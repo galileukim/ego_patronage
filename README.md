@@ -9,6 +9,6 @@
         * do voters care more about what is privately best for them or do they consider social welfare more broadly?
 * what is a visible good?
         * here it is not about a visible public good: think roads, bridges, light.
-        * it’s about what’s concealed: I will take away this public sector employment for myself - a gato, so to speak - and people won’t necessarily know.
+        * it’s about what’s concealed: I will take away this public sector employment for myself - a    gato, so to speak - and people won’t necessarily know.
         * but once enough of us are doing it, the whole electric grid collapses.
 
