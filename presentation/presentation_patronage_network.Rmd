@@ -1,0 +1,56 @@
+---
+title: "Government through Patronage"
+subtitle: "Bargaining for Education in Decentralized Brazil"
+author: "Galileu Kim"
+institute: "Princeton University"
+output:
+  beamer_presentation:
+    includes:
+      in_header: "presentation_template.txt"
+    incremental: false
+    keep_tex: true
+    slide_level: 2
+---
+
+# Introduction
+
+- Why should we care about patronage in specific?
+- What can I bring into the table that scholars have not thought about?
+- What are the gaps in the literature and the theoretical and empirical contribution I bring to the table?
+- Can I dream of being ambitious? Yes, I am much better now than I used to be before.
+- Bring both my theoretical treatment and empirical estimation to the fore.
+
+# Different types of patronage
+- Politicians value different types of positions for patronage.
+- For the mayor, who relies less on particularistic transfers (more on that later), control over the higher echelons of the bureaucracy is more important.
+- For city councilors, ties to the local community are more important: neighbors rely on public sector employment.
+
+# Betting on horses
+- Voters are strategic.
+- They should contribute to candidates who they believe will make them likely to obtain employment.
+- If I can link the people who donated tho candidates with the likelihood of them entering a bureaucracy.
+- Something very interesting can be done.
+
+# Differentiating types of donors
+- For some voters, campaign contributino is symbolic.
+- In Brazil, it is more likely that donors are thinking strategically about their candidates.
+- Who do they contribute to? What is there to win?
+- Who are the public sector workers more likely to donate?
+- How does this affect their likelihood of being in office?
+
+# Campaign contribution and employment
+- It is clear that this study dialogues with another set of studies.
+- Colonnelli et al. come to mind. The problem is that they have already done it.
+- Well, at least for mayors. Look at how campaign contributions increase the likelihood of obtaining employment.
+- So what else is there to be done?
+- Emphasizing the city councilor link is not enough. I need to do more.
+
+# Trade-offs
+- For voters t, there is a clear trade-off between the immediate gains of employment and the uncertain gains from public goods provision.
+- It is essentially the fact of hedging and how citizens are willing to take the public sector employment for themselves, which can help them provide for their family needs, rather than having to rely on public schools or well-staffed hospitals.
+- It is a tragedy of the commons, but more subtle.
+- Let's spell this out.
+
+# Context and data:
+- Brazil has multiple city councilors, who rely on patronage networks to be reelected.
+- The question then is what is the additional 

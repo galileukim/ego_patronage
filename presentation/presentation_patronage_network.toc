@@ -1,0 +1,7 @@
+\beamer@sectionintoc {1}{Introduction}{2}{0}{1}
+\beamer@sectionintoc {2}{Different types of patronage}{3}{0}{2}
+\beamer@sectionintoc {3}{Betting on horses}{4}{0}{3}
+\beamer@sectionintoc {4}{Differentiating types of donors}{5}{0}{4}
+\beamer@sectionintoc {5}{Campaign contribution and employment}{6}{0}{5}
+\beamer@sectionintoc {6}{Trade-offs}{7}{0}{6}
+\beamer@sectionintoc {7}{Context and data:}{8}{0}{7}

@@ -1,0 +1,73 @@
+\usetheme{metropolis}
+\setbeamertemplate{footline}[page number]{}
+
+% packages
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage{setspace}
+\usepackage{etoolbox}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{blindtext}
+\captionsetup[figure]{font=scriptsize} % set size of caption
+\AtBeginEnvironment{knitrout}{\singlespacing}
+\useoutertheme{infolines} % Alternatively: miniframes, infolines, split
+\useinnertheme{circles}
+\date[]{\today}
+
+% colors
+\definecolor{princeton}{rgb}{1.0, 0.6, 0.2} % princeton (primary)
+\definecolor{arsenic}{rgb}{0.23, 0.27, 0.29}
+
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{frametitle}{fg=white,bg=arsenic}
+\setbeamercolor{section in head/foot}{fg=arsenic,bg=princeton}
+\setbeamerfont{frametitle}{size=\Large}
+\setbeamercolor{palette primary}{fg=white,bg=arsenic}
+\setbeamercolor{palette secondary}{fg=arsenic,bg=princeton}
+\setbeamercolor{palette tertiary}{fg=princeton,bg=arsenic}
+\setbeamercolor{palette quaternary}{fg=princeton,bg=arsenic}
+\setbeamercolor{structure}{fg=princeton} % itemize, enumerate, etc
+\setbeamercolor{section in toc}{fg=arsenic} % TOC sections
+\setbeamerfont{subtitle}{size=\small}
+
+% override palette coloring with secondary
+\setbeamercolor{subsection in head/foot}{bg=arsenic,fg=white}
+
+% defining font
+\usepackage[T1]{fontenc}
+
+% Cabin
+% \usepackage[sfdefault,condensed]{cabin}
+
+% Helvetica
+\usepackage[scaled]{helvet}
+\renewcommand\familydefault{\sfdefault}
+
+% Inria Sans
+%\usepackage[lining]{InriaSans}
+%\renewcommand*\oldstylenums[1]{{\fontfamily{InriaSans-OsF}\selectfont #1}}
+%% The font package uses mweights.sty which has som issues with the
+%% \normalfont command. The following two lines fixes this issue.
+%\let\oldnormalfont\normalfont
+%\def\normalfont{\oldnormalfont\mdseries}
+
+% FiraSans
+%\usepackage[sfdefault]{FiraSans}
+%\renewcommand*\oldstylenums[1]{{\firaoldstyle #1}}
+%\usepackage{ragged2e}
+
+% aesthetics
+\setbeamersize{text margin left=10mm,text margin right=10mm}
+
+% source command
+\newcommand{\source}{\footnotesize\textcolor{black!25}}
+
+% suppress section slides
+\AtBeginPart{}
+\AtBeginSubsection{}
+\AtBeginSection{}
+\setlength{\emergencystretch}{0em}
+\setlength{\parskip}{0pt}

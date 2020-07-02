@@ -1,0 +1,309 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Government through Patronage},
+  pdfauthor={Galileu Kim},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\newif\ifbibliography
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usetheme{metropolis}
+\setbeamertemplate{footline}[page number]{}
+
+% packages
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage{setspace}
+\usepackage{etoolbox}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{blindtext}
+\captionsetup[figure]{font=scriptsize} % set size of caption
+\AtBeginEnvironment{knitrout}{\singlespacing}
+\useoutertheme{infolines} % Alternatively: miniframes, infolines, split
+\useinnertheme{circles}
+\date[]{\today}
+
+% colors
+\definecolor{princeton}{rgb}{1.0, 0.6, 0.2} % princeton (primary)
+\definecolor{arsenic}{rgb}{0.23, 0.27, 0.29}
+
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{frametitle}{fg=white,bg=arsenic}
+\setbeamercolor{section in head/foot}{fg=arsenic,bg=princeton}
+\setbeamerfont{frametitle}{size=\Large}
+\setbeamercolor{palette primary}{fg=white,bg=arsenic}
+\setbeamercolor{palette secondary}{fg=arsenic,bg=princeton}
+\setbeamercolor{palette tertiary}{fg=princeton,bg=arsenic}
+\setbeamercolor{palette quaternary}{fg=princeton,bg=arsenic}
+\setbeamercolor{structure}{fg=princeton} % itemize, enumerate, etc
+\setbeamercolor{section in toc}{fg=arsenic} % TOC sections
+\setbeamerfont{subtitle}{size=\small}
+
+% override palette coloring with secondary
+\setbeamercolor{subsection in head/foot}{bg=arsenic,fg=white}
+
+% defining font
+\usepackage[T1]{fontenc}
+
+% Cabin
+% \usepackage[sfdefault,condensed]{cabin}
+
+% Helvetica
+\usepackage[scaled]{helvet}
+\renewcommand\familydefault{\sfdefault}
+
+% Inria Sans
+%\usepackage[lining]{InriaSans}
+%\renewcommand*\oldstylenums[1]{{\fontfamily{InriaSans-OsF}\selectfont #1}}
+%% The font package uses mweights.sty which has som issues with the
+%% \normalfont command. The following two lines fixes this issue.
+%\let\oldnormalfont\normalfont
+%\def\normalfont{\oldnormalfont\mdseries}
+
+% FiraSans
+%\usepackage[sfdefault]{FiraSans}
+%\renewcommand*\oldstylenums[1]{{\firaoldstyle #1}}
+%\usepackage{ragged2e}
+
+% aesthetics
+\setbeamersize{text margin left=10mm,text margin right=10mm}
+
+% source command
+\newcommand{\source}{\footnotesize\textcolor{black!25}}
+
+% suppress section slides
+\AtBeginPart{}
+\AtBeginSubsection{}
+\AtBeginSection{}
+\setlength{\emergencystretch}{0em}
+\setlength{\parskip}{0pt}
+
+\title{Government through Patronage}
+\subtitle{Bargaining for Education in Decentralized Brazil}
+\author{Galileu Kim}
+\date{}
+\institute{Princeton University}
+
+\begin{document}
+\frame{\titlepage}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\begin{frame}{Introduction}
+\begin{itemize}
+\tightlist
+\item
+  Why should we care about patronage in specific?
+\item
+  What can I bring into the table that scholars have not thought about?
+\item
+  What are the gaps in the literature and the theoretical and empirical
+  contribution I bring to the table?
+\item
+  Can I dream of being ambitious? Yes, I am much better now than I used
+  to be before.
+\item
+  Bring both my theoretical treatment and empirical estimation to the
+  fore.
+\end{itemize}
+\end{frame}
+
+\hypertarget{different-types-of-patronage}{%
+\section{Different types of
+patronage}\label{different-types-of-patronage}}
+
+\begin{frame}{Different types of patronage}
+\begin{itemize}
+\tightlist
+\item
+  Politicians value different types of positions for patronage.
+\item
+  For the mayor, who relies less on particularistic transfers (more on
+  that later), control over the higher echelons of the bureaucracy is
+  more important.
+\item
+  For city councilors, ties to the local community are more important:
+  neighbors rely on public sector employment.
+\end{itemize}
+\end{frame}
+
+\hypertarget{betting-on-horses}{%
+\section{Betting on horses}\label{betting-on-horses}}
+
+\begin{frame}{Betting on horses}
+\begin{itemize}
+\tightlist
+\item
+  Voters are strategic.
+\item
+  They should contribute to candidates who they believe will make them
+  likely to obtain employment.
+\item
+  If I can link the people who donated tho candidates with the
+  likelihood of them entering a bureaucracy.
+\item
+  Something very interesting can be done.
+\end{itemize}
+\end{frame}
+
+\hypertarget{differentiating-types-of-donors}{%
+\section{Differentiating types of
+donors}\label{differentiating-types-of-donors}}
+
+\begin{frame}{Differentiating types of donors}
+\begin{itemize}
+\tightlist
+\item
+  For some voters, campaign contributino is symbolic.
+\item
+  In Brazil, it is more likely that donors are thinking strategically
+  about their candidates.
+\item
+  Who do they contribute to? What is there to win?
+\item
+  Who are the public sector workers more likely to donate?
+\item
+  How does this affect their likelihood of being in office?
+\end{itemize}
+\end{frame}
+
+\hypertarget{campaign-contribution-and-employment}{%
+\section{Campaign contribution and
+employment}\label{campaign-contribution-and-employment}}
+
+\begin{frame}{Campaign contribution and employment}
+\begin{itemize}
+\tightlist
+\item
+  It is clear that this study dialogues with another set of studies.
+\item
+  Colonnelli et al.~come to mind. The problem is that they have already
+  done it.
+\item
+  Well, at least for mayors. Look at how campaign contributions increase
+  the likelihood of obtaining employment.
+\item
+  So what else is there to be done?
+\item
+  Emphasizing the city councilor link is not enough. I need to do more.
+\end{itemize}
+\end{frame}
+
+\hypertarget{trade-offs}{%
+\section{Trade-offs}\label{trade-offs}}
+
+\begin{frame}{Trade-offs}
+\begin{itemize}
+\tightlist
+\item
+  For voters t, there is a clear trade-off between the immediate gains
+  of employment and the uncertain gains from public goods provision.
+\item
+  It is essentially the fact of hedging and how citizens are willing to
+  take the public sector employment for themselves, which can help them
+  provide for their family needs, rather than having to rely on public
+  schools or well-staffed hospitals.
+\item
+  It is a tragedy of the commons, but more subtle.
+\item
+  Let's spell this out.
+\end{itemize}
+\end{frame}
+
+\hypertarget{context-and-data}{%
+\section{Context and data:}\label{context-and-data}}
+
+\begin{frame}{Context and data:}
+\begin{itemize}
+\tightlist
+\item
+  Brazil has multiple city councilors, who rely on patronage networks to
+  be reelected.
+\item
+  The question then is what is the additional
+\end{itemize}
+\end{frame}
+
+\end{document}
