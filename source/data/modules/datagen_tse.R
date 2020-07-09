@@ -1,3 +1,7 @@
+# ==============================================================================
+# incorporate data from electoral results
+# to-do: finish cleaning the filiados data and prep it for merge with RAIS
+# ==============================================================================
 chamber <- read_data(
   "raw",
   "tse",
@@ -69,3 +73,12 @@ vereador %>%
     "tse",
     "vereador.rds"
   )
+
+# ============================================================================
+# clean filiados data
+# ============================================================================
+filiado <- read_data(
+  dir = "tse",
+  file = "filiados.csv.gz"
+  )
+
