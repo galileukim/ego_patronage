@@ -1,9 +1,13 @@
 # plan:
 
+## intro
+
+this document outlines the vision for the third paper in my dissertation.
+
 ## research questions 
-* who benefits from patronage and what is the nature of the transaction?
-  * can we identify which sectors individuals are coming from?
+* who benefits from patronage and what is the difference in compensation?
   * what are the areas of the bureaucracy most exposed to patronage?
+  * can we identify which sectors individuals are coming from?
 * private gains from employment vs. public gains from better services.
   * frame it in terms of the immediate gains from employment vs. an uncertain benefit from services.
   * what is the magnitude of the gains: compare to earnings from informal sector (pnad?)

@@ -72,13 +72,47 @@ vereador %>%
   write_data(
     "tse",
     "vereador.rds"
-  )
+  )`
 
 # ============================================================================
 # clean filiados data
 # ============================================================================
 filiado <- read_data(
   dir = "tse",
-  file = "filiados.csv.gz"
+  file = "filiado_cpf.csv.gz"
   )
 
+filiado_debug <- filiado %>%
+  sample_n(1e3)
+
+# fix year that membership ends.
+filiado_debug_with_spells <- filiado_debug %>%
+  mutate(
+    year_end = if_else(year_end == 2105, 2015L, year_end), # fix defective entries for 2015
+    year_membership_end = case_when(
+      is.na(year_end) & member_status == "regular" ~ 2019L, # note that the last year available is 2019
+      T ~ year_end
+    ),
+    year_membership_end = pmax(year_membership_end, year_cancel, na.rm = T),
+    membership_spell_years = map2(
+      year_start, year_membership_end, 
+      ~c(.x, .y)
+    )
+  ) %>%
+  unnest(membership_spell_years)
+
+filiado_complete_years <- filiado_debug_with_spells %>% 
+  rename(
+    year = membership_spell_years
+  ) %>%
+  complete_year_by_group(
+    .group_vars = c("member_name", "elec_title"),
+    complete_years = 2006:2015
+  )
+
+filiado_complete <- filiado_debug_with_spells %>%
+  left_join(
+    filiado_complete_years
+  )
+
+# to-do: figure out how to store this data efficeintly: it will be huge

@@ -3,6 +3,11 @@
 ivreg <- AER::ivreg
 between <- data.table::between
 
+list.files <- purrr::partial(
+  base::list.files,
+  full.names = T
+)
+
 # io ----------------------------------------------------------------------
 here_data <- function(type, dir, file) {
   path <- here("data", type, dir, file)
@@ -20,6 +25,14 @@ read_data <- function(type, dir, file) {
   }
   
   return(data)
+}
+
+get_data <- function(type, dir, file, cols){
+  data <- read_data(type, dir, file)
+
+  data_subset <- select(data, all_of(cols))
+
+  return(data_subset)
 }
 
 write_data <- function(object, dir, file, type = "clean", compress = "gz") {
@@ -54,7 +67,7 @@ build_repo <- function(module){
     }
   }
 
-run_module <- function(module) {
+run_module <- function(module, domain) {
   print(
     paste0("running module ", module, "...")
   )
@@ -62,7 +75,7 @@ run_module <- function(module) {
   build_repo(module)
 
   source_file <- paste0("datagen_", module, ".R")
-  path <- here("build", "data", "modules", source_file)
+  path <- here("source", domain, "modules", source_file)
 
   init_env <- ls(.GlobalEnv)
   source(path)
@@ -73,15 +86,10 @@ run_module <- function(module) {
   )
 }
 
-fread <- partial(
+fread <- purrr::partial(
   data.table::fread,
   nThread = parallel::detectCores(),
   integer64 = c("character")
-)
-
-list.files <- partial(
-  base::list.files,
-  full.names = T
 )
 
 list_files <- function(path, pattern) {
@@ -95,279 +103,135 @@ list_files <- function(path, pattern) {
   return(files)
 }
 
-import_data <- function(path, pattern, names = F) {
-  files <- list_files(
-    path,
-    pattern
-  )
-
-  if (names == F) {
-    names <- basename(files) %>%
-      str_remove_all(
-        "\\.csv|\\.gz"
-      )
-  }
-
-  data <- map(
-    files,
-    fread
-  )
-
-  names(data) <- names
-
-  return(data)
-}
-
-assign_data <- function(data, rm = T) {
-  walk2(
-    names(data),
-    data,
-    assign,
-    envir = globalenv()
-  )
-}
-
-append_db <- function(path, pattern, conn, names = F) {
-  data <- import(
-    files,
-    names
-  )
-
-  pwalk(
-    list(
-      name = names,
-      value = data
-    ),
-    RSQLite::dbWriteTable,
-    conn = con,
-    overwrite = T
-  )
-}
-
-fwrite_gz <- function(data, filename, overwrite = T) {
-  data.table::fwrite(
-    data,
-    filename
-  )
-
-  R.utils::gzip(
-    filename,
-    overwrite = overwrite
-  )
-}
-
-file_here <- function(paper = NULL, folder = NULL, file = NULL) {
-  if (is.null(file)) {
-    stop("no file name.")
-  }
-
-  path <- here(paste0("papers/paper_", paper), folder, file)
-  return(path)
-}
-
-object_size <- function(object) {
-  size <- object.size(object)
-
-  print(size, units = "MB")
-}
-
 # data manipulation -------------------------------------------------------
-# sample groups
-sample_group <- function(data, n, ...) {
-  grouping_vars <- enquos(...)
-
-  data %<>%
-    nest(
-      cols = -c(!!!grouping_vars)
+# check if vector of ids is unique
+check_if_id_unique <- function(data, .group_vars) {
+  data_count <- data %>%
+    group_by(
+      across(
+        all_of({{.group_vars}})
+      )
     ) %>%
-    sample_n(n) %>%
-    unnest(
-      cols = -c(!!!grouping_vars)
+    summarise(
+      n = n(),
+      .groups = "drop"
     )
 
-  return(data)
+  if(max(data_count$n) > 1) {
+    print("id_vars are not unique. printing duplicates...")
+    duplicated_groups <- data_count %>%
+      filter(n > 1) %>%
+      arrange(desc(n))
+
+    return(duplicated_groups)
+  }else {
+    print("id_vars are unique.")
+  }
 }
 
-round_integer <- function(number, digits) {
-  number %>%
-    as.integer() %>%
-    round(digits)
+# groups and summarises data
+create_teacher_turnover_index <- function(data, .group_vars, .vars, complete_years){
+  turnover_data <- data %>%
+    grouped_sum(.group_vars, .vars) %>%
+    complete_year_by_group(.group_vars, complete_years) %>%
+    calc_turnover_by_group(.group_vars) %>%
+    filter(
+      completed != 1 # remove completed entries
+    )
+
+    return(turnover_data)
 }
 
-calc_turnover <- function(data, group_vars){
-  years <- data %>% 
-    distinct(year) %>% 
-    pull
-  
-  data %<>%
+grouped_sum <- function(data, .group_vars, .vars){
+  data %>%
     group_by_at(
-      vars(
-        group_vars
+      all_of(
+       .group_vars
       )
     ) %>% 
-    summarise_at(
-      vars(starts_with("turnover_"), n),
-      sum,
-      na.rm = T
-    ) %>% 
+    summarise(
+      across(all_of({{.vars}}), sum, na.rm = T),
+      .groups = "drop"
+    )
+}
+
+complete_year_by_group <- function(data, .group_vars, complete_years){
+  .group_vars_minus_year <- stringr::str_subset(.group_vars, "year", negate = T)
+  
+  complete_data <- data %>%
+    mutate(
+      completed = 0
+    ) %>%
+    select(
+      all_of(
+        c(.group_vars, "year")
+      )
+    ) %>%
+    group_by_at(
+      all_of(.group_vars_minus_year)
+    ) %>%
+    complete(
+      year = complete_years,
+      fill = list(completed = 1)
+    ) %>%
     ungroup()
+
+    return(complete_data)
+}
+
+calc_turnover_by_group <- function(data, .group_vars) {
+   .group_vars_minus_year <- str_subset(.group_vars, "year", negate = T)
+
+  turnover_data  <- data %>%
+    group_by_at(
+      vars(
+        all_of(.group_vars_minus_year)
+      )
+    ) %>% 
+    mutate(
+      n_lag = dplyr::lag(n, order_by = year)
+    ) %>%
+    ungroup() %>%
+    mutate(
+      total_turnover = turnover_exit + turnover_transfer + turnover_entry,
+      total_n = n + n_lag,
+      turnover_index = ratio(total_turnover, total_n)
+    )
+
+  return(turnover_data)
+}
+
+ratio <- function(numerator, denominator){
+  ratio <- numerator/denominator
+  
+  return(ratio)
+}
+
+summarise_stats <- function(data, ...){
+  vars <- enquos(...)
+  
+  data_count <- data %>% 
+    count
   
   data %<>% 
-    mutate(
-      implicit = 0
-    ) %>% 
-    complete(
-      year = years,
-      fill = list(implicit = 1)
-    ) %>% 
-    group_by_at(
-      vars(
-        group_vars,
-        -year
-      )
-    ) %>% 
-    mutate(
-      n_lag = dplyr::lag(n, order_by = year),
-      percent_exit = turnover_exit/n_lag,
-      percent_transfer = turnover_transfer/n_lag,
-      percent_extinct = turnover_extinct/n_lag,
-      percent_entry = turnover_entry/n,
-      turnover_index = (turnover_exit + turnover_transfer + turnover_entry)/(n + n_lag)
-    ) %>% 
-    ungroup() %>% 
-    filter(
-      implicit != 1
-    ) %>% 
-    select(
-      -implicit
-    )
-  
-  return(data)
-}
-
-# tidy and ggcoef
-tidyfit <- function(fit, vars = ".") {
-  tidy(fit) %>%
-    filter(
-      !str_detect(term, "Intercept|as.factor|Observation.Residual"),
-      str_detect(term, vars)
-    ) %>%
-    mutate(
-      conf.low = estimate - 1.96 * std.error,
-      conf.high = estimate + 1.96 * std.error
-    )
-}
-
-# table of results
-mstar <- function(..., font.size = "small", float = F, no.space = T, keep.stat = c("n", "rsq")) {
-  stargazer::stargazer(
-    ...,
-    font.size = font.size,
-    float = float,
-    no.space = no.space,
-    keep.stat = keep.stat
-  )
-}
-
-# summarize props with c.i.
-summarise_prop <- function(data, var) {
-  summarise(
-    .data = data,
-    prop = mean(get(var), na.rm = T),
-    n = n(),
-    se = sqrt(prop * (1 - prop) / n),
-    upper = prop + 1.96 * se,
-    lower = prop - 1.96 * se
-  )
-}
-
-# tailored summarise
-summarise_stats <- function(data, ...) {
-  vars <- enquos(...)
-
-  data_count <- data %>%
-    count()
-
-  data %<>%
     summarise_at(
       .vars = vars(!!!vars),
       .funs = list(
         mean = mean,
-        sum = sum,
-        med = median,
+        sum = sum, 
+        med = median, 
         sd = sd
       ),
       na.rm = T
-    ) %>%
+    ) %>% 
     ungroup()
-
+  
   data %<>%
     left_join(
       data_count
     )
-
+  
   return(data)
-}
-
-count_freq <- function(data, ...) {
-  vars <- enquos(...)
-
-  data <- data %>%
-    group_by(!!!vars) %>%
-    summarise(n = n()) %>%
-    mutate(freq = n / sum(n))
-
-  return(data)
-}
-
-filter_if_n <- function(data, predicate) {
-  predicate <- enquo(predicate)
-
-  data %<>%
-    mutate(n = n()) %>%
-    filter(!!predicate) %>%
-    ungroup() %>%
-    select(-n)
-
-  return(data)
-}
-
-# standardize
-standardize <- function(data) {
-  out <- data %>%
-    mutate_if(
-      is.double,
-      scale
-    )
-
-  return(out)
-}
-
-# create first and last year
-bind_electoral_term <- function(data) {
-  out <- data %>%
-    mutate(
-      first_term = if_else(
-        year %% 4 == 1,
-        1, 0
-      )
-    )
-}
-
-group_split <- function(data, ...) {
-  vars <- enquos(...)
-
-  data <- data %>%
-    group_by(!!!vars)
-
-  group_names <- group_keys(data) %>%
-    pull()
-
-  data %>%
-    dplyr::group_split() %>%
-    set_names(
-      group_names
-    )
 }
 
 add_election_year <- function(data) {
