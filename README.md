@@ -19,16 +19,16 @@ this document outlines the vision for the third paper in my dissertation.
 * identified rais panel data:
   - complete
 * partisanship data:
-  - currently working
+  - complete
 * city councilors - and their own earnings
+  - ongoing
 * qualitative evidence
 * create sql database using SQLite
   - in progress
 
 ## timeline
 * for next week:
-  - finish cleaning the filiados data.
   - merge filiado data with rais.
-  - estimate the probability of getting employed.
+  - identify prevalence of patronage.
 * give a sense of the magnitude of the gains from employment.
 * compare private gains vs. public gains from better services.
