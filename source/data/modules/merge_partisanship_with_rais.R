@@ -12,6 +12,7 @@ library(haven)
 library(data.table)
 library(fastLink)
 
+sample_size <- 2e3
 path_to_rais <- "/home/BRDATA/RAIS/"
 
 # aux funs
@@ -27,7 +28,7 @@ split_name <- function(data) {
 
 filiados <- fread(
     "data/filiado_cpf.csv",
-    nrows = 1e4,
+    nrows = sample_size,
     integer64 = "character"
 )
 
@@ -36,7 +37,7 @@ rais <- read_dta(
         path_to_rais,
         "RAIS2006.dta"
     ),
-    n_max = 1e4
+    n_max = sample_size
 )
 
 print("prepare data for merge")
@@ -44,13 +45,17 @@ print("prepare data for merge")
 # first triage workers with cpf
 # merge remainder with fastLink
 # note that there are some duplicated names, but they are rare
-# the majority of duplicates is attributable to holding several jobs
-filiados_merge <- filiados %>%
+# also note that the majority of party members have only one affiliation
+# the majority of duplicates in RAIS is due to holding several jobs
+filiados_clean <- filiados %>%
     select(
         cod_ibge_6,
         elec_title,
         cpf = cpf_candidate,
-        name = member_name
+        name = member_name,
+        date_start,
+        date_end,
+        date_cancel
     ) %>%
     distinct(
         elec_title,
@@ -61,27 +66,24 @@ filiados_merge <- filiados %>%
         as.character
     )
 
-rais_merge <- rais %>%
+rais_clean <- rais %>%
     mutate_all(
         as.character
     ) %>%
     select(
         cod_ibge_6 = municipio,
+        year,
         id_employee,
         cpf,
         name = nome
-    ) %>%
-    distinct(
-        id_employee,
-        .keep_all = T
     ) %>%
     mutate_all(
         as.character
     )
 
-rais_filiados_with_cpf <- rais_merge %>%
+rais_filiados_with_cpf <- rais_clean %>%
     inner_join(
-        filiados_merge,
+        filiados_clean,
         by = "cpf"
     )
 
@@ -91,17 +93,45 @@ rais_filiados_with_cpf_ids <- rais_filiados_with_cpf %>%
         id_employee
     )
 
-rais_filiados_no_cpf <- rais_merge %>%
+rais_filiados_no_cpf <- rais_clean %>%
     anti_join(
         rais_filiados_with_cpf_ids
     )
 
 # probabilistic matching using fastLink
+# block by state year
 rais_filiados_no_cpf <- rais_filiados_no_cpf %>%
-    split_name()
+    split_name() %>%
+    mutate(
+        state = str_sub(cod_ibge_6, 1, 2)
+    )
 
-filiados_merge <- filiados_merge %>%
-    split_name()
+filiados_merge <- filiados_clean %>%
+    split_name() %>%
+    mutate(
+        state = str_sub(cod_ibge_6, 1, 2),
+        across(
+            c(starts_with("date")),
+            ~str_extract(., "\\d{4}") %>% as.integer,
+            .names = "year_{col}"
+        ),
+        year_termination = pmax(year_date_end, year_date_cancel, na.rm = T) %>%
+            replace_na(2019)
+    ) %>%
+    rename_with(
+        ~str_replace(., "year_date", "year"),
+        starts_with("year_date")
+    )
+
+# subset by year and state
+t <- 2006
+s <- 11
+
+rais_merge <- rais_filiados_no_cpf %>% 
+    filter(
+        year == t,
+        state == s
+    )
 
 rais_filiados_link <- fastLink(
     dfA = rais_filiados_no_cpf,
@@ -113,7 +143,7 @@ rais_filiados_link <- fastLink(
 
 matched_rais_filiados <- getMatches(
     dfA = rais_filiados_no_cpf,
-    dfB = filiados_merge,
+    dfB = filiados_clean,
     fl.out = rais_filiados_link,
     combine.dfs = F
 )
