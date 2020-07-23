@@ -7,12 +7,14 @@
 # 1) duplicated entries
 # 2) duplicated names
 # solution: distinct for now
+print("set-up")
+
 library(tidyverse)
 library(haven)
 library(data.table)
 library(fastLink)
 
-sample_size <- 2e3
+sample_size <- 1e5
 path_to_rais <- "/home/BRDATA/RAIS/"
 
 # aux funs
@@ -26,9 +28,16 @@ split_name <- function(data) {
         )
 }
 
+extract_year <- function(col) {
+    year_col <- str_extract(col, "\\d{4}") %>% 
+        as.integer
+    
+    return(year_col)
+}
+
 filiados <- fread(
     "data/filiado_cpf.csv",
-    nrows = sample_size,
+    # nrows = sample_size,
     integer64 = "character"
 )
 
@@ -106,13 +115,13 @@ rais_filiados_no_cpf <- rais_filiados_no_cpf %>%
         state = str_sub(cod_ibge_6, 1, 2)
     )
 
-filiados_merge <- filiados_clean %>%
+filiados_clean_with_years <- filiados_clean %>%
     split_name() %>%
     mutate(
         state = str_sub(cod_ibge_6, 1, 2),
         across(
             c(starts_with("date")),
-            ~str_extract(., "\\d{4}") %>% as.integer,
+            extract_year,
             .names = "year_{col}"
         ),
         year_termination = pmax(year_date_end, year_date_cancel, na.rm = T) %>%
@@ -124,6 +133,8 @@ filiados_merge <- filiados_clean %>%
     )
 
 # subset by year and state
+print("perform block merge (state-year) with fastLink")
+
 t <- 2006
 s <- 11
 
@@ -133,8 +144,14 @@ rais_merge <- rais_filiados_no_cpf %>%
         state == s
     )
 
+filiados_merge <- filiados_clean_with_years %>%
+    filter(
+        (year_start < t) & (year_cancel > t) &
+        state == s
+    )
+
 rais_filiados_link <- fastLink(
-    dfA = rais_filiados_no_cpf,
+    dfA = rais_merge,
     dfB = filiados_merge,
     varnames = c("first_name", "last_name", "middle_name"),
     stringdist.match = c("first_name", "last_name", "middle_name"),
@@ -147,3 +164,6 @@ matched_rais_filiados <- getMatches(
     fl.out = rais_filiados_link,
     combine.dfs = F
 )
+
+matched_rais_filiados %>% map(glimpse)
+
