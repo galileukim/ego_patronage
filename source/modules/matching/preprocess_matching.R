@@ -1,6 +1,6 @@
 filiados <- fread(
     "data/raw/filiado_cpf.csv",
-    # nrows = sample_size,
+    nrows = sample_size,
     integer64 = "character"
 )
 
@@ -31,30 +31,27 @@ filiados_clean <- filiados %>%
         date_end,
         date_cancel
     ) %>%
-    distinct(
-        elec_title,
-        name,
-        .keep_all = T
-    ) %>%
     mutate_all(
         as.character
+    ) %>%
+    create_split_name() %>%
+    mutate(
+        state = str_sub(cod_ibge_6, 1, 2)
     )
 
 rais_clean <- rais %>%
     mutate_all(
         as.character
-    ) %>%
-    select(
-        cod_ibge_6 = municipio,
-        year,
-        id_employee,
-        cpf,
-        name = nome
-    ) %>%
+    ) %>% 
     mutate_all(
         as.character
+    ) %>%
+    create_split_name() %>%
+    mutate(
+        state = str_sub(cod_ibge_6, 1, 2)
     )
 
+print("extracting filiados with cpf")
 rais_filiados_with_cpf <- rais_clean %>%
     inner_join(
         filiados_clean,
@@ -70,19 +67,4 @@ rais_filiados_with_cpf_ids <- rais_filiados_with_cpf %>%
 rais_filiados_no_cpf <- rais_clean %>%
     anti_join(
         rais_filiados_with_cpf_ids
-    )
-
-# probabilistic matching using fastLink
-# block by state and year
-rais_merge <- rais_filiados_no_cpf %>%
-    split_name() %>%
-    mutate(
-        state = str_sub(cod_ibge_6, 1, 2)
-    )
-
-filiados_merge <- filiados_clean %>%
-    split_name() %>%
-    extract_year_from_dates() %>%
-    mutate(
-        state = str_sub(cod_ibge_6, 1, 2)
     )

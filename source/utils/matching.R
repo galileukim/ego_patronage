@@ -1,12 +1,18 @@
-# aux funs
-split_name <- function(data) {
-    data %>%
+# aux funs for matching
+create_split_name <- function(data) {
+    data_with_split_names <- data %>%
         mutate(
             name = str_to_lower(name),
-            first_name = str_extract(name, "^[a-z]+"),
-            last_name = str_extract(name, "[a-z]+$"),
-            middle_name = str_extract(name, "(?<=\\s)[a-z\\s]+(?=\\s)")
-        )
+            split_names = str_match(
+                name, "(^[a-z]+)\\s([a-z\\s]+)\\s([a-z]+$)"
+            ),
+            first_name = split_names[, 2],
+            middle_name = split_names[, 3],
+            last_name = split_names[, 4]
+        ) %>%
+        select(-split_names)
+
+    return(data_with_split_names)
 }
 
 extract_year_from_dates <- function(data) {
@@ -17,7 +23,9 @@ extract_year_from_dates <- function(data) {
                 extract_year,
                 .names = "year_{col}"
             ),
-            year_termination = pmax(year_date_end, year_date_cancel, na.rm = T) %>%
+            year_termination = pmax(
+                year_date_end, year_date_cancel, na.rm = T
+            ) %>%
                 replace_na(2019)
         ) %>%
         rename_with(
