@@ -31,6 +31,7 @@ clean_rais <- function(data) {
             name = nome,
             cpf
         ) %>%
+        distinct() %>%
         mutate_all(
             as.character
         ) %>%
@@ -47,7 +48,7 @@ create_split_name <- function(data) {
         mutate(
             name = str_to_lower(name),
             split_names = str_match(
-                name, "(^[a-z]+)\\s([a-z\\s]+)\\s([a-z]+$)"
+                name, "(^[a-z]+)\\s([a-z\\.\\s]+)\\s([a-z]+$)"
             ),
             first_name = split_names[, 2],
             middle_name = split_names[, 3],
@@ -87,7 +88,7 @@ extract_year <- function(col) {
     return(year_col)
 }
 
-read_rais <- function(year, sample_size = Inf) {
+read_rais <- function(year, sample_size = Inf, path_to_rais = "/home/BRDATA/RAIS/") {
     rais <- read_dta(
         paste0(
             path_to_rais,

@@ -1,69 +1,44 @@
-# proceed in two parts
-# first triage workers with cpf
-# merge remainder with fastLink
+# input: filiados (partisan affiliation) and rais (employment data)
 # note that there are some duplicated names, but they are rare
 # also note that the majority of party members have only one affiliation
 # the majority of duplicates in RAIS is due to holding several jobs
 # final output: unique id and partisanship per year per state
-year <- 2006
-sample_size <- 1e5
+library(tidyverse)
+library(data.table)
+library(haven)
+library(here)
+
+source(here("source/utils/preprocess.R"))
+
+year <- 2006:2016
+path_out <- "data/clean/preprocessed"
 
 fwrite <- partial(data.table::fwrite, compress = "gzip")
 
 filiados <- fread(
     "data/raw/filiado_cpf.csv",
-    nrows = sample_size,
+    nrows = 1e4,
     integer64 = "character"
-) %>%
-    clean_filiados()
+)
 
-rais <- read_rais(
+filiados %>%
+    clean_filiados() %>%
+    fwrite(
+        here(path_out, "filiados_clean.csv.gz")
+    )
+
+path_rais_out <- here(path_out, sprintf("rais_clean_%s.csv.gz", year))
+
+walk2(
     year,
-    sample_size
-) %>%
-    clean_rais()
-
-# ==============================================================================
-print("extracting filiados with cpf")
-# ==============================================================================
-rais_filiados_with_cpf <- rais %>%
-    distinct(
-        id_employee,
-        cpf
+    path_rais_out,
+    ~ read_rais(
+        year = .x
     ) %>%
-    inner_join(
-        filiados,
-        by = "cpf"
-    )
-
-# triage merged candidates from dataset
-rais_filiados_with_cpf_ids <- rais_filiados_with_cpf %>%
-    distinct(
-        id_employee
-    )
-
-rais_merge <- rais %>%
-    anti_join(
-        rais_filiados_with_cpf_ids
-    )
-
-# ==============================================================================
-print("write-out clean data tables")
-# ==============================================================================
-rais_filiados_with_cpf %>%
-    fwrite(
-        here(
-            sprintf("data/preprocess/rais_filiados_with_cpf_%s", year),
-            ".csv.gz"
+        clean_rais() %>%
+        fwrite(
+            file = .y
         )
-    )
+)
 
-filiados_clean %>%
-    fwrite(
-        here("data/preprocess/filiados_clean")
-    )
-
-rais_merge %>%
-    fwrite(
-        here("data/clean/preprocess/rais_merge")
-    )
+# most efficient solution is actually to create an rsqlite database
