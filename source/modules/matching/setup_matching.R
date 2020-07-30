@@ -15,5 +15,10 @@ library(data.table)
 library(fastLink)
 library(here)
 
-sample_size <- 5e5
 path_to_rais <- "/home/BRDATA/RAIS/"
+
+path_to_matching <- "source/modules/matching/"
+
+source(here::here(path_to_matching, "setup_matching.R"))
+
+source(here("source/utils/matching.R"))

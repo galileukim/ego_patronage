@@ -1,18 +1,3 @@
-filiados <- fread(
-    "data/raw/filiado_cpf.csv",
-    nrows = sample_size,
-    integer64 = "character"
-)
-
-rais <- read_dta(
-    paste0(
-        path_to_rais,
-        "RAIS2006.dta"
-    ),
-    n_max = sample_size
-)
-
-print("prepare data for merge")
 # proceed in two parts
 # first triage workers with cpf
 # merge remainder with fastLink
@@ -20,41 +5,34 @@ print("prepare data for merge")
 # also note that the majority of party members have only one affiliation
 # the majority of duplicates in RAIS is due to holding several jobs
 # final output: unique id and partisanship per year per state
-filiados_clean <- filiados %>%
-    select(
-        cod_ibge_6,
-        elec_title,
-        cpf = cpf_candidate,
-        name = member_name,
-        party,
-        date_start,
-        date_end,
-        date_cancel
-    ) %>%
-    mutate_all(
-        as.character
-    ) %>%
-    create_split_name() %>%
-    mutate(
-        state = str_sub(cod_ibge_6, 1, 2)
-    )
+year <- 2006
+sample_size <- 1e5
 
-rais_clean <- rais %>%
-    mutate_all(
-        as.character
-    ) %>% 
-    mutate_all(
-        as.character
-    ) %>%
-    create_split_name() %>%
-    mutate(
-        state = str_sub(cod_ibge_6, 1, 2)
-    )
+fwrite <- partial(data.table::fwrite, compress = "gzip")
 
+filiados <- fread(
+    "data/raw/filiado_cpf.csv",
+    nrows = sample_size,
+    integer64 = "character"
+) %>%
+    clean_filiados()
+
+rais <- read_rais(
+    year,
+    sample_size
+) %>%
+    clean_rais()
+
+# ==============================================================================
 print("extracting filiados with cpf")
-rais_filiados_with_cpf <- rais_clean %>%
+# ==============================================================================
+rais_filiados_with_cpf <- rais %>%
+    distinct(
+        id_employee,
+        cpf
+    ) %>%
     inner_join(
-        filiados_clean,
+        filiados,
         by = "cpf"
     )
 
@@ -64,7 +42,28 @@ rais_filiados_with_cpf_ids <- rais_filiados_with_cpf %>%
         id_employee
     )
 
-rais_filiados_no_cpf <- rais_clean %>%
+rais_merge <- rais %>%
     anti_join(
         rais_filiados_with_cpf_ids
+    )
+
+# ==============================================================================
+print("write-out clean data tables")
+# ==============================================================================
+rais_filiados_with_cpf %>%
+    fwrite(
+        here(
+            sprintf("data/preprocess/rais_filiados_with_cpf_%s", year),
+            ".csv.gz"
+        )
+    )
+
+filiados_clean %>%
+    fwrite(
+        here("data/preprocess/filiados_clean")
+    )
+
+rais_merge %>%
+    fwrite(
+        here("data/clean/preprocess/rais_merge")
     )

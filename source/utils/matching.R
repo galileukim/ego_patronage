@@ -1,56 +1,16 @@
 # aux funs for matching
-create_split_name <- function(data) {
-    data_with_split_names <- data %>%
-        mutate(
-            name = str_to_lower(name),
-            split_names = str_match(
-                name, "(^[a-z]+)\\s([a-z\\s]+)\\s([a-z]+$)"
-            ),
-            first_name = split_names[, 2],
-            middle_name = split_names[, 3],
-            last_name = split_names[, 4]
-        ) %>%
-        select(-split_names)
-
-    return(data_with_split_names)
-}
-
-extract_year_from_dates <- function(data) {
-    data_with_years <- data %>%
-        mutate(
-            across(
-                c(starts_with("date")),
-                extract_year,
-                .names = "year_{col}"
-            ),
-            year_termination = pmax(
-                year_date_end, year_date_cancel, na.rm = T
-            ) %>%
-                replace_na(2019)
-        ) %>%
-        rename_with(
-            ~ str_replace(., "year_date", "year"),
-            starts_with("year_date")
-        )
-
-    return(data_with_years)
-}
-
-extract_year <- function(col) {
-    year_col <- str_extract(col, "\\d{4}") %>%
-        as.integer()
-
-    return(year_col)
-}
 
 blocked_fastLink <- function(year, state, df_rais, df_filiados) {
-    rais <- rais_filiados_no_cpf %>%
+    t <- year
+    s <- state
+
+    rais <- df_rais %>%
         filter(
             year == t,
             state == s
         )
 
-    filiados <- filiados_clean_with_years %>%
+    filiados <- df_filiados %>%
         filter(
             (year_start < t) & (year_cancel > t) &
                 state == s
@@ -71,24 +31,25 @@ run_diagnostics_fastLink <- function(fastLink, rais, filiados) {
     matched_fastLink <- getMatches(
         dfA = rais,
         dfB = filiados,
-        fl.out = rais_filiados_link,
+        fl.out = fastLink,
         combine.dfs = F
     )
 
     # match rate by first name
-    number_of_first_name_matches <- matched_fastLink %>%
-        map(
-            ~ head(., 50)
-        ) %>%
+    first_name_matches <- matched_fastLink %>%
         reduce(
             inner_join,
-            by = "first_name"
-        ) %>%
-        nrow()
+            by = c("first_name", "last_name")
+        )
+
+    exact_matches <-
 
     if (number_of_first_name_matches <= 40) {
-        print("match rate for first names less than 80 percent.")
-        break
+        stop("match rate for first names less than 80 percent.")
+    } else{
+        print(sprintf("match rate is %s percent.",
+        number_of_first_name_matches/50)
+        )
     }
 
     # how many duplicated id_employees are there for each electoral title?
@@ -102,7 +63,9 @@ run_diagnostics_fastLink <- function(fastLink, rais, filiados) {
         pull()
 
     if (proportion_duplicated_rais_filiados > 20) {
-        print("duplication rate is higher than 20 percent.")
-        break
+        stop("duplication rate is higher than 20 percent.")
+    } else{
+        print(sprintf("duplication rate is %s"),
+        proportion_duplicated_rais_filiados)
     }
 }

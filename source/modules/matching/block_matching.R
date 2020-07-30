@@ -3,7 +3,8 @@ print("perform block merge (state-year) with fastLink")
 
 # years <- 2003:2019
 years <- 2006
-states <- filiados_clean_with_years %>%
+
+states <- filiados_clean %>%
     distinct(state) %>%
     pull() %>%
     sort() %>%
@@ -13,13 +14,14 @@ for (i in seq_along(years)) {
     t <- years[i]
 
     rais_deduped <- rais_merge %>%
-        distinct(# extract unique id's by employee.
-            cod_ibge_6 = municipio,
+        select(# extract unique id's by employee.
+            cod_ibge_6,
             year,
             id_employee,
             cpf,
-            name = nome
-        )
+            contains("name")
+        ) %>%
+        distinct()
 
     rais_filiados_link <- map(
         states,
