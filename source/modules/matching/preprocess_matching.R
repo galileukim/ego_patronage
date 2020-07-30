@@ -15,6 +15,7 @@ path_out <- "data/clean/preprocessed"
 
 fwrite <- partial(data.table::fwrite, compress = "gzip")
 
+print("clean-up filiados and write-out")
 filiados <- fread(
     "data/raw/filiado_cpf.csv",
     nrows = 1e4,
@@ -27,6 +28,7 @@ filiados %>%
         here(path_out, "filiados_clean.csv.gz")
     )
 
+print("clean-up rais and write-out")
 path_rais_out <- here(path_out, sprintf("rais_clean_%s.csv.gz", year))
 
 walk2(
