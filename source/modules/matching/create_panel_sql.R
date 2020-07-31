@@ -10,23 +10,22 @@ pacman::p_load(
   magrittr
 )
 
-set.seed(1789)
 here <- here::here
-path <- '/home/brdata/RAIS'
-rais_sql <- here('data/output/rais.sqlite3')
+path_to_rais <- "/home/BRDATA/RAIS"
+rais_sql <- here("data/clean/rais_panel.sqlite3")
 
-source(here('scripts/funs.R'))
+source(here("source/utils/panel.R"))
 
 # data --------------------------------------------------------------------
 files <- list.files(
-  path = path,
-  pattern = 'RAIS200[3-9]|RAIS201[0-5]',
+  path_to_rais = path,
+  pattern = "RAIS200[3-9]|RAIS201[0-6]",
   full.names = T
 )
 
 cpi <- fread(
-    here("data/cpi.csv"),
-    colClasses = c('year' = 'numeric')
+    here("data/raw/cpi.csv"),
+    colClasses = c("year" = "numeric")
   )
 
 # data --------------------------------------------------------------------
@@ -41,8 +40,8 @@ con <- DBI::dbConnect(RSQLite::SQLite(), rais_sql)
 for(file in files){
   print_log(file)
   
-  year <- str_extract(file, '\\d{4}')
-  ref_date <- paste0(year, '-12-31')
+  year <- str_extract(file, "\\d{4}")
+  ref_date <- paste0(year, "-12-31")
   
   cpi_year <- cpi %>% 
     filter(year == !!year) %>% 
@@ -80,7 +79,7 @@ for(file in files){
   dbWriteTable(
     value = rais,
     conn = con,
-    name = 'rais',
+    name = "rais",
     row.names = F,
     append = T
   )
@@ -90,51 +89,3 @@ for(file in files){
   
   write_log(file)
 }
-
-# audits
-load(
-  here('data/audits.RData')
-)
-
-audits %<>%
-  rename(
-    cod_ibge_6 = idMun
-  )
-
-dbWriteTable(
-  con,
-  'audits',
-  audits,
-  row.names = F
-)
-
-# extract high bureaucrats ------------------------------------------------
-con <- DBI::dbConnect(
-  RSQLite::SQLite(),
-  here('data', 'rais.sqlite3')
-)
-
-rais_bureau <- rais %>% 
-  filter(
-    nat_jur == 1031 & occupation == 1
-  ) %>% 
-  filter(
-    sql('id_employee IS NOT NULL')
-  ) %>% 
-  transmute(
-    id_employee,
-    idMun,
-    year,
-    action = case_when(
-      fired == 1 ~ 1,
-      departure == 1 ~ 2,
-      T ~ 0
-    )
-  ) %>% 
-  collect()
-
-rais_bureau %>% 
-  data.table::fwrite(
-    here('data/output/rais_bureau.csv.gz'),
-    compress = 'gzip'
-  )

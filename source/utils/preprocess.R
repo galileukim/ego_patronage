@@ -1,3 +1,14 @@
+extract_unique_records <- function(data){
+    data_unique <- data %>%
+        distinct(
+            id_employee,
+            name
+        ) %>%
+        create_split_name()
+    
+    return(data_unique)
+}
+
 clean_filiados <- function(data) {
     clean_data <- data %>%
         select(
