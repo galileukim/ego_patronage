@@ -1,4 +1,4 @@
-extract_unique_records <- function(data){
+extract_unique_records <- function(data, ...){
     data_unique <- data %>%
         distinct(
             id_employee,
@@ -9,17 +9,17 @@ extract_unique_records <- function(data){
     return(data_unique)
 }
 
-clean_filiados <- function(data) {
+clean_filiados <- function(data, ...) {
     clean_data <- data %>%
         select(
             cod_ibge_6,
-            elec_title,
-            cpf = cpf_candidate,
+            electoral_title,
             name = member_name,
             party,
             date_start,
             date_end,
-            date_cancel
+            date_cancel,
+            ...
         ) %>%
         mutate_all(
             as.character
@@ -109,4 +109,26 @@ read_rais <- function(year, sample_size = Inf, path_to_rais = "/home/BRDATA/RAIS
     )
 
     return(rais)
+}
+
+arrange_by_name <- function(data, var, kmer = 3){
+    ordered_data <- data %>%
+        mutate(
+            ordering = str_sub({{var}}, 1, kmer)
+        ) %>%
+        arrange(
+            ordering
+        ) %>%
+        select(-ordering)
+
+    return(ordered_data)
+}
+
+clean_names <- function(data, var){
+    clean_data <- data %>%
+        mutate(
+            {{var}} := str_replace_all({{var}}, "[^[:alpha:] ]", "")
+        )
+
+    return(clean_data)
 }
