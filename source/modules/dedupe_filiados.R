@@ -31,7 +31,7 @@ filiados <- filiados %>%
 
 filiados_deduped <- filiados %>%
     distinct(
-        elec_title,
+        electoral_title,
         name
     ) %>% 
     clean_names(name) %>%
