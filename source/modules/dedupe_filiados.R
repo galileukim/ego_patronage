@@ -4,7 +4,7 @@ library(tidyverse)
 library(here)
 
 debug <- FALSE
-sample_size <- if_else(isTRUE(debug), 1e4, Inf)
+sample_size <- if_else(isTRUE(debug), 1e3, Inf)
 
 source(
     here("source/utils/preprocess.R")
@@ -18,10 +18,14 @@ filiados <- fread(
 
 # ---------------------------------------------------------------------------- #
 print("deduplicate filiados data")
-# distribution of duplicated entrlsies
+# distribution of duplicated entries
 # year tendencies
 filiados <- filiados %>%
-    clean_filiados()
+    unique(
+        by = c("member_name", "electoral_title", "party")
+    ) %>%
+    clean_filiados() %>%
+    clean_names(name)
 
 # note: there are defective year entries < 0.5%
 filiados <- filiados %>%
@@ -29,17 +33,11 @@ filiados <- filiados %>%
        between(year_start, 1950, 2019)
    )
 
-filiados_deduped <- filiados %>%
-    distinct(
-        electoral_title,
-        name
-    ) %>% 
-    clean_names(name) %>%
-    arrange_by_name(name)
+filiados_ordered <- filiados[order(last_name)]
 
 # ---------------------------------------------------------------------------- #
 print("write-out file")
-filiados_deduped %>% 
+filiados_ordered %>% 
     fwrite(
         here("data/clean/filiados_deduped.csv.gz"),
         compress = "gzip"

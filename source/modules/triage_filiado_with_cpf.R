@@ -1,36 +1,35 @@
+print("set-up")
+debug <- FALSE
+sample_size <- ifelse(isTRUE(debug), 1e4, Inf)
+
 source(
     here::here("source/modules/setup_preprocess.R")
 )
 
-debug <- TRUE
-sample_size <- if_else(isTRUE(debug), 1e4, Inf)
-
-fread <- partial(
-    data.table::fread,
-    integer64 = "character",
-    nrows = sample_size
-    )
-
+print("read-in data")
 candidate <- fread(
     here("data/clean/candidate_deduped.csv.gz")
-)
+) %>%
+    select(-name)
 
 filiado <- fread(
     here("data/clean/filiados_deduped.csv.gz")
 )
 
+print("joining data files")
 filiado_with_cpf <- filiado %>%
     inner_join(
         candidate,
-        by = c("elec_title")
+        by = c("electoral_title")
     )
 
 filiado_without_cpf <- filiado %>%
     anti_join(
         candidate,
-        by = c("elec_title")
+        by = c("electoral_title")
     )
 
+print("write-out data")
 file_names <- sprintf(
     here("data/clean/%s.csv.gz"),
     c("filiado_with_cpf", "filiado_without_cpf")

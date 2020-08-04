@@ -54,6 +54,12 @@ clean_rais <- function(data) {
     return(clean_data)
 }
 
+dedupe_data <- function(data, vars) {
+    unique_data <- unique(data, by = vars)
+
+    return(unique_data)
+}
+
 create_split_name <- function(data) {
     data_with_split_names <- data %>%
         mutate(
@@ -127,7 +133,8 @@ arrange_by_name <- function(data, var, kmer = 3){
 clean_names <- function(data, var){
     clean_data <- data %>%
         mutate(
-            {{var}} := str_replace_all({{var}}, "[^[:alpha:] ]", "")
+            {{var}} := str_replace_all({{var}}, "[^[:alpha:] ]", "") %>%
+                iconv(to = "ASCII//TRANSLIT")
         )
 
     return(clean_data)
