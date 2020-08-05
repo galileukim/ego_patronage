@@ -1,58 +1,58 @@
-extract_unique_records <- function(data, ...){
+extract_unique_records <- function(data, ...) {
     data_unique <- data %>%
         distinct(
             id_employee,
             name
         ) %>%
         create_split_name()
-    
+
     return(data_unique)
 }
 
 clean_filiados <- function(data, ...) {
     clean_data <- data %>%
-        select(
+        transmute(
             cod_ibge_6,
             electoral_title,
-            name = member_name,
-            party,
-            date_start,
-            date_end,
-            date_cancel,
-            ...
+            name = clean_name(member_name)
+            # party,
+            # date_start,
+            # date_end,
+            # date_cancel,
+            # ...
         ) %>%
         mutate_all(
             as.character
-        ) %>%
-        create_split_name() %>%
-        extract_year_from_dates() %>%
-        mutate(
-            state = str_sub(cod_ibge_6, 1, 2)
         )
+    # create_split_name() %>%
+    # extract_year_from_dates() %>%
+    # mutate(
+    #     state = str_sub(cod_ibge_6, 1, 2)
+    # )
 
     return(clean_data)
 }
 
-clean_rais <- function(data) {
-    clean_data <- data %>%
-        select(
-            cod_ibge_6 = municipio,
-            year,
-            id_employee,
-            name = nome,
-            cpf
-        ) %>%
-        distinct() %>%
-        mutate_all(
-            as.character
-        ) %>%
-        create_split_name() %>%
-        mutate(
-            state = str_sub(cod_ibge_6, 1, 2)
-        )
+# clean_rais <- function(data) {
+#     clean_data <- data %>%
+#         select(
+#             cod_ibge_6 = municipio,
+#             year,
+#             id_employee,
+#             name = nome,
+#             cpf
+#         ) %>%
+#         distinct() %>%
+#         mutate_all(
+#             as.character
+#         ) %>%
+#         create_split_name() %>%
+#         mutate(
+#             state = str_sub(cod_ibge_6, 1, 2)
+#         )
 
-    return(clean_data)
-}
+#     return(clean_data)
+# }
 
 dedupe_data <- function(data, vars) {
     unique_data <- unique(data, by = vars)
@@ -60,12 +60,12 @@ dedupe_data <- function(data, vars) {
     return(unique_data)
 }
 
-create_split_name <- function(data) {
+create_split_name <- function(data, var = name) {
     data_with_split_names <- data %>%
         mutate(
-            name = str_to_lower(name),
+            {{ var }} := clean_name({{ var }}),
             split_names = str_match(
-                name, "(^[a-z]+)\\s([a-z\\.\\s]+)\\s([a-z]+$)"
+                {{ var }}, "(^[a-z]+)\\s([a-z\\.\\s]+)\\s([a-z]+$)"
             ),
             first_name = split_names[, 2],
             middle_name = split_names[, 3],
@@ -74,6 +74,14 @@ create_split_name <- function(data) {
         select(-split_names)
 
     return(data_with_split_names)
+}
+
+clean_name <- function(name) {
+    clean_name <- str_replace_all(name, "[^[:alpha:] ]", "") %>%
+        str_to_lower() %>%
+        iconv(to = "ASCII//TRANSLIT")
+
+    return(clean_name)
 }
 
 extract_year_from_dates <- function(data) {
@@ -117,10 +125,10 @@ read_rais <- function(year, sample_size = Inf, path_to_rais = "/home/BRDATA/RAIS
     return(rais)
 }
 
-arrange_by_name <- function(data, var, kmer = 3){
+arrange_by_name <- function(data, var, kmer = 3) {
     ordered_data <- data %>%
         mutate(
-            ordering = str_sub({{var}}, 1, kmer)
+            ordering = str_sub({{ var }}, 1, kmer)
         ) %>%
         arrange(
             ordering
@@ -130,12 +138,25 @@ arrange_by_name <- function(data, var, kmer = 3){
     return(ordered_data)
 }
 
-clean_names <- function(data, var){
-    clean_data <- data %>%
-        mutate(
-            {{var}} := str_replace_all({{var}}, "[^[:alpha:] ]", "") %>%
-                iconv(to = "ASCII//TRANSLIT")
-        )
+extract_7z_file <- function(path, year, dest_folder = tempdir()) {
+    # extracts files from id folder
+    # into a dest_folder, silently
+    id_file_path <- list.files(
+        here(id_path, year),
+        full.names = T
+    )
 
-    return(clean_data)
+    extraction_command <- sprintf("7za e -aoa -o%s %s", dest_folder, id_file_path)
+
+    walk(extraction_command, system)
+}
+
+extract_unique_id <- function(data, vars){
+    unique_data <- data %>%
+    select(
+        vars
+        ) %>%
+    unique(
+        by = vars
+    )
 }

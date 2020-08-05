@@ -13,7 +13,7 @@ candidate <- fread(
     select(-name)
 
 filiado <- fread(
-    here("data/clean/filiados_deduped.csv.gz")
+    here("data/clean/id/filiados_deduped.csv.gz")
 )
 
 print("joining data files")
@@ -31,7 +31,7 @@ filiado_without_cpf <- filiado %>%
 
 print("write-out data")
 file_names <- sprintf(
-    here("data/clean/%s.csv.gz"),
+    here("data/clean/id/%s.csv.gz"),
     c("filiado_with_cpf", "filiado_without_cpf")
 )
 

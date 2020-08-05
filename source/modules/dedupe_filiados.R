@@ -1,4 +1,11 @@
 # ---------------------------------------------------------------------------- #
+# do a trial run with n_row = 1e5
+# large enough that the run time tells you something meaningful
+# monitor memory usage
+# consider using a deterministic hash function (removing duplicates there)
+# hash package (in CRAN)
+# ignore new entries
+# by its numeral
 library(data.table)
 library(tidyverse)
 library(here)
@@ -24,21 +31,23 @@ filiados <- filiados %>%
     unique(
         by = c("member_name", "electoral_title", "party")
     ) %>%
-    clean_filiados() %>%
-    clean_names(name)
+    select(
+        electoral_title,
+        name = clean_name(member_name)
+    )
 
-# note: there are defective year entries < 0.5%
-filiados <- filiados %>%
-   filter(
-       between(year_start, 1950, 2019)
-   )
+# # note: there are defective year entries < 0.5%
+# filiados <- filiados %>%
+#    filter(
+#        between(year_start, 1950, 2019)
+#    )
 
 filiados_ordered <- filiados[order(last_name)]
 
 # ---------------------------------------------------------------------------- #
 print("write-out file")
-filiados_ordered %>% 
+filiados_ordered %>%
     fwrite(
-        here("data/clean/filiados_deduped.csv.gz"),
+        here("data/clean/id/filiados_deduped.csv.gz"),
         compress = "gzip"
     )

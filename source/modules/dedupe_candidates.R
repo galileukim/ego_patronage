@@ -21,10 +21,10 @@ candidate_deduped <- candidate %>%
     unique(
         by = c("elec_title", "cpf_candidate")
     ) %>%
-    select(
+    transmute(
         electoral_title = elec_title,
         cpf = cpf_candidate,
-        name = candidate_name
+        name = clean_name(candidate_name)
     )
 
 # ---------------------------------------------------------------------------- #
