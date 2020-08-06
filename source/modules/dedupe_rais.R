@@ -8,14 +8,13 @@
 # triage for the merge
 # kmer subset: 4 or 5 letters.
 # do it on last name only
-# make a more concrete finding
-# document those findings
 # output: deduplicated employee identifiers
 source(
     here::here("source/modules/setup_preprocess.R")
 )
 
 library(haven)
+library(hash)
 
 debug <- T
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
@@ -52,6 +51,12 @@ identifiers_deduped <- identifiers %>%
     transmute(
         cpf,
         name = clean_name(nome)
+    )
+
+# create unique keys by combining name and id_employee
+identifiers_deduped %>%
+    mutate(
+        key = map_chr(cpf, name)
     )
 
 if(year > 2003){
