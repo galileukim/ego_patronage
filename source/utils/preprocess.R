@@ -138,7 +138,34 @@ arrange_by_name <- function(data, var, kmer = 3) {
     return(ordered_data)
 }
 
-extract_7z_file <- function(path, year, dest_folder = tempdir()) {
+read_7z <- function(path, year, dest_folder = tempdir(), debug = F) {
+    sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
+
+    extract_7z_file(
+        path,
+        year,
+        debug = debug
+    )
+
+    id_file_path <- list.files(
+        tempdir(),
+        full.names = T
+    )
+
+    data <- map_dfr(
+        id_file_path,
+        read_dta,
+        n_max = sample_size
+    )
+
+    file.remove(
+        id_file_path
+    )
+
+    return(data)
+}
+
+extract_7z_file <- function(path, year, dest_folder = tempdir(), debug = F) {
     # extracts files from id folder
     # into a dest_folder, silently
     id_file_path <- list.files(
@@ -146,17 +173,28 @@ extract_7z_file <- function(path, year, dest_folder = tempdir()) {
         full.names = T
     )
 
+    if (isTRUE(debug)) {
+        id_file_path <- sample(id_file_path, 2)
+    }
+
     extraction_command <- sprintf("7za e -aoa -o%s %s", dest_folder, id_file_path)
 
     walk(extraction_command, system)
 }
 
-extract_unique_id <- function(data, vars){
+extract_unique_id <- function(data, vars) {
     unique_data <- data %>%
-    select(
-        vars
+        select(
+            all_of(vars)
         ) %>%
-    unique(
-        by = vars
-    )
+        unique(
+            by = vars
+        )
+}
+
+to_list <- function(df) {
+  lis <- list()
+  for (i in seq(nrow(df))) lis[[i]] <- as.list(df[i, ])
+  
+  return(lis)
 }
