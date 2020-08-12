@@ -17,71 +17,61 @@ library(haven)
 library(hash)
 library(digest)
 
-debug <- T
+debug <- TRUE
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
-vdigest <- Vectorize(digest::digest)
+# vdigest <- Vectorize(digest::digest)
 
 # ---------------------------------------------------------------------------- #
 id_path <- "data/raw/id"
-year <- 2003
+years <- 2003:2004
 
-rais_id <- read_7z(
-    id_path,
-    2003,
-    debug = T
-)
+rais_id_hash <- hash()
+for (i in seq_along(years)) {
+    t <- years[i]
 
-rais_id <- rais_id %>%
-    extract_unique_id(
-        c("cpf", "nome")
-    ) %>%
-    transmute(
-        cpf = str_pad(cpf, 11, "left", "0"),
-        name = clean_name(nome)
+    print("import 7z files")
+    rais_id < read_7z(
+        id_path, 
+        t, 
+        debug = FALSE
+    ) 
+    
+    rais_id <- rais_id %>%
+        extract_unique_id(
+            c("cpf", "nome")
+        ) %>%
+        transmute(
+            cpf = str_pad(cpf, 11, "left", "0"),
+            name = clean_name(nome)
+        )
+
+    # # create unique keys by combining name and id_employee
+    # rais_key <- rais_id %>%
+    #     mutate(
+    #         key = vdigest(paste(cpf, name), algo = "xxhash32")
+    #     ) %>%
+    #     select(key) %>%
+    #     pull()
+
+    # names(rais_key) <- NULL
+
+    print("extract id hash t0")
+    rais_id_hash <- hash(
+        keys = rais_id %>% pluck(t0, "cpf"),
+        values = rais_id %>% pluck(t0, "name")
     )
 
-# # create unique keys by combining name and id_employee
-# rais_key <- rais_id %>%
-#     mutate(
-#         key = vdigest(paste(cpf, name), algo = "xxhash32")
-#     ) %>%
-#     select(key) %>%
-#     pull()
-
-# names(rais_key) <- NULL
-
-rais_id_hash <- hash(
-    keys = rais_id[["cpf"]],
-    values = rais_id[["name"]]
-)
-
-rais_id_t1 <- read_7z(
-    id_path,
-    2004,
-    debug = T
-)
-
-rais_id_t1 <- rais_id_t1 %>%
-    extract_unique_id(
-        c("cpf", "nome")
-    ) %>%
-    transmute(
-        cpf = str_pad(cpf, 11, "left", "0"),
-        name = clean_name(nome)
+    print("extract id hash t1")
+    rais_id_new_hash <- extract_new_hash(
+        rais_id %>% pluck(t1),
+        rais_id_hash
     )
 
-rais_id_t1_keys <- rais_id_t1[["cpf"]]
-rais_id_t1_values <- rais_id_t1[["name"]]
+    print("update id hash t0")
+    rais_id_hash[rais_id_new_hash[["keys"]]] <- rais_id_new_hash[["values"]]
+}
 
-index <- !has.key(rais_id_t1_keys, rais_id_hash)
-names(index) <- NULL
-
-rais_id_t1_keys <- rais_id_t1_keys[index]
-rais_id_t1_values <- rais_id_t1_values[index]
-
-rais_id_hash[rais_id_t1_keys] <- rais_id_t1_values
-# probably has to loop? wtf is going on
-
+rais_id_hash
 # ---------------------------------------------------------------------------- #
 
 # if(year > 2003){

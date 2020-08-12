@@ -165,7 +165,7 @@ read_7z <- function(path, year, dest_folder = tempdir(), debug = F) {
     return(data)
 }
 
-extract_7z_file <- function(path, year, dest_folder = tempdir(), debug = F) {
+extract_7z_file <- function(path, year, dest_folder = tempdir(), debug) {
     # extracts files from id folder
     # into a dest_folder, silently
     id_file_path <- list.files(
@@ -177,7 +177,9 @@ extract_7z_file <- function(path, year, dest_folder = tempdir(), debug = F) {
         id_file_path <- sample(id_file_path, 2)
     }
 
-    extraction_command <- sprintf("7za e -aoa -o%s %s", dest_folder, id_file_path)
+    extraction_command <- sprintf(
+        "7za e -aoa -o%s %s", dest_folder, id_file_path
+    )
 
     walk(extraction_command, system)
 }
@@ -192,9 +194,18 @@ extract_unique_id <- function(data, vars) {
         )
 }
 
-to_list <- function(df) {
-  lis <- list()
-  for (i in seq(nrow(df))) lis[[i]] <- as.list(df[i, ])
-  
-  return(lis)
+extract_new_hash <- function(data, hash) {
+    # extracts new hash keys in a list
+    new_hash <- list()
+
+    keys <- data[["cpf"]]
+    values <- data[["name"]]
+
+    index <- !has.key(keys, hash)
+    names(index) <- NULL
+
+    new_hash[["keys"]] <- keys[index]
+    new_hash[["values"]] <- values[index]
+
+    return(new_hash)
 }
