@@ -17,7 +17,7 @@ library(haven)
 library(hash)
 library(digest)
 
-debug <- TRUE
+debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
 # vdigest <- Vectorize(digest::digest)
 
@@ -26,17 +26,20 @@ id_path <- "data/raw/id"
 years <- 2003:2004
 
 rais_id_hash <- hash()
+n_unique_ids <- rep(NA, length(years))
+
 for (i in seq_along(years)) {
     t <- years[i]
 
     print("import 7z files")
-    rais_id < read_7z(
+    rais_id <- read_7z(
         id_path, 
         t, 
-        debug = FALSE
-    ) 
-    
-    rais_id <- rais_id %>%
+        debug = debug
+    )
+
+    print("deduplicate names")
+    rais_id_unique <- rais_id %>%
         extract_unique_id(
             c("cpf", "nome")
         ) %>%
@@ -45,58 +48,47 @@ for (i in seq_along(years)) {
             name = clean_name(nome)
         )
 
-    # # create unique keys by combining name and id_employee
-    # rais_key <- rais_id %>%
-    #     mutate(
-    #         key = vdigest(paste(cpf, name), algo = "xxhash32")
-    #     ) %>%
-    #     select(key) %>%
-    #     pull()
+    n_unique_ids[i] <- nrow(rais_id_unique)
 
-    # names(rais_key) <- NULL
+    print("check if there are multiple names per cpf...")
+    n_names_per_cpf <- rais_id_unique %>%
+        group_by(cpf) %>%
+        mutate(
+            n = n_distinct(name)
+        ) %>%
+        pull(n)
+    
+    multiple_names_per_cpf <- any(n_names_per_cpf > 1)
 
-    print("extract id hash t0")
-    rais_id_hash <- hash(
-        keys = rais_id %>% pluck(t0, "cpf"),
-        values = rais_id %>% pluck(t0, "name")
-    )
+    if(isTRUE(multiple_names_per_cpf)){
+        print(
+            sprintf("there are multiple name entries per cpf for year %s,", years[i])
+        )
+    }else{
+        print(
+            sprintf("all name entries per cpf for year %s are unique!", years[i])
+        )
+    }
 
-    print("extract id hash t1")
+    print("extract id hash")
     rais_id_new_hash <- extract_new_hash(
-        rais_id %>% pluck(t1),
+        rais_id_unique,
         rais_id_hash
     )
 
     print("update id hash t0")
     rais_id_hash[rais_id_new_hash[["keys"]]] <- rais_id_new_hash[["values"]]
+
+    gc()
 }
 
-rais_id_hash
-# ---------------------------------------------------------------------------- #
+length(rais_id_hash)
+print(n_unique_ids)
 
-# if(year > 2003){
-#     identifiers_previous_year <- fread(
-#         sprintf(here("data/clean/id/rais_id_deduped_%s.csv"), year - 1)
-#     )
-
-#     identifiers_new <- identifiers_deduped %>%
-#         anti_join(
-#             identifiers_previous_year,
-#             by = c("cpf")
-#         )
-
-#     identifiers_deduped <- bind_rows(
-#         identifiers_previous_year,
-#         identifiers_new
-#     )
-
-#     identifiers_deduped <- identifiers[order(name)]
-# }
-
-identifiers_deduped %>%
+rais_id_hash %>%
+    as.list() %>%
+    as.data.frame() %>%
     fwrite(
-        sprintf(here("data/clean/rais_id_deduped_%s.csv"), year)
+        sprintf(here("data/clean/rais_id_hash.csv"), year),
+        compress = "gzip"
     )
-
-# create anti-join and find new entries
-# dedupe and append these

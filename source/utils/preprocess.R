@@ -174,7 +174,7 @@ extract_7z_file <- function(path, year, dest_folder = tempdir(), debug) {
     )
 
     if (isTRUE(debug)) {
-        id_file_path <- sample(id_file_path, 2)
+        id_file_path <- id_file_path[1]
     }
 
     extraction_command <- sprintf(
