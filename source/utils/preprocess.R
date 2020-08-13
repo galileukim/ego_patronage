@@ -1,5 +1,3 @@
-rm_tempdir <- function() file.remove(list.files(tempdir(), full.names = T))
-
 extract_unique_records <- function(data, ...) {
     data_unique <- data %>%
         distinct(
@@ -119,22 +117,29 @@ arrange_by_name <- function(data, var, kmer = 3) {
     return(ordered_data)
 }
 
-read_7z <- function(file_path, year, select, dest_folder = tempdir()) {
+rm_dir_files <- function(dir){
+    files <- list.files(dir, full.names = T)
+
+    file.remove(files)
+}
+
+read_7z <- function(file_path, year, select, dest_dir = tempdir()) {
     # extracts file from id folder
     # into a dest_folder, silently
     # returns data, cleans up the temp file
-    rm_tempdir()
-
     sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
+    dest_dir_temp <- sprintf(
+        "%s/%s", dest_dir, "temp"
+    )
 
     extraction_command <- sprintf(
-        "7za e -aoa -o%s %s", dest_folder, file_path
+        "7za e -aoa -o%s %s", dest_dir_temp, file_path
     )
 
     system(extraction_command)
 
     extracted_file_path <- list.files(
-        dest_folder,
+        dest_dir_temp,
         full.names = T
     )
 
@@ -143,7 +148,7 @@ read_7z <- function(file_path, year, select, dest_folder = tempdir()) {
         select = select
     )
 
-    file.remove(extracted_file_path)
+    unlink(dest_dir_temp, recursive = T)
 
     return(data)
 }
@@ -155,7 +160,19 @@ extract_unique_id <- function(data, vars) {
         ) %>%
         unique(
             by = vars
+        ) %>%
+        filter(
+            !(cpf %in% c("00000000000", "00000000099"))
         )
+
+    # remove if there are multiple entries per cpf (< 0.1 percent)
+    unique_data <- unique_data %>%
+        group_by(cpf) %>%
+        mutate(n = n()) %>%
+        ungroup() %>%
+        filter(n == 1)
+
+    return(unique_data)
 }
 
 extract_new_hash <- function(data, hash) {
