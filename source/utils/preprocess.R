@@ -145,6 +145,7 @@ read_7z <- function(file_path, year, select, dest_dir = tempdir()) {
 
     data <- fread(
         extracted_file_path,
+        colClasses = "character",
         select = select
     )
 
@@ -162,7 +163,7 @@ extract_unique_id <- function(data, vars) {
             by = vars
         ) %>%
         filter(
-            !(cpf %in% c("00000000000", "00000000099"))
+            !(cpf %in% c("0", "99"))
         )
 
     # remove if there are multiple entries per cpf (< 0.1 percent)

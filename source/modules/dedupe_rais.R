@@ -17,12 +17,12 @@ library(haven)
 library(hash)
 library(digest)
 
-debug <- TRUE
+debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
 
 # ---------------------------------------------------------------------------- #
 id_path <- "/home/BRDATA/RAIS/rawtxt"
-years <- 2003
+years <- 2003:2016
 
 for (i in seq_along(years)) {
     rais_id_hash <- hash()
@@ -61,12 +61,12 @@ for (i in seq_along(years)) {
         rename_with( # note that cpf comes first: check select_cols
             ~ c("cpf", "name")
         ) %>%
-        transmute(
-            cpf = str_pad(cpf, 11, "left", "0"),
-            name = clean_name(name)
-        ) %>%
         extract_unique_id(
             c("cpf", "name")
+        ) %>%
+        transmute(
+            cpf,
+            name = clean_name(name)
         )
 
     n_unique_ids[i] <- nrow(rais_id_unique)
