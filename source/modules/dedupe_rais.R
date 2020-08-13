@@ -17,13 +17,13 @@ library(haven)
 library(hash)
 library(digest)
 
-debug <- FALSE
+debug <- T
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
 # vdigest <- Vectorize(digest::digest)
 
 # ---------------------------------------------------------------------------- #
-id_path <- "data/raw/id"
-years <- 2003:2004
+id_path <- "/home/BRDATA/RAIS/rawtxt"
+years <- 2003:2016
 
 rais_id_hash <- hash()
 n_unique_ids <- rep(NA, length(years))
@@ -31,15 +31,22 @@ n_unique_ids <- rep(NA, length(years))
 for (i in seq_along(years)) {
     t <- years[i]
 
+    select_cols <- c(
+        "CPF",
+        ifelse(t <= 2010, "NOME", "Nome Trabalhador")
+    )
+
     print("import 7z files")
     rais_id <- read_7z(
         id_path, 
-        t, 
+        t,
+        select = select_cols,
         debug = debug
     )
 
     print("deduplicate names")
     rais_id_unique <- rais_id %>%
+        rename_with(str_to_lower) %>%
         extract_unique_id(
             c("cpf", "nome")
         ) %>%
@@ -62,11 +69,11 @@ for (i in seq_along(years)) {
 
     if(isTRUE(multiple_names_per_cpf)){
         print(
-            sprintf("there are multiple name entries per cpf for year %s,", years[i])
+            sprintf("multiple name entries per cpf for year %s,", years[i])
         )
     }else{
         print(
-            sprintf("all name entries per cpf for year %s are unique!", years[i])
+            sprintf("all names per cpf for year %s are unique!", years[i])
         )
     }
 

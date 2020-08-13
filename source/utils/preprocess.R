@@ -138,7 +138,7 @@ arrange_by_name <- function(data, var, kmer = 3) {
     return(ordered_data)
 }
 
-read_7z <- function(path, year, dest_folder = tempdir(), debug = F) {
+read_7z <- function(path, year, dest_folder = tempdir(), select, debug = F) {
     sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
 
     extract_7z_file(
@@ -154,8 +154,8 @@ read_7z <- function(path, year, dest_folder = tempdir(), debug = F) {
 
     data <- map_dfr(
         id_file_path,
-        read_dta,
-        n_max = sample_size
+        ~ fread(., select = select)
+        # select = c("CPF", "NOME")
     )
 
     file.remove(
@@ -169,7 +169,7 @@ extract_7z_file <- function(path, year, dest_folder = tempdir(), debug) {
     # extracts files from id folder
     # into a dest_folder, silently
     id_file_path <- list.files(
-        here(id_path, year),
+        sprintf("%s/%s", id_path, year),
         full.names = T
     )
 
