@@ -22,7 +22,7 @@ sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
 
 # ---------------------------------------------------------------------------- #
 id_path <- "/home/BRDATA/RAIS/rawtxt"
-years <- 2003:2016
+years <- 2003
 
 for (i in seq_along(years)) {
     rais_id_hash <- hash()
@@ -86,7 +86,6 @@ for (i in seq_along(years)) {
 
     length(rais_id_hash)
     print(n_unique_ids)
-    print(n_duplicated_ids)
     
     tibble(
         cpf = keys(rais_id_hash),
