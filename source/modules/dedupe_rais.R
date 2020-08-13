@@ -17,9 +17,8 @@ library(haven)
 library(hash)
 library(digest)
 
-debug <- T
+debug <- TRUE
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
-# vdigest <- Vectorize(digest::digest)
 
 # ---------------------------------------------------------------------------- #
 id_path <- "/home/BRDATA/RAIS/rawtxt"
@@ -31,28 +30,39 @@ n_unique_ids <- rep(NA, length(years))
 for (i in seq_along(years)) {
     t <- years[i]
 
+    print(
+        sprintf("start producing hash for year %s", t)
+    )
+
+    id_file_path <- list.files(
+        sprintf("%s/%s/", id_path, t), 
+        full.names = T
+    )
+
     select_cols <- c(
         "CPF",
         ifelse(t <= 2010, "NOME", "Nome Trabalhador")
     )
 
+    select_cols_lower <- str_to_lower(select_cols)
+
     print("import 7z files")
-    rais_id <- read_7z(
-        id_path, 
-        t,
-        select = select_cols,
-        debug = debug
+    rais_id <- map_dfr(
+        id_file_path,
+        ~ read_7z(., t, select = select_cols)
     )
 
     print("deduplicate names")
     rais_id_unique <- rais_id %>%
-        rename_with(str_to_lower) %>%
+        rename_with( # note that cpf comes first: check select_cols
+            ~ c("cpf", "name")
+        ) %>%
         extract_unique_id(
-            c("cpf", "nome")
+            c("cpf", "name")
         ) %>%
         transmute(
             cpf = str_pad(cpf, 11, "left", "0"),
-            name = clean_name(nome)
+            name = clean_name(name)
         )
 
     n_unique_ids[i] <- nrow(rais_id_unique)
@@ -64,14 +74,14 @@ for (i in seq_along(years)) {
             n = n_distinct(name)
         ) %>%
         pull(n)
-    
+
     multiple_names_per_cpf <- any(n_names_per_cpf > 1)
 
-    if(isTRUE(multiple_names_per_cpf)){
+    if (isTRUE(multiple_names_per_cpf)) {
         print(
             sprintf("multiple name entries per cpf for year %s,", years[i])
         )
-    }else{
+    } else {
         print(
             sprintf("all names per cpf for year %s are unique!", years[i])
         )
@@ -86,16 +96,25 @@ for (i in seq_along(years)) {
     print("update id hash t0")
     rais_id_hash[rais_id_new_hash[["keys"]]] <- rais_id_new_hash[["values"]]
 
+    rais_id_hash %>%
+        as.list() %>%
+        as.data.frame() %>%
+        fwrite(
+            sprintf(here("data/clean/id/rais_id_hash%s.csv"), t),
+            compress = "gzip"
+        )
+
     gc()
 }
 
 length(rais_id_hash)
 print(n_unique_ids)
 
+print("write out rais id hash")
 rais_id_hash %>%
     as.list() %>%
     as.data.frame() %>%
     fwrite(
-        sprintf(here("data/clean/rais_id_hash.csv"), year),
+        here("data/clean/rais_id_hash.csv"),
         compress = "gzip"
     )
