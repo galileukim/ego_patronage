@@ -39,7 +39,10 @@ for (i in seq_along(years)) {
         full.names = T
     )
 
-    id_file_path <- ifelse(isTRUE(debug), id_file_path[1], id_file_path)
+    if (isTRUE(debug))
+        id_file_path <- sample(id_file_path, 1) 
+    else 
+        id_file_path <- id_file_path
 
     select_cols <- c(
         "CPF",
