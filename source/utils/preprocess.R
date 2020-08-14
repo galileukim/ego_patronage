@@ -146,8 +146,7 @@ read_7z <- function(file_path, year, select, dest_dir = tempdir()) {
     data <- fread(
         extracted_file_path,
         colClasses = "character",
-        select = select,
-        encoding = "Latin-1"
+        select = select
     )
 
     unlink(dest_dir_temp, recursive = T)
@@ -179,21 +178,16 @@ extract_unique_id <- function(data, vars) {
 
 extract_new_hash <- function(data, hash) {
     # extracts new hash keys in a list
+    new_hash <- list()
+
     keys <- data[["cpf"]]
-    values <- data[c("name", "year", "cod_ibge_6")]
+    values <- data[["name"]]
 
-    index <- !(keys %in% names(hash))
+    index <- !has.key(keys, hash)
+    names(index) <- NULL
 
-    keys_new <- keys[index]
-    values_new <- values[index, ]
+    new_hash[["keys"]] <- keys[index]
+    new_hash[["values"]] <- values[index]
 
-     # create rowwise list
-    new_hash_list <- split(
-        values_new,
-        seq(nrow(values_new))
-    )
-
-    names(new_hash_list) <- keys_new
-
-    return(new_hash_list)
+    return(new_hash)
 }
