@@ -17,7 +17,7 @@ library(haven)
 library(hash)
 library(digest)
 
-debug <- FALSE
+debug <- F
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
 
 # ---------------------------------------------------------------------------- #
@@ -82,19 +82,23 @@ for (i in seq_along(years)) {
     rais_id_hash[rais_id_new_hash[["keys"]]] <- rais_id_new_hash[["values"]]
 
 # ---------------------------------------------------------------------------- #
-    print("write out hash table")
+    print("print out key metrics")
 
     length(rais_id_hash)
     print(n_unique_ids)
-    
-    tibble(
+
+    rm(rais_id, rais_id_unique, rais_id_new_hash)
+    gc()
+}
+
+print("write out hash table")
+ tibble(
         cpf = keys(rais_id_hash),
         name = values(rais_id_hash, USE.NAMES = F)
     ) %>%
         as.data.table() %>%
         fwrite(
-            sprintf(here("data/clean/id/rais_id_hash_%s.csv"), t)
+            here("data/clean/id/rais_id_hash.csv")
         )
 
-    gc()
-}
+print("create rais hash table: complete!")
