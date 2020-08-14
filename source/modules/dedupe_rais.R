@@ -17,15 +17,15 @@ library(haven)
 library(hash)
 library(digest)
 
-debug <- F
+debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
 
 # ---------------------------------------------------------------------------- #
 id_path <- "/home/BRDATA/RAIS/rawtxt"
 years <- 2003:2016
 
+rais_id_hash <- hash()
 for (i in seq_along(years)) {
-    rais_id_hash <- hash()
     n_unique_ids <- rep(NA, length(years))
     t <- years[i]
 
