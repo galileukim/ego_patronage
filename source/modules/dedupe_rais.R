@@ -90,9 +90,9 @@ for (i in seq_along(years)) {
     length(rais_id_hash)
     print(n_unique_ids)
 
-    write_out_hash(
-        rais_id_new_hash,
-        "rais_id_hash_new.csv"
+    fwrite(
+        rais_id_unique,
+        sprintf("rais_id_hash_%s.csv", t)
     )
 
     rm(rais_id, rais_id_unique, rais_id_new_hash)
