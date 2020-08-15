@@ -191,3 +191,14 @@ extract_new_hash <- function(data, hash) {
 
     return(new_hash)
 }
+
+write_out_hash <- function(hash, filename){
+     tibble(
+        cpf = keys(hash),
+        name = values(hash, USE.NAMES = F)
+    ) %>%
+        as.data.table() %>%
+        fwrite(
+            sprintf(here("data/clean/id/%s"), filename)
+        )
+}

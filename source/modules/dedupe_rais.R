@@ -90,18 +90,19 @@ for (i in seq_along(years)) {
     length(rais_id_hash)
     print(n_unique_ids)
 
+    write_out_hash(
+        rais_id_new_hash,
+        "rais_id_hash_new.csv"
+    )
+
     rm(rais_id, rais_id_unique, rais_id_new_hash)
     gc()
 }
 
 print("write out hash table")
- tibble(
-        cpf = keys(rais_id_hash),
-        name = values(rais_id_hash, USE.NAMES = F)
-    ) %>%
-        as.data.table() %>%
-        fwrite(
-            here("data/clean/id/rais_id_hash.csv")
-        )
+write_out_hash(
+    rais_id_hash,
+    "rais_id_hash.csv"
+)
 
 print("create rais hash table: complete!")
