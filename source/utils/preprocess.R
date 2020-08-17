@@ -123,11 +123,13 @@ rm_dir_files <- function(dir){
     file.remove(files)
 }
 
-read_7z <- function(file_path, year, select, dest_dir = tempdir()) {
+read_7z <- function(file_path, year, dest_dir = tempdir()) {
     # extracts file from id folder
     # into a dest_folder, silently
     # returns data, cleans up the temp file
     sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
+    select_cols <- c("CPF", ifelse(t <= 2010, "NOME", "Nome Trabalhador"))
+
     dest_dir_temp <- sprintf(
         "%s/%s", dest_dir, "temp"
     )
@@ -146,7 +148,7 @@ read_7z <- function(file_path, year, select, dest_dir = tempdir()) {
     data <- fread(
         extracted_file_path,
         colClasses = "character",
-        select = select
+        select = select_cols
     )
 
     unlink(dest_dir_temp, recursive = T)
@@ -176,20 +178,54 @@ extract_unique_id <- function(data, vars) {
     return(unique_data)
 }
 
-extract_new_hash <- function(data, hash) {
-    # extracts new hash keys in a list
-    new_hash <- list()
-
+update_hash <- function(hash, data) {
     keys <- data[["cpf"]]
     values <- data[["name"]]
 
     index <- !has.key(keys, hash)
     names(index) <- NULL
 
-    new_hash[["keys"]] <- keys[index]
-    new_hash[["values"]] <- values[index]
+    new_keys <- keys[index]
+    new_values <- values[index]
 
-    return(new_hash)
+    hash[new_keys] <- new_values
+
+    return(hash)
+}
+
+extract_id_file_names <- function(year){
+    print(
+        sprintf("start producing hash for year %s", year)
+    )
+
+    id_file_path <- list.files(
+        sprintf("%s/%s/", id_path, year),
+        full.names = T
+    )
+
+    if (isTRUE(debug))
+        id_file_path <- sample(id_file_path, 1) 
+    else 
+        id_file_path <- id_file_path
+
+    return(id_file_path)
+}
+
+deduplicate_names <- function(data, cols = c("cpf", "name")){
+    print("deduplicate names")
+    data_unique <- data %>%
+        rename_with( # note that cpf comes first: check select_cols
+            ~ cols
+        ) %>%
+        extract_unique_id(
+            cols
+        ) %>%
+        transmute(
+            cpf,
+            name = clean_name(name)
+        )
+
+    return(data_unique)
 }
 
 write_out_hash <- function(hash, filename){
@@ -199,6 +235,6 @@ write_out_hash <- function(hash, filename){
     ) %>%
         as.data.table() %>%
         fwrite(
-            sprintf(here("data/clean/id/%s"), filename)
+            sprintf(here("data/clean/id/rais_hash/%s"), filename)
         )
 }
