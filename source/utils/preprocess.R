@@ -55,14 +55,6 @@ create_split_name <- function(data, var = name) {
     return(data_with_split_names)
 }
 
-clean_name <- function(name) {
-    clean_name <- str_replace_all(name, "[^[:alpha:] ]", "") %>%
-        str_to_lower() %>%
-        iconv(to = "ASCII//TRANSLIT")
-
-    return(clean_name)
-}
-
 extract_year_from_dates <- function(data) {
     data_with_years <- data %>%
         mutate(
@@ -123,13 +115,10 @@ rm_dir_files <- function(dir){
     file.remove(files)
 }
 
-read_7z <- function(file_path, year, dest_dir = tempdir()) {
+read_7z <- function(file_path, year, select = NULL, dest_dir = tempdir()) {
     # extracts file from id folder
     # into a dest_folder, silently
     # returns data, cleans up the temp file
-    sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
-    select_cols <- c("CPF", ifelse(t <= 2010, "NOME", "Nome Trabalhador"))
-
     dest_dir_temp <- sprintf(
         "%s/%s", dest_dir, "temp"
     )
@@ -148,7 +137,8 @@ read_7z <- function(file_path, year, dest_dir = tempdir()) {
     data <- fread(
         extracted_file_path,
         colClasses = "character",
-        select = select_cols
+        select = select,
+        encoding = "Latin-1"
     )
 
     unlink(dest_dir_temp, recursive = T)
@@ -156,43 +146,29 @@ read_7z <- function(file_path, year, dest_dir = tempdir()) {
     return(data)
 }
 
-extract_unique_id <- function(data, vars) {
-    unique_data <- data %>%
-        select(
-            all_of(vars)
-        ) %>%
-        unique(
-            by = vars
-        ) %>%
-        filter(
-            !(cpf %in% c("0", "99"))
-        )
+# update_hash <- function(hash, data) {
+#     keys <- data[["cpf"]]
+#     values <- data[["name"]]
 
-    return(unique_data)
-}
+#     index <- !has.key(keys, hash)
+#     names(index) <- NULL
 
-update_hash <- function(hash, data) {
-    keys <- data[["cpf"]]
-    values <- data[["name"]]
+#     new_keys <- keys[index]
+#     new_values <- values[index]
 
-    index <- !has.key(keys, hash)
-    names(index) <- NULL
+#     hash[new_keys] <- new_values
 
-    new_keys <- keys[index]
-    new_values <- values[index]
+#     return(hash)
+# }
 
-    hash[new_keys] <- new_values
-
-    return(hash)
-}
-
-extract_id_file_names <- function(year){
+extract_id_file_names <- function(year, debug){
     print(
         sprintf("start producing hash for year %s", year)
     )
 
     id_file_path <- list.files(
         sprintf("%s/%s/", id_path, year),
+        pattern = "7z$",
         full.names = T
     )
 
@@ -204,21 +180,21 @@ extract_id_file_names <- function(year){
     return(id_file_path)
 }
 
-deduplicate_names <- function(data, cols = c("cpf", "name")){
-    print("deduplicate names")
-    data_unique <- data %>%
-        rename_with( # note that cpf comes first: check select_cols
-            ~ cols
-        ) %>%
-        extract_unique_id(
-            cols
-        ) %>%
-        transmute(
-            cpf,
-            name = clean_name(name)
+clean_name <- function(name) {
+    clean_name <- str_replace_all(name, "[^[:alpha:] ]", "") %>%
+        str_to_lower() %>%
+        iconv(to = "ASCII//TRANSLIT")
+
+    return(clean_name)
+}
+
+extract_unique_cpf <- function(data, key = "cpf") {
+    unique_data <- data[!c("0", "99")] %>%
+        unique(
+            by = key
         )
 
-    return(data_unique)
+    return(unique_data)
 }
 
 write_out_hash <- function(hash, filename){
