@@ -17,12 +17,12 @@ library(haven)
 library(hash)
 library(digest)
 
-debug <- FALSE
-sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
+debug <- TRUE
+sample_size <- ifelse(isTRUE(debug), 1e6, Inf)
 
 # ---------------------------------------------------------------------------- #
 id_path <- "/home/BRDATA/RAIS/rawtxt"
-years <- 2003:2004
+years <- 2003
 n_unique_ids <- rep(NA, length(years))
 
 rais_id_hash <- hash()
@@ -48,9 +48,13 @@ for (i in seq_along(years)) {
         rais_id
     )
 
-    write_out_hash(
+    print("write out file")
+    write_rds(
         rais_id_hash,
-        sprintf("rais_id_hash_%s.csv", t)
+        sprintf(
+            here("data/clean/id/rais_hash/rais_id_hash_%s.csv", t)
+        ),
+        compress = "gz"
     )
 
     rm(rais_id)

@@ -168,13 +168,6 @@ extract_unique_id <- function(data, vars) {
             !(cpf %in% c("0", "99"))
         )
 
-    # remove if there are multiple entries per cpf (< 0.1 percent)
-    unique_data <- unique_data %>%
-        group_by(cpf) %>%
-        mutate(n = n()) %>%
-        ungroup() %>%
-        filter(n == 1)
-
     return(unique_data)
 }
 
