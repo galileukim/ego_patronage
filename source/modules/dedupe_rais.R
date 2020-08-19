@@ -37,7 +37,7 @@ for (i in seq_along(years)) {
     select_cols <- c(mun_col, "CPF", name_col)
 
     print("initiate extraction for year t")
-    id_file_path <- extract_id_file_names(t, debug = FALSE)
+    id_file_path <- extract_id_file_names(t, debug)
     
     print("import 7z files")
     rais_id_t <- map_dfr(
