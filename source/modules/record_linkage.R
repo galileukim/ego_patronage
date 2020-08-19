@@ -24,17 +24,26 @@ rais_id_files <- list.files(
 
 # ---------------------------------------------------------------------------- #
 # repeat procedure for each year
-rais <- fread(
+filiados <- fread(
+    here("data/clean/id/filiado_id_without_cpf.csv.gz"),
+    select = c(
+        "state", "name", "electoral_title", "year_start", "year_termination"
+    )
+)
+
+filiados <- filiados %>%
+    set_key(
+        year_start, year_termination
+    )
+
+rais_t <- fread(
     rais_id_files[1]
 )
 
-filiados <- fread(
-    here("data/clean/id/filiado_id_without_cpf.csv.gz"),
-    select = c("state", "name", "year_start", "year_termination")
-)
+filiados_t <- filiados[year_start <= t & year_termination >= t]
 
 # ---------------------------------------------------------------------------- #
-rais <- rais %>%
+rais_t <- rais_t %>%
     mutate(
         state = str_sub(cod_ibge_6, 1, 2),
         kmer = substr(name, 1, 3)
@@ -48,16 +57,16 @@ filiados <- filiados %>%
 
 # ---------------------------------------------------------------------------- #
 # create blocks
-rais_grouped <- rais %>%
+rais_grouped <- rais_t %>%
     group_nest_dt(year, state, kmer, .key = "rais_data") %>%
     mutate(
-        rais_data_key = map(rais_data, ~setkey(., name))
+        rais_data = map(rais_data, ~setkey(., name))
     )
 
 filiados_grouped <- filiados %>%
     group_nest_dt(state, kmer, .key = "filiados_data") %>%
     mutate(
-        rais_data_key = map(rais_data, ~setkey(., name))
+        filiados_data = map(filiados_data, ~setkey(., name))
     )
 
 record_linkage_data <- rais_grouped %>%
@@ -67,13 +76,25 @@ record_linkage_data <- rais_grouped %>%
     )
 
 # exact matching
-record_linkage_data %>%
+record_linkage_data <- record_linkage_data %>%
     mutate(
-        joint_records = map2(list(rais_data, filiados_data),~ .x[.y])
+        joint_records = map2(
+            rais_data,
+            filiados_data, 
+            ~ merge(.x, .y, all = FALSE)
+        )
+    )
+
+record_linkage_data %>%
+    unnest_dt(joint_records, .(year, state, kmer)) %>%
+    select(
+        cpf,
+        electoral_title,
+        name
     )
 
 # ---------------------------------------------------------------------------- #
-setkey(rais, kmer)
+setkey(rais_t, kmer)
 
 # create kmer block and within them, set keys foreach data table
 # perform exact linkage by name
