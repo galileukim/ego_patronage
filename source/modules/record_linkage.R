@@ -48,31 +48,29 @@ filiados <- filiados %>%
 
 # ---------------------------------------------------------------------------- #
 # create blocks
-
 rais_grouped <- rais %>%
-    group_nest(
-        year, state, kmer
+    group_nest_dt(year, state, kmer, .key = "rais_data") %>%
+    mutate(
+        rais_data_key = map(rais_data, ~setkey(., name))
     )
 
-rais_grouped <- rais[
-    ,
-    .(data = list(.SD)),
-    by = .(year, state, kmer)
-]
+filiados_grouped <- filiados %>%
+    group_nest_dt(state, kmer, .key = "filiados_data") %>%
+    mutate(
+        rais_data_key = map(rais_data, ~setkey(., name))
+    )
 
-filiados_grouped <- filiados[
-    ,
-    .(data = list(.SD)),
-    by = .(state, kmer)
-]
-
-record_linkage_data <- rais %>%
-    left_join(
+record_linkage_data <- rais_grouped %>%
+    inner_join(
         filiados_grouped,
         by = c("state", "kmer")
     )
 
-
+# exact matching
+record_linkage_data %>%
+    mutate(
+        joint_records = map2(list(rais_data, filiados_data),~ .x[.y])
+    )
 
 # ---------------------------------------------------------------------------- #
 setkey(rais, kmer)

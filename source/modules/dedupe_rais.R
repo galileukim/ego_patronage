@@ -64,7 +64,7 @@ for (i in seq_along(years)) {
     print("write out file")
     fwrite(
         rais_id_t,
-        sprintf(here("data/clean/id/rais_hash/rais_id_%s.csv"), t),
+        sprintf(here("data/clean/id/rais_hash/rais_id_%s.csv.gz"), t),
         compress = "gzip"
     )
 
