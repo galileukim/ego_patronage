@@ -18,12 +18,14 @@ library(hash)
 library(digest)
 library(microbenchmark)
 
+source(here("source/utils/preprocess_rais.R"))
+
 debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
 
 # ---------------------------------------------------------------------------- #
 id_path <- "/home/BRDATA/RAIS/rawtxt"
-years <- 2003:2011
+years <- 2008:2016
 n_unique_ids <- rep(NA, length(years))
 
 for (i in seq_along(years)) {

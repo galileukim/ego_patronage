@@ -5,7 +5,8 @@ library(here)
 fread <- partial(
     data.table::fread,
     integer64 = "character",
-    nrows = sample_size
+    nrows = sample_size,
+    fill = TRUE
     )
 
 source(
