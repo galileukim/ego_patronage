@@ -20,15 +20,20 @@ read_7z <- function(file_path, year, select = NULL, dest_dir = tempdir()) {
 
     data <- map_dfr(
         extracted_file_path,
-        ~ fread(
-            .,
-            colClasses = "character",
-            select = select,
-            encoding = "Latin-1"
-        )
-    )
+        function(file) {
+            data_7z <- fread(
+                file,
+                sep = ";",
+                colClasses = "character",
+                select = select,
+                encoding = "Latin-1"
+            )
 
-    unlink(dest_dir_temp, recursive = T)
+            unlink(dest_dir_temp, recursive = T)
+
+            return(data_7z)
+        }
+    )
 
     return(data)
 }
@@ -45,10 +50,10 @@ extract_id_file_names <- function(year, debug) {
     )
 
     if (isTRUE(debug)) {
-          id_file_path <- sample(id_file_path, 1)
-      } else {
-          id_file_path <- id_file_path
-      }
+        id_file_path <- sample(id_file_path, 1)
+    } else {
+        id_file_path <- id_file_path
+    }
 
     return(id_file_path)
 }
