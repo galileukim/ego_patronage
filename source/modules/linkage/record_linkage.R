@@ -15,49 +15,14 @@ source(
 debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e6, Inf)
 
-rais_id_path <- here("data/clean/id/rais_hash")
-
-rais_id_files <- list.files(
-    rais_id_path,
-    full.names = T
+source(
+    here("source/modules/linkage/preprocess_data.R")
 )
 
 # ---------------------------------------------------------------------------- #
-# repeat procedure for each year
-filiados <- fread(
-    here("data/clean/id/filiado_id_without_cpf.csv.gz"),
-    select = c(
-        "state", "name", "electoral_title", "year_start", "year_termination"
-    )
-)
-
-# note that thisdata is still incomplete
-filiados <- filiados %>%
-    setkey(
-        year_start, year_termination
-    )
-
-rais_t <- fread(
-    rais_id_files[1]
-)
-
-filiados_t <- filiados[data.table::between(t, year_start, year_termination)]
-
-# ---------------------------------------------------------------------------- #
-rais_t <- rais_t %>%
-    mutate(
-        state = str_sub(cod_ibge_6, 1, 2),
-        kmer = substr(name, 1, 3)
-    )
-
-filiados_t <- filiados_t %>%
-    mutate(
-        state = as.character(state),
-        kmer = substr(name, 1, 3)
-    )
-
-# ---------------------------------------------------------------------------- #
-# create blocks
+# create blocks by kmer (first initial 3 letters of name)
+# and state
+# deduplicate names within each block to ensure that each name is unique
 rais_grouped <- rais_t %>%
     group_nest_dt(year, state, kmer, .key = "rais_data") %>%
     mutate(
@@ -76,23 +41,46 @@ record_linkage_data <- rais_grouped %>%
         by = c("state", "kmer")
     )
 
-record_linkage_data %>% write_rds(here("data/debug/record_linkage.rds"))
+# record_linkage_data %>% write_rds(here("data/debug/record_linkage.rds"))
+record_linkage_data <- read_rds(here("data/debug/record_linkage.rds"))
+
+record_test <- record_linkage_data[1]
+
+record_test[
+    ,
+    .(
+        rais_data_unique = map(rais_data, ~ filter_group_by_size(., n = 1, name)),
+        filiados_data_unique = map(filiados_data, ~ filter_group_by_size(., n = 1, name))
+    ),
+    by = .(year, state, kmer)
+]
+
+rais_data <- record_test %>%
+    unnest_dt(rais_data, .(year, state, kmer))
+
+filiados_data <- record_test %>%
+    unnest_dt(filiados_data, .(year, state, kmer))
+
+rais_data_unique <- rais_data %>%
+    filter_group_by_size(n = 1, name)
+
+filiados_data_unique <- filiados_data %>%
+    filter_group_by_size(n = 1, name)
+
+merge(rais_data_unique, filiados_data_unique, all = FALSE)
+
 
 # exact matching
+# note that there are some names that are common: > 500 repeated names
 record_linkage_data <- record_linkage_data %>%
     mutate(
         joint_records = map2(
             rais_data,
             filiados_data, 
-            ~ merge(.x, .y, all = FALSE)
+            merge,
+            all = FALSE
         )
     )
-
-# rais_data <- record_test %>%
-#     unnest_dt(rais_data, .(year, state, kmer))
-
-# filiados_data <- record_test %>%
-#     unnest_dt(filiados_data, .(year, state, kmer))
 
 record_hash <- record_linkage_data %>%
     unnest_dt(joint_records, .(year, state, kmer)) %>%
