@@ -12,8 +12,8 @@ source(
     here("source/utils/record_linkage.R")
 )
 
-debug <- TRUE
-sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
+debug <- FALSE
+sample_size <- ifelse(isTRUE(debug), 1e6, Inf)
 
 rais_id_path <- here("data/clean/id/rais_hash")
 
@@ -31,8 +31,9 @@ filiados <- fread(
     )
 )
 
+# note that thisdata is still incomplete
 filiados <- filiados %>%
-    set_key(
+    setkey(
         year_start, year_termination
     )
 
@@ -40,7 +41,7 @@ rais_t <- fread(
     rais_id_files[1]
 )
 
-filiados_t <- filiados[year_start <= t & year_termination >= t]
+filiados_t <- filiados[data.table::between(t, year_start, year_termination)]
 
 # ---------------------------------------------------------------------------- #
 rais_t <- rais_t %>%
@@ -49,7 +50,7 @@ rais_t <- rais_t %>%
         kmer = substr(name, 1, 3)
     )
 
-filiados <- filiados %>%
+filiados_t <- filiados_t %>%
     mutate(
         state = as.character(state),
         kmer = substr(name, 1, 3)
@@ -63,7 +64,7 @@ rais_grouped <- rais_t %>%
         rais_data = map(rais_data, ~setkey(., name))
     )
 
-filiados_grouped <- filiados %>%
+filiados_grouped <- filiados_t %>%
     group_nest_dt(state, kmer, .key = "filiados_data") %>%
     mutate(
         filiados_data = map(filiados_data, ~setkey(., name))
@@ -85,7 +86,13 @@ record_linkage_data <- record_linkage_data %>%
         )
     )
 
-record_linkage_data %>%
+# rais_data <- record_test %>%
+#     unnest_dt(rais_data, .(year, state, kmer))
+
+# filiados_data <- record_test %>%
+#     unnest_dt(filiados_data, .(year, state, kmer))
+
+record_hash <- record_linkage_data %>%
     unnest_dt(joint_records, .(year, state, kmer)) %>%
     select(
         cpf,
@@ -93,9 +100,3 @@ record_linkage_data %>%
         name
     )
 
-# ---------------------------------------------------------------------------- #
-setkey(rais_t, kmer)
-
-# create kmer block and within them, set keys foreach data table
-# perform exact linkage by name
-# alternatively use fastLink, but this may not be the best route
