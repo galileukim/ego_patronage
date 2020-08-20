@@ -76,6 +76,8 @@ record_linkage_data <- rais_grouped %>%
         by = c("state", "kmer")
     )
 
+record_linkage_data %>% write_rds(here("data/debug/record_linkage.rds"))
+
 # exact matching
 record_linkage_data <- record_linkage_data %>%
     mutate(
