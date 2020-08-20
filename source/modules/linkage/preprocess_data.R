@@ -11,7 +11,7 @@ rais_id_files <- list.files(
 filiados <- fread(
     here("data/clean/id/filiado_id_without_cpf.csv.gz"),
     select = c(
-        "state", "name", "electoral_title", "year_start", "year_termination"
+        "cod_ibge_6", "name", "electoral_title", "year_start", "year_termination"
     )
 )
 
@@ -19,24 +19,4 @@ filiados <- fread(
 filiados <- filiados %>%
     setkey(
         year_start, year_termination
-    )
-
-
-rais_t <- fread(
-    rais_id_files[1]
-)
-
-filiados_t <- filiados[data.table::between(t, year_start, year_termination)]
-
-# ---------------------------------------------------------------------------- #
-rais_t <- rais_t %>%
-    mutate(
-        state = str_sub(cod_ibge_6, 1, 2),
-        kmer = substr(name, 1, 3)
-    )
-
-filiados_t <- filiados_t %>%
-    mutate(
-        state = as.character(state),
-        kmer = substr(name, 1, 3)
     )
