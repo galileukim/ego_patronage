@@ -55,6 +55,10 @@ create_split_name <- function(data, var = name) {
     return(data_with_split_names)
 }
 
+extract_first_name <- function(string){
+    first_name <- str_subset(string, "(^[a-z]+)")
+}
+
 extract_year_from_dates <- function(data) {
     data_with_years <- data %>%
         mutate(

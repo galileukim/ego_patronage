@@ -61,6 +61,22 @@ for (i in seq_along(years)) {
             suffix = sprintf("_%s", names(records_t))
         )
 
+    # running into zipth problem
+    # create an extra block (using a check)
+    # 1) filtering operation upfront to remove high frequency names
+    # 2) create a vector of most common names
+    # meta analysis: most common names. layering.
+    # use functions that work recursively
+    # group by, group to group bys.
+    # reduce the number of times you do it.
+    # be comfortable with fuzzy functions
+    # produce metadata on the frequency of these names
+    # do probabilistic linkage in the blocks of high frequency names.
+    # the zipth distribution has some properties that you can test empirically.
+    # zipth stribution (benford distribution)
+
+    
+
     record_linkage_data[
         ,
         joint_records := map2(
