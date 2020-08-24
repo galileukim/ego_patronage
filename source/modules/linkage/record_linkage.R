@@ -41,7 +41,12 @@ common_names[, frequency := NULL]
 # create blocks by kmer (first initial 3 letters of name)
 # and state
 # deduplicate names within each block to ensure that each name is unique
-years <- 2003:2015
+record <- list(
+    hash_table = tibble(),
+    diagnostic = tibble()
+)
+
+years <- 2003:4
 for (i in seq_along(years)) {
     t <- years[i]
 
@@ -50,13 +55,13 @@ for (i in seq_along(years)) {
     filiados_t <- filiados[between(t, year_start, year_termination)]
     filiados_t[, year := t]
 
-    records_rais_and_filiados_list <- list(
+    record_rais_filiados_list <- list(
         rais = rais_t,
         filiados = filiados_t
     )
 
     # create blocks for linkage (state and kmer)
-    records_rais_filiados <- records_rais_filiados_list %>%
+    record_rais_filiados <- record_rais_filiados_list %>%
         modify(
             ~ mutate(
                 .,
@@ -67,33 +72,21 @@ for (i in seq_along(years)) {
             setkey(first_name)
         )
 
-    # records_t_common <- records_t %>%
-    #     modify(
-    #         ~ .[common_names] # inner join
-    #     )
-
-    # records_t_uncommon <- records_t %>%
-    #     modify(
-    #         ~ .[!common_names] # anti join
-    #     )
-
-    # extract unique names and nest data
-    # need to extract common names before grouping
     # questions:
     # 1) what is the proportion of names with n > 1?
     # 2) what is the mass of these duplicated names?
-    records_diagnostics <- records_rais_filiados %>%
+    record_diagnostics <- record_rais_filiados %>%
         map_dfr(
             ~ .[, .(n = .N), by = name] %>% # create tally of obs by name
                 summarise(
-                    n_records = n(),
+                    n_record = n(),
                     prop_names = mean(n > 1), # prop of dup. names
                     density_names = sum(n[n > 1])/sum(n) # mass of dup. names
                 ),
             .id = "dataset"
         )
 
-    records_rais_filiados_nested <- records_rais_filiados %>%
+    record_rais_filiados_nested <- record_rais_filiados %>%
         modify(
             # ~ filter_group_by_size(., n = 1, name) %>%
                 ~ filter_group_by_size(., name) %>%
@@ -107,11 +100,11 @@ for (i in seq_along(years)) {
         )
 
     # join rais and filiado blocks
-    record_linkage_data <- records_rais_filiados_nested %>%
+    record_linkage_data <- record_rais_filiados_nested %>%
         reduce(
             inner_join,
             by = c("year", "state", "kmer"),
-            suffix = sprintf("_%s", names(records_t))
+            suffix = sprintf("_%s", names(record_t))
         )
 
     # join rais and filiado names through exact match
@@ -121,30 +114,40 @@ for (i in seq_along(years)) {
     # 2) how many filiados can we match?
     record_linkage_data <- record_linkage_data %>%
         transmute(
-            linked_records = map2(
+            linked_record = map2(
             nested_data_rais,
             nested_data_filiados,
             ~ merge(.x, .y, all = FALSE)
             ),
-            n_records = map_dbl(linked_records, nrow)
+            n_record = map_dbl(linked_record, nrow)
         ) %>%
         filter(
-            n_records > 0
+            n_record > 0
         ) %>%
-        select(-n_records) %>%
+        select(-n_record) %>%
         unnest(
-            cols = c(linked_records)
+            cols = c(linked_record)
         )
 
-    record_link <- record_linkage_data %>%
+    record_linkage <- record_linkage_data %>%
         select(year, state, name, cpf, electoral_title)
     
     n_match <- nrow(record_link)
 
-    records_diagnostics <- records_diagnostics %>%
+    record_diagnostics <- record_diagnostics %>%
         mutate(
-            prop_matched = n_match/n_records
+            prop_matched = n_match/n_record
         )
+
+    record[["hash_table"]] <- rbindlist(
+        record[["hash_table"]],
+        record_linkage
+    )
+
+    record[["diagnostic"]] <- rbindlist(
+        record[["diagnostic"]],
+        record_diagnostics
+    )
 }
 
 #notes:
@@ -158,48 +161,3 @@ for (i in seq_along(years)) {
 # be comfortable with fuzzy functions
 # produce metadata on the frequency of these names
 # ---------------------------------------------------------------------------- #
-
-
-record_linkage_data <- rais_grouped %>%
-    inner_join(
-        filiados_grouped,
-        by = c("state", "kmer")
-    )
-
-# record_linkage_data %>% write_rds(here("data/debug/record_linkage.rds"))
-record_linkage_data <- read_rds(here("data/debug/record_linkage.rds"))
-
-record_test <- record_linkage_data
-
-
-# rais_data <- record_test %>%
-#     unnest_dt(rais_data, .(year, state, kmer))
-
-# filiados_data <- record_test %>%
-#     unnest_dt(filiados_data, .(year, state, kmer))
-
-# rais_data_unique <- rais_data %>%
-#     filter_group_by_size(n = 1, name)
-
-# filiados_data_unique <- filiados_data %>%
-#     filter_group_by_size(n = 1, name)
-
-# # exact matching
-# # note that there are some names that are common: > 500 repeated names
-# record_linkage_data <- record_linkage_data %>%
-#     mutate(
-#         joint_records = map2(
-#             rais_data,
-#             filiados_data,
-#             merge,
-#             all = FALSE
-#         )
-#     )
-
-record_hash <- record_linkage_data %>%
-    unnest_dt(joint_records, .(year, state, kmer)) %>%
-    select(
-        cpf,
-        electoral_title,
-        name
-    )
