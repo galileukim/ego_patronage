@@ -82,10 +82,19 @@ for (i in seq_along(years)) {
     # ok so what do I need to know: 
     # 1) what is the proportion of names with n > 1?
     # 2) what is the mass of these duplicated names?
-    records_t_nested <- records_t_uncommon %>%
+    records_diagnostics <- records_t %>%
+        map(
+            ~ .[, .(n = .N), by = name] %>% # create tally of obs by name
+                summarise(
+                    prop_duplicated_names = mean(n > 1),
+                    density_duplicated_names = sum(n[n > 1])/sum(n)
+                )
+        )
+
+    records_t_nested <- records_t %>%
         modify(
             # ~ filter_group_by_size(., n = 1, name) %>%
-                ~ filter_group_by_size(name) %>%
+                ~ filter_group_by_size(., name) %>%
                     group_nest_dt(
                     .,
                     year, state, kmer, .key = "nested_data"

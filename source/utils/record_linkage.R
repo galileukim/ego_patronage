@@ -15,7 +15,7 @@ unnest_dt <- function(dt, col, id) {
     dt[, eval(col), by = eval(by)]
 }
 
-filter_group_by_size <- function(data, n = 1, ...) {
+filter_group_by_size <- function(data, ..., n = 1) {
     by <- substitute(list(...))
 
     data_filter <- data[
