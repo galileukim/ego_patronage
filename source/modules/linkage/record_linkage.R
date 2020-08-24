@@ -50,13 +50,13 @@ for (i in seq_along(years)) {
     filiados_t <- filiados[between(t, year_start, year_termination)]
     filiados_t[, year := t]
 
-    records_t_list <- list(
+    records_rais_and_filiados_list <- list(
         rais = rais_t,
         filiados = filiados_t
     )
 
     # create blocks for linkage (state and kmer)
-    records_t <- records_t_list %>%
+    records_rais_filiados <- records_rais_filiados_list %>%
         modify(
             ~ mutate(
                 .,
@@ -79,19 +79,21 @@ for (i in seq_along(years)) {
 
     # extract unique names and nest data
     # need to extract common names before grouping
-    # ok so what do I need to know: 
+    # questions:
     # 1) what is the proportion of names with n > 1?
     # 2) what is the mass of these duplicated names?
-    records_diagnostics <- records_t %>%
-        map(
+    records_diagnostics <- records_rais_filiados %>%
+        map_dfr(
             ~ .[, .(n = .N), by = name] %>% # create tally of obs by name
                 summarise(
-                    prop_duplicated_names = mean(n > 1),
-                    density_duplicated_names = sum(n[n > 1])/sum(n)
-                )
+                    n_records = n(),
+                    prop_names = mean(n > 1), # prop of dup. names
+                    density_names = sum(n[n > 1])/sum(n) # mass of dup. names
+                ),
+            .id = "dataset"
         )
 
-    records_t_nested <- records_t %>%
+    records_rais_filiados_nested <- records_rais_filiados %>%
         modify(
             # ~ filter_group_by_size(., n = 1, name) %>%
                 ~ filter_group_by_size(., name) %>%
@@ -104,37 +106,57 @@ for (i in seq_along(years)) {
                 )
         )
 
-    record_linkage_data <- records_t_nested %>%
+    # join rais and filiado blocks
+    record_linkage_data <- records_rais_filiados_nested %>%
         reduce(
             inner_join,
             by = c("year", "state", "kmer"),
             suffix = sprintf("_%s", names(records_t))
         )
 
-    # running into zipth problem
-    # create an extra block (using a check)
-    # 1) filtering operation upfront to remove high frequency names
-    # 2) create a vector of most common names
-    # meta analysis: most common names. layering.
-    # use functions that work recursively
-    # group by, group to group bys.
-    # reduce the number of times you do it.
-    # be comfortable with fuzzy functions
-    # produce metadata on the frequency of these names
-    # do probabilistic linkage in the blocks of high frequency names.
-    # the zipth distribution has some properties that you can test empirically.
-    # zipth stribution (benford distribution)
-    record_linkage_data[
-        ,
-        joint_records := map2(
+    # join rais and filiado names through exact match
+    # exclude all empty blocks
+    # questions:
+    # 1) how many rais workers can we match?
+    # 2) how many filiados can we match?
+    record_linkage_data <- record_linkage_data %>%
+        transmute(
+            linked_records = map2(
             nested_data_rais,
             nested_data_filiados,
             ~ merge(.x, .y, all = FALSE)
+            ),
+            n_records = map_dbl(linked_records, nrow)
+        ) %>%
+        filter(
+            n_records > 0
+        ) %>%
+        select(-n_records) %>%
+        unnest(
+            cols = c(linked_records)
         )
-    ]
 
+    record_link <- record_linkage_data %>%
+        select(year, state, name, cpf, electoral_title)
+    
+    n_match <- nrow(record_link)
+
+    records_diagnostics <- records_diagnostics %>%
+        mutate(
+            prop_matched = n_match/n_records
+        )
 }
 
+#notes:
+# running into zipth problem
+# create an extra block (using a check)
+# 1) filtering operation upfront to remove high frequency names
+# 2) create a vector of most common names
+# meta analysis: most common names. layering.
+# use functions that work recursively
+# reduce the number of iterations
+# be comfortable with fuzzy functions
+# produce metadata on the frequency of these names
 # ---------------------------------------------------------------------------- #
 
 
