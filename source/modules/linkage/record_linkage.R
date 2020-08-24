@@ -21,6 +21,23 @@ source(
 )
 
 # ---------------------------------------------------------------------------- #
+# extract most common names by frequency in party membership data: top 50
+common_names <- filiados[
+    ,
+    .(
+        first_name = str_extract(name, "^[a-z]+")
+    )
+][
+    ,
+    .(frequency = .N),
+    by = first_name
+][
+    order(-frequency),
+    head(.SD, 50)
+] %>% setkey(first_name)
+
+common_names[, frequency := NULL]
+
 # create blocks by kmer (first initial 3 letters of name)
 # and state
 # deduplicate names within each block to ensure that each name is unique
@@ -33,28 +50,52 @@ for (i in seq_along(years)) {
     filiados_t <- filiados[between(t, year_start, year_termination)]
     filiados_t[, year := t]
 
-    records_t <- list(rais = rais_t, filiados = filiados_t)
+    records_t_list <- list(
+        rais = rais_t,
+        filiados = filiados_t
+    )
 
-    records_t <- records_t %>%
+    # create blocks for linkage (state and kmer)
+    records_t <- records_t_list %>%
         modify(
             ~ mutate(
                 .,
                 state = str_sub(cod_ibge_6, 1, 2),
-                kmer = substr(name, 1, 3)
+                kmer = substr(name, 1, 3),
+                first_name = str_extract(name, "^[a-z]+")
             ) %>%
-                setkey(name)
+            setkey(first_name)
         )
 
-    records_t <- records_t %>%
+    # records_t_common <- records_t %>%
+    #     modify(
+    #         ~ .[common_names] # inner join
+    #     )
+
+    # records_t_uncommon <- records_t %>%
+    #     modify(
+    #         ~ .[!common_names] # anti join
+    #     )
+
+    # extract unique names and nest data
+    # need to extract common names before grouping
+    # ok so what do I need to know: 
+    # 1) what is the proportion of names with n > 1?
+    # 2) what is the mass of these duplicated names?
+    records_t_nested <- records_t_uncommon %>%
         modify(
-            ~ filter_group_by_size(., n = 1, name) %>%
-                group_nest_dt(year, state, kmer, .key = "nested_data") %>%
+            # ~ filter_group_by_size(., n = 1, name) %>%
+                ~ filter_group_by_size(name) %>%
+                    group_nest_dt(
+                    .,
+                    year, state, kmer, .key = "nested_data"
+                ) %>%
                 mutate(
                     nested_data = map(nested_data, ~ setkey(., name))
                 )
         )
 
-    record_linkage_data <- records_t %>%
+    record_linkage_data <- records_t_nested %>%
         reduce(
             inner_join,
             by = c("year", "state", "kmer"),
@@ -74,9 +115,6 @@ for (i in seq_along(years)) {
     # do probabilistic linkage in the blocks of high frequency names.
     # the zipth distribution has some properties that you can test empirically.
     # zipth stribution (benford distribution)
-
-    
-
     record_linkage_data[
         ,
         joint_records := map2(
