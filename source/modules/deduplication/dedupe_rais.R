@@ -72,4 +72,4 @@ for (i in seq_along(years)) {
     gc()
 }
 
-print("create rais hash table: complete!")
+print("create rais hash tables: complete!")

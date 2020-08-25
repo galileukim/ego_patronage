@@ -42,8 +42,8 @@ common_names[, frequency := NULL]
 # and state
 # deduplicate names within each block to ensure that each name is unique
 record <- list(
-    hash_table = tibble(),
-    diagnostic = tibble()
+    hash_table = list(),
+    diagnostic = list()
 )
 
 years <- 2003:4
@@ -73,7 +73,7 @@ for (i in seq_along(years)) {
         )
 
     # questions:
-    # 1) what is the proportion of names with n > 1?
+    # 1) what is the proportion of names with n > 1?record[["diagnostic"]]
     # 2) what is the mass of these duplicated names?
     record_diagnostics <- record_rais_filiados %>%
         map_dfr(
@@ -104,7 +104,7 @@ for (i in seq_along(years)) {
         reduce(
             inner_join,
             by = c("year", "state", "kmer"),
-            suffix = sprintf("_%s", names(record_t))
+            suffix = sprintf("_%s", names(record_rais_filiados))
         )
 
     # join rais and filiado names through exact match
@@ -114,6 +114,8 @@ for (i in seq_along(years)) {
     # 2) how many filiados can we match?
     record_linkage_data <- record_linkage_data %>%
         transmute(
+            year,
+            state,
             linked_record = map2(
             nested_data_rais,
             nested_data_filiados,
@@ -136,17 +138,18 @@ for (i in seq_along(years)) {
 
     record_diagnostics <- record_diagnostics %>%
         mutate(
-            prop_matched = n_match/n_record
+            prop_matched = n_match/n_record,
+            year = t
         )
 
     record[["hash_table"]] <- rbindlist(
-        record[["hash_table"]],
-        record_linkage
+        list(record[["hash_table"]], record_linkage),
+        fill = TRUE
     )
 
     record[["diagnostic"]] <- rbindlist(
-        record[["diagnostic"]],
-        record_diagnostics
+        list(record[["diagnostic"]], record_diagnostics),
+        fill = TRUE
     )
 }
 
