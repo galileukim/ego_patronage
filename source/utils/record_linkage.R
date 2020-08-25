@@ -30,3 +30,14 @@ filter_group_by_size <- function(data, ..., n = 1) {
 inner_merge <- function(x, y){
     merge(x, y, all = FALSE)
 }
+
+reset_env <- function(init_env){
+  final_env <- ls(.GlobalEnv)
+
+  rm(
+    envir = .GlobalEnv,
+    list = setdiff(final_env, init_env)
+  )
+
+  gc()
+}

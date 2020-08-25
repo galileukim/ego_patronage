@@ -12,7 +12,7 @@ source(
     here("source/utils/record_linkage.R")
 )
 
-debug <- TRUE
+debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 between <- data.table::between
 
@@ -44,12 +44,14 @@ source(
 record_hash <- list()
 record_diagnostic <- list()
 
-years <- 2003:2004
+years <- 2003:2015
 for (i in seq_along(years)) {
-    t <- years[i]
-    print(sprintf("initializing record linkage for year %s...", t))
+    init_env <- ls()
 
-    print("reading in files")
+    t <- years[i]
+    cat(sprintf("initializing record linkage for year %s...", t))
+
+    cat("reading in files")
     rais_t <- fread(rais_id_files[i])
 
     filiados_t <- filiados[between(t, year_start, year_termination)]
@@ -60,7 +62,7 @@ for (i in seq_along(years)) {
         filiados = filiados_t
     )
 
-    print("creating blocks for linkage")
+    cat("creating blocks for linkage")
     # create blocks for linkage (state and kmer)
     record_rais_filiados <- record_rais_filiados_list %>%
         modify(
@@ -76,7 +78,7 @@ for (i in seq_along(years)) {
     # questions:
     # 1) what is the proportion of names with n > 1?
     # 2) what is the mass of these duplicated names?
-    print("output initial set of diagnostics")
+    cat("output initial set of diagnostics")
 
     record_diagnostics <- record_rais_filiados %>%
         map_dfr(
@@ -89,7 +91,7 @@ for (i in seq_along(years)) {
             .id = "dataset"
         )
 
-    print("nest and join rais and filiados data")
+    cat("nest and join rais and filiados data")
     record_rais_filiados_nested <- record_rais_filiados %>%
         modify(
             # ~ filter_group_by_size(., n = 1, name) %>%
@@ -116,7 +118,7 @@ for (i in seq_along(years)) {
     # questions:
     # 1) how many rais workers can we match?
     # 2) how many filiados can we match?
-    print("join through exact match")
+    cat("join through exact match")
     record_linkage_data <- record_linkage_data %>%
         transmute(
             year,
@@ -148,6 +150,7 @@ for (i in seq_along(years)) {
             year = t
         )
 
+    cat("write out hash table and diagnostics.")
     record_hash <- rbindlist(
         list(record_hash, record_linkage),
         fill = TRUE
@@ -158,6 +161,17 @@ for (i in seq_along(years)) {
         fill = TRUE
     )
 
-    rm(rais_t, filiados_t, record_linkage_data)
-    gc()
+    reset_env(init_env)
+
+    cat("record_linkage complete!\n # ----- # ")
 }
+
+record_hash %>% 
+    fwrite(
+        here("data/clean/id/rais_filiado_crosswalk.csv")
+        )
+
+record_diagnostic %>%
+    fwrite(
+        here("data/clean/id/rais_filiado_linkage_diagnostics.csv")
+    )
