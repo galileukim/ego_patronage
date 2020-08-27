@@ -175,3 +175,4 @@ record_diagnostic %>%
     fwrite(
         here("data/clean/id/rais_filiado_linkage_diagnostics.csv")
     )
+
