@@ -34,12 +34,21 @@ rais_hash_multiple_entries <- rais_hash[
     all = FALSE
 ]
 
+# different electoral titles
 rais_hash_multiple_names <- rais_hash_multiple_entries[
     ,
     .(name, electoral_title, count_names = uniqueN(name)),
     by = cpf
 ][
     count_names > 1
+]
+
+rais_hash_multiple_electoral_titles <- rais_hash_multiple_entries[
+    ,
+    .(name, electoral_title, count = uniqueN(electoral_title)),
+    by = cpf
+][
+    count > 1
 ]
 
 rais_hash_multiple_names[cpf %in% sample(rais_hash_multiple_entries[["cpf"]], 5)]

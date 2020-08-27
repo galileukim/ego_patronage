@@ -2,8 +2,6 @@
 # b) rais data
 # output: table containing the linkage between electoral_title and cpf
 # notes: create a unique identifier that tracks row number and file id
-# modularize each function to perform the linkage within each block
-# nest, nest, nest!
 source(
     here::here("source/modules/setup_preprocess.R")
 )
@@ -49,9 +47,9 @@ for (i in seq_along(years)) {
     init_env <- ls()
 
     t <- years[i]
-    cat(sprintf("initializing record linkage for year %s...", t))
+    message("initializing record linkage for year ", t, "...")
 
-    cat("reading in files")
+    message("reading in files")
     rais_t <- fread(rais_id_files[i])
 
     filiados_t <- filiados[between(t, year_start, year_termination)]
@@ -62,7 +60,7 @@ for (i in seq_along(years)) {
         filiados = filiados_t
     )
 
-    cat("creating blocks for linkage")
+    message("creating blocks for linkage")
     # create blocks for linkage (state and kmer)
     record_rais_filiados <- record_rais_filiados_list %>%
         modify(
@@ -78,7 +76,8 @@ for (i in seq_along(years)) {
     # questions:
     # 1) what is the proportion of names with n > 1?
     # 2) what is the mass of these duplicated names?
-    cat("output initial set of diagnostics")
+    # 3) are there multiple names per cpf/electoral_title?
+    message("output initial set of diagnostics")
 
     record_diagnostics <- record_rais_filiados %>%
         map_dfr(
@@ -90,8 +89,8 @@ for (i in seq_along(years)) {
                 ),
             .id = "dataset"
         )
-
-    cat("nest and join rais and filiados data")
+        
+    message("nest and join rais and filiados data")
     record_rais_filiados_nested <- record_rais_filiados %>%
         modify(
             # ~ filter_group_by_size(., n = 1, name) %>%
@@ -118,7 +117,7 @@ for (i in seq_along(years)) {
     # questions:
     # 1) how many rais workers can we match?
     # 2) how many filiados can we match?
-    cat("join through exact match")
+    message("join through exact match")
     record_linkage_data <- record_linkage_data %>%
         transmute(
             year,
@@ -150,7 +149,7 @@ for (i in seq_along(years)) {
             year = t
         )
 
-    cat("write out hash table and diagnostics.")
+    message("write out hash table and diagnostics.")
     record_hash <- rbindlist(
         list(record_hash, record_linkage),
         fill = TRUE
@@ -163,7 +162,7 @@ for (i in seq_along(years)) {
 
     reset_env(init_env)
 
-    cat("record_linkage complete!\n # ----- # ")
+    message("record_linkage complete!\n # ----------- # ")
 }
 
 record_hash %>% 
