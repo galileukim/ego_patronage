@@ -7,48 +7,29 @@ source(
 )
 
 debug <- FALSE
-sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 between <- data.table::between
 
-rais_hash <- fread(
-    here("data/clean/id/rais_filiado_crosswalk.csv")
-)
+# ---------------------------------------------------------------------------- #
+rais_hash_file <- here("data/clean/id/rais_filiado_crosswalk.csv") 
 
-rais_hash <- sample_frac(rais_hash, 0.1) %>%
-    setkey(cpf)
+if (!isTRUE(debug)) {
+    rais_hash_file <- str_replace(rais_file, ".csv$", "_sample.csv")
+}
 
-rais_diagnostics <- fread(
-    here("data/clean/id/rais_filiado_linkage_diagnostics.csv")
-)
+rais_hash <- fread(rais_file)
 
-# what are the problematic entries?
-# 1) different electoral titles for the same cpf
-# 2) duplicated entries
-cpf_multiple_entries <- rais_hash[, .(n = .N), by = cpf][
-    n > 1
-]
+rais_hash <- rais_hash %>%
+    setkey(name)
 
-rais_hash_multiple_entries <- rais_hash[
-    cpf_multiple_entries,
-    on = "cpf",
-    all = FALSE
-]
-
-# different electoral titles
-rais_hash_multiple_names <- rais_hash_multiple_entries[
+rais_hash_diagnostics <- rais_hash[
     ,
-    .(name, electoral_title, count_names = uniqueN(name)),
-    by = cpf
-][
-    count_names > 1
+    .(
+        count_title = uniqueN(electoral_title),
+        count_cpf = uniqueN(cpf)
+    ),
+    by = name
 ]
 
-rais_hash_multiple_electoral_titles <- rais_hash_multiple_entries[
-    ,
-    .(name, electoral_title, count = uniqueN(electoral_title)),
-    by = cpf
-][
-    count > 1
-]
+names_with_multiple_cpfs <- rais_hash_diagnostics[count_cpf > 1, .(name)]
 
-rais_hash_multiple_names[cpf %in% sample(rais_hash_multiple_entries[["cpf"]], 5)]
+rais_hash[!names_with_multiple_cpfs, on = "name"]

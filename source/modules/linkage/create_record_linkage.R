@@ -170,6 +170,11 @@ record_hash %>%
         here("data/clean/id/rais_filiado_crosswalk.csv")
         )
 
+record_hash[sample(.N, 1e5)] %>%
+    fwrite(
+        here("data/clean/id/rais_filiado_crosswalk_sample.csv")
+    )
+
 record_diagnostic %>%
     fwrite(
         here("data/clean/id/rais_filiado_linkage_diagnostics.csv")

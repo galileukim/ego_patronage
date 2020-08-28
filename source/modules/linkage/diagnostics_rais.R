@@ -11,10 +11,6 @@ source(
 debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 
-source(
-    here("source/modules/linkage/preprocess_data.R")
-)
-
 # ---------------------------------------------------------------------------- #
 rais_id_path <- here("data/clean/id/rais_hash")
 
@@ -29,7 +25,7 @@ rais_diagnostics <- rais_id_files %>%
             generate_diagnostics_rais()
     )
 
-rais_diagnostics_name %>%
+rais_diagnostics %>%
     fwrite(
         here("data/clean/debug/rais_diagnostics.csv")
     )

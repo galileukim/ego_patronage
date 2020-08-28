@@ -43,7 +43,8 @@ generate_diagnostics_rais <- function(data) {
     # generate a diagnostics table from rais
     year <- unique(data[["year"]])
 
-    data_sample <- data[sample(1:nrow(data), 1e6, replace = FALSE)]
+    # sample 10 percent of the data
+    data_sample <- data[sample(1:nrow(data), nrow(data)/10, replace = FALSE)]
 
     data_diagnostics_name <- data_sample %>%
         setkey(name) %>%
