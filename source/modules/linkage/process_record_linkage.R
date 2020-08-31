@@ -8,16 +8,20 @@ source(
 
 debug <- FALSE
 between <- data.table::between
+sample_size <- Inf
 
 # ---------------------------------------------------------------------------- #
+message("read in data.")
+
 rais_hash_file <- here("data/clean/id/rais_filiado_crosswalk.csv") 
 
-if (!isTRUE(debug)) {
-    rais_hash_file <- str_replace(rais_file, ".csv$", "_sample.csv")
+if (isTRUE(debug)) {
+    rais_hash_file <- str_replace(rais_hash_file, ".csv$", "_sample.csv")
 }
 
-rais_hash <- fread(rais_file)
+rais_hash <- fread(rais_hash_file)
 
+message("count unique entries for electoral title and cpf by name")
 rais_hash <- rais_hash %>%
     setkey(name)
 
@@ -30,6 +34,21 @@ rais_hash_diagnostics <- rais_hash[
     by = name
 ]
 
-names_with_multiple_cpfs <- rais_hash_diagnostics[count_cpf > 1, .(name)]
+message("filter out names with multiple titles or cpf")
+names_with_multiple_cpfs <- rais_hash_diagnostics[
+    count_cpf + count_title > 2, .(name)
+]
 
-rais_hash[!names_with_multiple_cpfs, on = "name"]
+number_of_defective_entries <- nrow(names_with_multiple_cpfs)
+
+message(
+    "there are ", number_of_defective_entries, 
+    "defective entries in the hash table."
+)
+
+rais_hash_clean <- rais_hash[!names_with_multiple_cpfs, on = "name"]
+
+rais_hash_file %>% 
+    fwrite(
+        here("data/clean/id/rais_filiado_crosswalk_clean.csv")
+    )
