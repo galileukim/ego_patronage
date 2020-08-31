@@ -25,6 +25,7 @@ message("count unique entries for electoral title and cpf by name")
 rais_hash <- rais_hash %>%
     setkey(name)
 
+# note that all names by state-year are unique, so take that into careful consideration.
 rais_hash_diagnostics <- rais_hash[
     ,
     .(
