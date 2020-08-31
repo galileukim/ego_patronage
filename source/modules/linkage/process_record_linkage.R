@@ -41,14 +41,27 @@ names_with_multiple_cpfs <- rais_hash_diagnostics[
 
 number_of_defective_entries <- nrow(names_with_multiple_cpfs)
 
+rais_hash_duplicated_names <- rais_hash[names_with_multiple_cpfs, on = "name"]
+rais_hash_duplicated_names[
+    ,
+    .(count_year = .N),
+    by = year
+]
+
 message(
     "there are ", number_of_defective_entries, 
-    "defective entries in the hash table."
+    " duplicated names in the hash table."
 )
 
-rais_hash_clean <- rais_hash[!names_with_multiple_cpfs, on = "name"]
+rais_hash_clean <- rais_hash[
+    !names_with_multiple_cpfs,
+    .(name, cpf, electoral_title),
+    on = "name"
+]
 
-rais_hash_file %>% 
+rais_hash_clean_unique <- unique(rais_hash_clean, by = "name")
+
+rais_hash_file %>%
     fwrite(
         here("data/clean/id/rais_filiado_crosswalk_clean.csv")
     )
