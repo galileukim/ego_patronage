@@ -11,19 +11,26 @@ debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 between <- data.table::between
 
+# ---------------------------------------------------------------------------- #
 # extract all id_employees and merge with cpf to generate crosswalk
+message("read in data.")
+
 rais_id_employee <- read_dta(
     "/home/BRDATA/RAIS/id/RAIS_employee_identifiers.dta",
-    n_max = 1e5
+    n_max = sample_size
 ) %>%
     select(id_employee, cpf)
 
 rais_hash_table <- fread(
-    here("data/clean/id/rais_filiado_crosswalk_clean.csv")
+    here("data/clean/id/rais_filiado_crosswalk_unique.csv")
 )
 
-rais_hash_table_with_ids <- rais_hash_table[
-    rais_id_employee,
+rais_hash_table[, cpf := as.double(cpf)]
+
+message("merge rais_hash_table with id_employees")
+rais_hash_table[
+    as.data.table(rais_id_employee),
+    id_employee := i.id_employee,
     on = "cpf"
 ]
 
@@ -32,13 +39,15 @@ rais_hash_table_with_ids <- rais_hash_table_with_ids %>%
 
 message("check if there are duplicated titles per id_employee")
 rais_multiple_titles <- rais_hash_table_with_ids[
-    ,
+    !is.na(id_employee),
     .(count_titles = uniqueN(electoral_title)),
     by = id_employee
 ]
 
-number_of_duplicated_titles <- nrow(
-    rais_multiple_titles[count_titles > 1]
+message(
+    "there are "
+    nrow(rais_multiple_titles[count_titles > 1]),
+    " defective entries ffor id_employee."
 )
 
 rais_hash_table_with_ids %>%
@@ -47,5 +56,7 @@ rais_hash_table_with_ids %>%
         electoral_title
     ) %>%
     fwrite(
-        here("rais_to_filiado_hash_table.csv")
+        here("data/clean/id/rais_id_to_filiado_hash.csv")
     )
+
+message("generate rais id_employee to electoral title table...complete!")

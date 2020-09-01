@@ -29,6 +29,7 @@ rais_hash_unique <- unique(
     rais_hash, by = c("name", "cpf", "electoral_title")
 )
 
+message("write out table.")
 rais_hash_unique %>%
     select(
         name, cpf, electoral_title
