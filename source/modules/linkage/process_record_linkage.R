@@ -6,7 +6,7 @@ source(
     here::here("source/modules/setup_preprocess.R")
 )
 
-debug <- FALSE
+debug <- TRUE
 between <- data.table::between
 sample_size <- Inf
 
@@ -25,35 +25,8 @@ message("count unique entries for electoral title and cpf by name")
 rais_hash <- rais_hash %>%
     setkey(name)
 
-# note that all names by state-year are unique, so take that into careful consideration.
-rais_hash_diagnostics <- rais_hash[
-    ,
-    .(
-        count_title = uniqueN(electoral_title),
-        count_cpf = uniqueN(cpf)
-    ),
-    by = name
-]
-
-message("filter out names with multiple titles or cpf")
-names_with_multiple_cpfs <- rais_hash_diagnostics[
-    count_cpf + count_title > 2, .(name)
-]
-
-number_of_defective_entries <- nrow(names_with_multiple_cpfs)
-
-rais_hash_duplicated_names <- rais_hash[names_with_multiple_cpfs, on = "name"]
-rais_hash_duplicated_names[
-    ,
-    .(count_year = .N),
-    by = year
-]
-
-message(
-    "there are ", number_of_defective_entries, 
-    " duplicated names in the hash table."
-)
-
+# note that all names by state-year are unique, denoting that these are
+# different individuals with the same name, since I performed block merge
 rais_hash_clean <- rais_hash[
     !names_with_multiple_cpfs,
     .(name, cpf, electoral_title),
