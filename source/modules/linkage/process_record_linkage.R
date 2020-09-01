@@ -6,7 +6,7 @@ source(
     here::here("source/modules/setup_preprocess.R")
 )
 
-debug <- TRUE
+debug <- FALSE
 between <- data.table::between
 sample_size <- Inf
 
@@ -21,21 +21,18 @@ if (isTRUE(debug)) {
 
 rais_hash <- fread(rais_hash_file)
 
-message("count unique entries for electoral title and cpf by name")
+message("create unique hash table linking cpf to electoral title")
 rais_hash <- rais_hash %>%
-    setkey(name)
+    setkey(name, cpf, electoral_title)
 
-# note that all names by state-year are unique, denoting that these are
-# different individuals with the same name, since I performed block merge
-rais_hash_clean <- rais_hash[
-    !names_with_multiple_cpfs,
-    .(name, cpf, electoral_title),
-    on = "name"
-]
+rais_hash_unique <- unique(
+    rais_hash, by = c("name", "cpf", "electoral_title")
+)
 
-rais_hash_clean_unique <- unique(rais_hash_clean, by = "name")
-
-rais_hash_file %>%
+rais_hash_unique %>%
+    select(
+        name, cpf, electoral_title
+    ) %>%
     fwrite(
-        here("data/clean/id/rais_filiado_crosswalk_clean.csv")
+        here("data/clean/id/rais_filiado_crosswalk_unique.csv")
     )

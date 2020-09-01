@@ -19,23 +19,6 @@ source(
 )
 
 # ---------------------------------------------------------------------------- #
-# extract most common names by frequency in party membership data: top 50
-# common_names <- filiados[
-#     ,
-#     .(
-#         first_name = str_extract(name, "^[a-z]+")
-#     )
-# ][
-#     ,
-#     .(frequency = .N),
-#     by = first_name
-# ][
-#     order(-frequency),
-#     head(.SD, 50)
-# ] %>% setkey(first_name)
-
-# common_names[, frequency := NULL]
-
 # create blocks by kmer (first initial 3 letters of name)
 # and state
 # deduplicate names within each block to ensure that each name is unique
