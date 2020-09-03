@@ -35,27 +35,28 @@ rais_hash_table[
     on = "cpf"
 ]
 
-rais_hash_table_with_ids <- rais_hash_table_with_ids %>%
+rais_hash_table %>%
     setkey(id_employee)
 
 message("check if there are duplicated titles per id_employee")
-rais_multiple_titles <- rais_hash_table_with_ids[
+rais_multiple_titles <- rais_hash_table[
     !is.na(id_employee),
-    .(count_titles = uniqueN(electoral_title)),
+    .(count_titles = uniqueN(electoral_title), count_cpf = uniqueN(cpf)),
     by = id_employee
 ]
 
+defective_titles <- nrow(rais_multiple_titles[count_titles > 1])
+defective_cpf <- nrow(rais_multiple_titles[count_cpf > 1])
+
 message(
-    "there are "
-    nrow(rais_multiple_titles[count_titles > 1]),
-    " defective entries ffor id_employee."
+    "there are ",
+    defective_titles, " entries with multiple titles and ",
+    defective_cpf, " entries with multiple cpfs for id_employee"
 )
 
-rais_hash_table_with_ids %>%
-    select(
-        id_employee,
-        electoral_title
-    ) %>%
+rais_hash_table[
+    !is.na(id_employee), .(id_employee, electoral_title)
+] %>%
     fwrite(
         here("data/clean/id/rais_id_to_filiado_hash.csv")
     )
