@@ -14,7 +14,7 @@ between <- data.table::between
 
 # ---------------------------------------------------------------------------- #
 # extract all id_employees and merge with cpf to generate crosswalk
-message("read in data.")
+message("read in data")
 
 rais_id_employee <- read_dta(
     "/home/BRDATA/RAIS/id/RAIS_employee_identifiers.dta",
@@ -26,10 +26,25 @@ rais_hash_table <- fread(
     here("data/clean/id/rais_filiado_crosswalk_unique.csv")
 )
 
-rais_hash_table[, cpf := as.double(cpf)]
+filiado_id_cpf <- fread(
+    here("data/clean/id/filiado_id_with_cpf.csv.gz")
+) %>%
+    select(
+        cpf,
+        name,
+        electoral_title
+    )
 
 message("merge rais_hash_table with id_employees")
+rais_hash_table[, cpf := as.double(cpf)]
+
 rais_hash_table[
+    as.data.table(rais_id_employee),
+    id_employee := i.id_employee,
+    on = "cpf"
+]
+
+filiado_id_cpf[
     as.data.table(rais_id_employee),
     id_employee := i.id_employee,
     on = "cpf"
@@ -60,5 +75,7 @@ rais_hash_table[
     fwrite(
         here("data/clean/id/rais_id_to_filiado_hash.csv")
     )
+
+
 
 message("generate rais id_employee to electoral title table...complete!")

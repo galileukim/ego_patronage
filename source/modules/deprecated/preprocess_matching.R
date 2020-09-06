@@ -93,7 +93,7 @@ filiados %>%
     )
 
 print("clean-up rais and write-out")
-path_rais_out <- here(path_out, sprintf("rais_clean_%s.csv.gz", year))
+path_rais_out <- here(path_out, sprintf("_%s.csv.gz", year))
 
 walk2(
     year,
