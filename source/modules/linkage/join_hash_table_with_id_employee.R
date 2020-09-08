@@ -76,6 +76,4 @@ rais_hash_table[
         here("data/clean/id/rais_id_to_filiado_hash.csv")
     )
 
-
-
 message("generate rais id_employee to electoral title table...complete!")
