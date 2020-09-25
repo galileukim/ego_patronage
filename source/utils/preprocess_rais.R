@@ -8,7 +8,7 @@ read_7z <- function(file_path, year, select = NULL, dest_dir = tempdir()) {
     )
 
     extraction_command <- sprintf(
-        "7za e -o%s %s", dest_dir_temp, file_path
+        "7za e -aoa -o%s %s", dest_dir_temp, file_path
     )
 
     system(extraction_command)
@@ -18,15 +18,11 @@ read_7z <- function(file_path, year, select = NULL, dest_dir = tempdir()) {
         full.names = T
     )
 
-    data <- map_dfr(
+    data <- fread(
         extracted_file_path,
-        ~ fread(
-            .,
-            sep = ";",
-            colClasses = "character",
-            select = select,
-            encoding = "Latin-1"
-        )
+        colClasses = "character",
+        select = select,
+        encoding = "Latin-1"
     )
 
     unlink(dest_dir_temp, recursive = T)
@@ -34,7 +30,7 @@ read_7z <- function(file_path, year, select = NULL, dest_dir = tempdir()) {
     return(data)
 }
 
-extract_id_file_names <- function(year, debug) {
+extract_id_file_names <- function(year, debug){
     print(
         sprintf("start producing hash for year %s", year)
     )
@@ -45,11 +41,10 @@ extract_id_file_names <- function(year, debug) {
         full.names = T
     )
 
-    if (isTRUE(debug)) {
-          id_file_path <- sample(id_file_path, 1)
-      } else {
-          id_file_path <- id_file_path
-      }
+    if (isTRUE(debug))
+        id_file_path <- sample(id_file_path, 1) 
+    else 
+        id_file_path <- id_file_path
 
     return(id_file_path)
 }
@@ -71,8 +66,8 @@ extract_unique_cpf <- function(data, key = "cpf") {
     return(unique_data)
 }
 
-write_out_hash <- function(hash, filename) {
-    tibble(
+write_out_hash <- function(hash, filename){
+     tibble(
         cpf = keys(hash),
         name = values(hash, USE.NAMES = F)
     ) %>%

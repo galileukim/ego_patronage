@@ -12,7 +12,7 @@ source(
     here("source/utils/record_linkage.R")
 )
 
-debug <- TRUE
+debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 between <- data.table::between
 
@@ -22,34 +22,36 @@ source(
 
 # ---------------------------------------------------------------------------- #
 # extract most common names by frequency in party membership data: top 50
-common_names <- filiados[
-    ,
-    .(
-        first_name = str_extract(name, "^[a-z]+")
-    )
-][
-    ,
-    .(frequency = .N),
-    by = first_name
-][
-    order(-frequency),
-    head(.SD, 50)
-] %>% setkey(first_name)
+# common_names <- filiados[
+#     ,
+#     .(
+#         first_name = str_extract(name, "^[a-z]+")
+#     )
+# ][
+#     ,
+#     .(frequency = .N),
+#     by = first_name
+# ][
+#     order(-frequency),
+#     head(.SD, 50)
+# ] %>% setkey(first_name)
 
-common_names[, frequency := NULL]
+# common_names[, frequency := NULL]
 
 # create blocks by kmer (first initial 3 letters of name)
 # and state
 # deduplicate names within each block to ensure that each name is unique
-record <- list(
-    hash_table = list(),
-    diagnostic = list()
-)
+record_hash <- list()
+record_diagnostic <- list()
 
-years <- 2003:4
+years <- 2003:2015
 for (i in seq_along(years)) {
-    t <- years[i]
+    init_env <- ls()
 
+    t <- years[i]
+    cat(sprintf("initializing record linkage for year %s...", t))
+
+    cat("reading in files")
     rais_t <- fread(rais_id_files[i])
 
     filiados_t <- filiados[between(t, year_start, year_termination)]
@@ -60,6 +62,7 @@ for (i in seq_along(years)) {
         filiados = filiados_t
     )
 
+    cat("creating blocks for linkage")
     # create blocks for linkage (state and kmer)
     record_rais_filiados <- record_rais_filiados_list %>%
         modify(
@@ -73,19 +76,22 @@ for (i in seq_along(years)) {
         )
 
     # questions:
-    # 1) what is the proportion of names with n > 1?record[["diagnostic"]]
+    # 1) what is the proportion of names with n > 1?
     # 2) what is the mass of these duplicated names?
+    cat("output initial set of diagnostics")
+
     record_diagnostics <- record_rais_filiados %>%
         map_dfr(
             ~ .[, .(n = .N), by = name] %>% # create tally of obs by name
                 summarise(
                     n_record = n(),
-                    prop_names = mean(n > 1), # prop of dup. names
-                    density_names = sum(n[n > 1])/sum(n) # mass of dup. names
+                    prop_names_duplicated = mean(n > 1), # prop of dup. names
+                    density_names_duplicated = sum(n[n > 1])/sum(n) # mass of dup. names
                 ),
             .id = "dataset"
         )
 
+    cat("nest and join rais and filiados data")
     record_rais_filiados_nested <- record_rais_filiados %>%
         modify(
             # ~ filter_group_by_size(., n = 1, name) %>%
@@ -112,6 +118,7 @@ for (i in seq_along(years)) {
     # questions:
     # 1) how many rais workers can we match?
     # 2) how many filiados can we match?
+    cat("join through exact match")
     record_linkage_data <- record_linkage_data %>%
         transmute(
             year,
@@ -134,7 +141,8 @@ for (i in seq_along(years)) {
     record_linkage <- record_linkage_data %>%
         select(year, state, name, cpf, electoral_title)
     
-    n_match <- nrow(record_link)
+    # final diagnostic: proportion of matches
+    n_match <- nrow(record_linkage)
 
     record_diagnostics <- record_diagnostics %>%
         mutate(
@@ -142,25 +150,28 @@ for (i in seq_along(years)) {
             year = t
         )
 
-    record[["hash_table"]] <- rbindlist(
-        list(record[["hash_table"]], record_linkage),
+    cat("write out hash table and diagnostics.")
+    record_hash <- rbindlist(
+        list(record_hash, record_linkage),
         fill = TRUE
     )
 
-    record[["diagnostic"]] <- rbindlist(
-        list(record[["diagnostic"]], record_diagnostics),
+    record_diagnostic <- rbindlist(
+        list(record_diagnostic, record_diagnostics),
         fill = TRUE
     )
+
+    reset_env(init_env)
+
+    cat("record_linkage complete!\n # ----- # ")
 }
 
-# notes:
-# running into zipth problem
-# create an extra block (using a check)
-# 1) filtering operation upfront to remove high frequency names
-# 2) create a vector of most common names
-# meta analysis: most common names. layering.
-# use functions that work recursively
-# reduce the number of iterations
-# be comfortable with fuzzy functions
-# produce metadata on the frequency of these names
-# ---------------------------------------------------------------------------- #
+record_hash %>% 
+    fwrite(
+        here("data/clean/id/rais_filiado_crosswalk.csv")
+        )
+
+record_diagnostic %>%
+    fwrite(
+        here("data/clean/id/rais_filiado_linkage_diagnostics.csv")
+    )

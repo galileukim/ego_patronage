@@ -14,7 +14,7 @@ between <- data.table::between
 
 # ---------------------------------------------------------------------------- #
 # extract all id_employees and merge with cpf to generate crosswalk
-message("read in data")
+message("read in data.")
 
 rais_id_employee <- read_dta(
     "/home/BRDATA/RAIS/id/RAIS_employee_identifiers.dta",
@@ -26,25 +26,10 @@ rais_hash_table <- fread(
     here("data/clean/id/rais_filiado_crosswalk_unique.csv")
 )
 
-filiado_id_cpf <- fread(
-    here("data/clean/id/filiado_id_with_cpf.csv.gz")
-) %>%
-    select(
-        cpf,
-        name,
-        electoral_title
-    )
-
-message("merge rais_hash_table with id_employees")
 rais_hash_table[, cpf := as.double(cpf)]
 
+message("merge rais_hash_table with id_employees")
 rais_hash_table[
-    as.data.table(rais_id_employee),
-    id_employee := i.id_employee,
-    on = "cpf"
-]
-
-filiado_id_cpf[
     as.data.table(rais_id_employee),
     id_employee := i.id_employee,
     on = "cpf"
@@ -62,16 +47,18 @@ rais_multiple_titles <- rais_hash_table[
 
 defective_titles <- nrow(rais_multiple_titles[count_titles > 1])
 defective_cpf <- nrow(rais_multiple_titles[count_cpf > 1])
-
 message(
     "there are ",
-    defective_titles, " entries with multiple titles and ",
-    defective_cpf, " entries with multiple cpfs for id_employee"
+    defective_titles, "entries with multiple titles and ",
+    defective_cpf, "entries with multiple cpfs for id_employee"
 )
 
-rais_hash_table[
-    !is.na(id_employee), .(id_employee, electoral_title)
-] %>%
+rais_hash_table %>%
+    select(
+        id_employee,
+        cpf,
+        electoral_title
+    ) %>%
     fwrite(
         here("data/clean/id/rais_id_to_filiado_hash.csv")
     )
