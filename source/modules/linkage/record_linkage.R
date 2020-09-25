@@ -12,7 +12,7 @@ source(
     here("source/utils/record_linkage.R")
 )
 
-debug <- FALSE
+debug <- TRUE
 sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 between <- data.table::between
 
@@ -174,4 +174,21 @@ record_hash %>%
 record_diagnostic %>%
     fwrite(
         here("data/clean/id/rais_filiado_linkage_diagnostics.csv")
+    )
+
+message("create unique hash table linking cpf to electoral title")
+record_hash <- record_hash %>%
+    setkey(name, cpf, electoral_title)
+
+record_hash_unique <- unique(
+    record_hash, by = c("name", "cpf", "electoral_title")
+)
+
+message("write out table.")
+record_hash_unique %>%
+    select(
+        name, cpf, electoral_title
+    ) %>%
+    fwrite(
+        here("data/clean/id/rais_filiado_crosswalk_unique.csv")
     )
