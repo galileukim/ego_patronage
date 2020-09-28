@@ -12,7 +12,7 @@ source(
     here("source/utils/record_linkage.R")
 )
 
-debug <- TRUE
+debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 between <- data.table::between
 
@@ -23,7 +23,7 @@ source(
 # ---------------------------------------------------------------------------- #
 # extract most common names by frequency in party membership data: top 50
 # common_names <- filiados[
-#     ,
+#     ,kl
 #     .(
 #         first_name = str_extract(name, "^[a-z]+")
 #     )
@@ -64,22 +64,28 @@ for (i in seq_along(years)) {
 
     cat("creating blocks for linkage")
     # create blocks for linkage (cod_ibge_6 and kmer)
-    record_rais_filiados_nested <- join_
+    record_rais_filiados <- record_rais_filiados_list %>%
+        modify(
+            ~ mutate(
+                .,
+                kmer = substr(name, 1, 3),
+                first_name = str_extract(name, "^[a-z]+")
+            ) %>%
+            setkey(first_name)
+        )
 
-    # questions:
-    # 1) what is the proportion of names with n > 1?
-    # 2) what is the mass of these duplicated names?
-    cat("output initial set of diagnostics")
-
-    record_diagnostics <- record_rais_filiados %>%
-        map_dfr(
-            ~ .[, .(n = .N), by = name] %>% # create tally of obs by name
-                summarise(
-                    n_record = n(),
-                    prop_names_duplicated = mean(n > 1), # prop of dup. names
-                    density_names_duplicated = sum(n[n > 1])/sum(n) # mass of dup. names
-                ),
-            .id = "dataset"
+    cat("nest and join rais and filiados data")
+    record_rais_filiados_nested <- record_rais_filiados %>%
+        modify(
+            # ~ filter_group_by_size(., n = 1, name) %>%
+                ~ filter_group_by_size(., name) %>%
+                    group_nest_dt(
+                    .,
+                    year, cod_ibge_6, kmer, .key = "nested_data"
+                ) %>%
+                mutate(
+                    nested_data = map(nested_data, ~ setkey(., name))
+                )
         )
 
     # join rais and filiado blocks
@@ -120,6 +126,15 @@ for (i in seq_along(years)) {
     
     # final diagnostic: proportion of matches
     n_match <- nrow(record_linkage)
+
+    record_diagnostics <- record_rais_filiados %>%
+        map_dfr(
+            ~ .[, .(n = .N), by = name] %>% # create tally of obs by name
+                summarise(
+                    n_record = n()
+                ),
+            .id = "dataset"
+        )
 
     record_diagnostics <- record_diagnostics %>%
         mutate(

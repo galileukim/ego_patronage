@@ -26,7 +26,7 @@ filter_group_by_size <- function(data, ..., n = 1) {
 
     return(data_filter)
 }
-s
+
 nested_join <- function(nested_data){
     data <- record_rais_filiados_list %>%
         modify(
