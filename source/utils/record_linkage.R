@@ -26,6 +26,32 @@ filter_group_by_size <- function(data, ..., n = 1) {
 
     return(data_filter)
 }
+s
+nested_join <- function(nested_data){
+    data <- record_rais_filiados_list %>%
+        modify(
+            ~ mutate(
+                .,
+                kmer = substr(name, 1, 3),
+                first_name = str_extract(name, "^[a-z]+")
+            ) %>%
+            setkey(first_name)
+        )
+
+    cat("nest and join rais and filiados data")
+    record_rais_filiados_nested <- record_rais_filiados %>%
+        modify(
+            # ~ filter_group_by_size(., n = 1, name) %>%
+                ~ filter_group_by_size(., name) %>%
+                    group_nest_dt(
+                    .,
+                    year, cod_ibge_6, kmer, .key = "nested_data"
+                ) %>%
+                mutate(
+                    nested_data = map(nested_data, ~ setkey(., name))
+                )
+        )
+}
 
 inner_merge <- function(x, y){
     merge(x, y, all = FALSE)

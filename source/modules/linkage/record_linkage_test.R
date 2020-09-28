@@ -44,7 +44,7 @@ source(
 record_hash <- list()
 record_diagnostic <- list()
 
-years <- 2003:2016
+years <- 2003:2015
 for (i in seq_along(years)) {
     init_env <- ls()
 
@@ -64,15 +64,7 @@ for (i in seq_along(years)) {
 
     cat("creating blocks for linkage")
     # create blocks for linkage (cod_ibge_6 and kmer)
-    record_rais_filiados <- record_rais_filiados_list %>%
-        modify(
-            ~ mutate(
-                .,
-                kmer = substr(name, 1, 3),
-                first_name = str_extract(name, "^[a-z]+")
-            ) %>%
-            setkey(first_name)
-        )
+    record_rais_filiados_nested <- join_
 
     # questions:
     # 1) what is the proportion of names with n > 1?
@@ -88,20 +80,6 @@ for (i in seq_along(years)) {
                     density_names_duplicated = sum(n[n > 1])/sum(n) # mass of dup. names
                 ),
             .id = "dataset"
-        )
-
-    cat("nest and join rais and filiados data")
-    record_rais_filiados_nested <- record_rais_filiados %>%
-        modify(
-            # ~ filter_group_by_size(., n = 1, name) %>%
-                ~ filter_group_by_size(., name) %>%
-                    group_nest_dt(
-                    .,
-                    year, cod_ibge_6, kmer, .key = "nested_data"
-                ) %>%
-                mutate(
-                    nested_data = map(nested_data, ~ setkey(., name))
-                )
         )
 
     # join rais and filiado blocks
