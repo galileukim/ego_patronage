@@ -54,6 +54,7 @@ for (i in seq_along(years)) {
     cat("reading in files")
     rais_t <- fread(rais_id_files[i])
 
+    # filter out filiados for year
     filiados_t <- filiados[between(t, year_start, year_termination)]
     filiados_t[, year := t]
 
@@ -123,7 +124,7 @@ for (i in seq_along(years)) {
         )
 
     record_linkage <- record_linkage_data %>%
-        select(year, cod_ibge_6, name, cpf, electoral_title)
+        select(name, cpf, electoral_title)
 
     # final diagnostic: proportion of matches
     n_match <- nrow(record_linkage)
@@ -145,9 +146,9 @@ for (i in seq_along(years)) {
 
     cat("write out hash table and diagnostics.")
     record_hash[[i]] <- record_linkage %>%
+        as.data.table %>%
         setkey(name, cpf, electoral_title) %>%
         unique(
-            record_hash,
             by = c("name", "cpf", "electoral_title")
         )
 

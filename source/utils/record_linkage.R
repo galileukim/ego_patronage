@@ -67,3 +67,19 @@ reset_env <- function(init_env){
 
   gc()
 }
+
+diagnose_duplicates <- function(data){
+    diagnostic <- data[
+        ,
+        .(n = .N),
+        by = .(cod_ibge_6, name)
+    ][
+        ,
+        .(
+            number_duplicated = sum(n > 1),
+            density_duplicated = sum(n[n > 1]) / sum(n)
+        )
+    ]
+
+    return(diagnostic)
+}
