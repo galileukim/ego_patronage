@@ -43,8 +43,8 @@ source(
 # deduplicate names within each block to ensure that each name is unique
 record_hash <- list()
 record_diagnostic <- list()
-
 years <- 2003:2015
+
 for (i in seq_along(years)) {
     init_env <- ls()
 
@@ -71,17 +71,18 @@ for (i in seq_along(years)) {
                 kmer = substr(name, 1, 3),
                 first_name = str_extract(name, "^[a-z]+")
             ) %>%
-            setkey(first_name)
+                setkey(first_name)
         )
 
     cat("nest and join rais and filiados data")
     record_rais_filiados_nested <- record_rais_filiados %>%
         modify(
             # ~ filter_group_by_size(., n = 1, name) %>%
-                ~ filter_group_by_size(., name) %>%
-                    group_nest_dt(
+            ~ filter_group_by_size(., name) %>%
+                group_nest_dt(
                     .,
-                    year, cod_ibge_6, kmer, .key = "nested_data"
+                    year, cod_ibge_6, kmer,
+                    .key = "nested_data"
                 ) %>%
                 mutate(
                     nested_data = map(nested_data, ~ setkey(., name))
@@ -107,9 +108,9 @@ for (i in seq_along(years)) {
             year,
             cod_ibge_6,
             linked_record = map2(
-            nested_data_rais,
-            nested_data_filiados,
-            ~ merge(.x, .y, all = FALSE)
+                nested_data_rais,
+                nested_data_filiados,
+                ~ merge(.x, .y, all = FALSE)
             ),
             n_record = map_dbl(linked_record, nrow)
         ) %>%
@@ -123,7 +124,7 @@ for (i in seq_along(years)) {
 
     record_linkage <- record_linkage_data %>%
         select(year, cod_ibge_6, name, cpf, electoral_title)
-    
+
     # final diagnostic: proportion of matches
     n_match <- nrow(record_linkage)
 
@@ -138,49 +139,33 @@ for (i in seq_along(years)) {
 
     record_diagnostics <- record_diagnostics %>%
         mutate(
-            prop_matched = n_match/n_record,
+            prop_matched = n_match / n_record,
             year = t
         )
 
     cat("write out hash table and diagnostics.")
-    record_hash <- rbindlist(
-        list(record_hash, record_linkage),
-        fill = TRUE
-    )
+    record_hash[[i]] <- record_linkage %>%
+        setkey(name, cpf, electoral_title) %>%
+        unique(
+            record_hash,
+            by = c("name", "cpf", "electoral_title")
+        )
 
-    record_diagnostic <- rbindlist(
-        list(record_diagnostic, record_diagnostics),
-        fill = TRUE
-    )
+    record_diagnostic[[i]] <- record_diagnostics
 
     reset_env(init_env)
 
     cat("record_linkage complete!\n # ----- # ")
 }
 
-record_hash %>% 
+record_hash %>%
+    rbindlist(fill = TRUE) %>%
     fwrite(
         here("data/clean/id/rais_filiado_crosswalk_mun.csv")
-        )
-
-record_diagnostic %>%
-    fwrite(
-        here("data/clean/id/rais_filiado_linkage_diagnostics_mun.csv")
     )
 
-message("create unique hash table linking cpf to electoral title")
-record_hash <- record_hash %>%
-    setkey(name, cpf, electoral_title)
-
-record_hash_unique <- unique(
-    record_hash, by = c("name", "cpf", "electoral_title")
-)
-
-message("write out table.")
-record_hash_unique %>%
-    select(
-        name, cpf, electoral_title
-    ) %>%
+record_diagnostic %>%
+    rbindlist(fill = TRUE) %>%
     fwrite(
-        here("data/clean/id/rais_filiado_crosswalk_unique_mun.csv")
+        here("data/clean/id/rais_filiado_linkage_diagnostics_mun.csv")
     )
