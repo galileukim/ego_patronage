@@ -77,7 +77,8 @@ diagnose_duplicates <- function(data){
         ,
         .(
             number_duplicated = sum(n > 1),
-            density_duplicated = sum(n[n > 1]) / sum(n)
+            density_duplicated = sum(n[n > 1]) / sum(n),
+            total_records = sum(n)
         )
     ]
 
