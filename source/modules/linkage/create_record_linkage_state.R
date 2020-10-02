@@ -12,7 +12,7 @@ source(
     here("source/utils/record_linkage.R")
 )
 
-debug <- FALSE
+debug <- TRUE
 sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 between <- data.table::between
 
@@ -35,12 +35,16 @@ for (i in seq_along(years)) {
     rais_t <- fread(
         rais_id_files[i],
         select = c("cod_ibge_6", "cpf", "name")
-    )
+    ) %>%
+        mutate(
+            state = str_sub(cod_ibge_6, 1, 2)
+        ) %>%
+        select(-cod_ibge_6)
 
     # filter out filiados for year
     filiados_t <- filiados[
         between(t, year_start, year_termination),
-        .(cod_ibge_6, name, electoral_title)
+        .(state = str_sub(cod_ibge_6, 1, 2), name, electoral_title)
     ]
     filiados_t[, year := t]
 
@@ -57,22 +61,22 @@ for (i in seq_along(years)) {
     message("extract only names that are unique by municipio")
     rais_t_dedupe <- rais_t %>%
         remove_duplicate_by_group(
-            group = .(cod_ibge_6, name)
+            group = .(state, name)
         )
 
     filiados_t_dedupe <- filiados_t %>%
         remove_duplicate_by_group(
-            group = .(cod_ibge_6, name)
+            group = .(state, name)
         )
 
     # set keys
-    setkey(rais_t_dedupe, cod_ibge_6, name)
-    setkey(filiados_t_dedupe, cod_ibge_6, name)
+    setkey(rais_t_dedupe, state, name)
+    setkey(filiados_t_dedupe, state, name)
 
     message("join rais and filiados data")
     rais_filiados_t <- merge(
         rais_t_dedupe, filiados_t_dedupe,
-        by = c("cod_ibge_6", "name"),
+        by = c("state", "name"),
         all = FALSE
     )
 
@@ -87,7 +91,7 @@ for (i in seq_along(years)) {
 
 rais_filiados <- rbindlist(rais_filiados, fill = TRUE) %>%
     select(
-        cod_ibge_6, cpf, electoral_title, name
+        state, cpf, electoral_title, name
     ) %>%
     unique()
 
@@ -96,10 +100,12 @@ record_diagnostic <- rbindlist(record_diagnostic, fill = TRUE)
 message("write-out data")
 rais_filiados %>%
     fwrite(
-        here("data/clean/id/rais_filiado_crosswalk_mun.csv")
+        here("data/clean/id/rais_filiado_crosswalk_state.csv")
     )
 
 record_diagnostic %>%
     fwrite(
-        here("data/clean/id/rais_diagnostics_mun.csv")
+        here("data/clean/id/rais_diagnostics_state.csv")
     )
+
+message("record linkage by state complete!")

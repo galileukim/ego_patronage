@@ -87,15 +87,17 @@ diagnose_duplicates <- function(data){
 
 remove_duplicate_by_group <- function(data, group){
     group <- substitute(group)
-
-    data_deduplicate <- data[
+    
+    data[
         ,
-        .(n = .N),
+        n := .N,
         by = eval(group)
-    ][
+    ]
+    
+    data_deduplicated <- data[
         n == 1
     ] %>%
         select(-n)
 
-    return(data_deduplicate)
+    return(data_deduplicated)
 }
