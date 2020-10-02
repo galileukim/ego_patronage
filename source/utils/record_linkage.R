@@ -84,3 +84,18 @@ diagnose_duplicates <- function(data){
 
     return(diagnostic)
 }
+
+remove_duplicate_by_group <- function(data, group){
+    group <- substitute(group)
+
+    data_deduplicate <- data[
+        ,
+        .(n = .N),
+        by = eval(group)
+    ][
+        n == 1
+    ] %>%
+        select(-n)
+
+    return(data_deduplicate)
+}

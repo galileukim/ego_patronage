@@ -44,12 +44,6 @@ for (i in seq_along(years)) {
     ]
     filiados_t[, year := t]
 
-    message("extrat unique name entries by municipio")
-    # extract unique cpf and names by municipio
-    rais_t <- unique(rais_t)
-    filiados_t <- unique(filiados_t)
-    # note there are few duplicates for filiados
-
     # number of names duplicated by municipality
     # mass of names duplicated by municipality
     message("produce diagnostics for duplicated names")
@@ -60,13 +54,20 @@ for (i in seq_along(years)) {
         map_dfr(diagnose_duplicates, .id = "dataset") %>%
         mutate(year = t)
 
+    message("extract only names that are unique by municipio")
+    rais_t_dedupe <- rais_t %>%
+        remove_duplicate_by_group(.(cod_ibge_6, name))
+    
+    filiados_t_dedupe <- filiados_t %>%
+        remove_duplicate_by_group(.(cod_ibge_6, name))
+
     # set keys
-    setkey(rais_t, cod_ibge_6, name)
-    setkey(filiados_t, cod_ibge_6, name)
+    setkey(rais_t_dedupe, cod_ibge_6, name)
+    setkey(filiados_t_dedupe, cod_ibge_6, name)
 
     message("join rais and filiados data")
     rais_filiados_t <- merge(
-        rais_t, filiados_t,
+        rais_t_dedupe, filiados_t_dedupe,
         by = c("cod_ibge_6", "name"),
         all = FALSE
     )
