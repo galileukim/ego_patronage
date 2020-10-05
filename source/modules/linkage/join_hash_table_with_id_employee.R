@@ -68,6 +68,7 @@ for (i in level) {
         here(
             sprintf("data/clean/id/rais_id_to_filiado_hash_%s.csv", level[i])
         )
+    )
 }
 
 message("generate rais id_employee to electoral title table...complete!")
