@@ -68,11 +68,13 @@ reset_env <- function(init_env){
   gc()
 }
 
-diagnose_duplicates <- function(data){
+diagnose_duplicates <- function(data, group){
+    grouping <- substitute(group)
+
     diagnostic <- data[
         ,
         .(n = .N),
-        by = .(cod_ibge_6, name)
+        by = eval(grouping)
     ][
         ,
         .(

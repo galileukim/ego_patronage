@@ -23,7 +23,7 @@ rais_id_employee <- read_dta(
     select(id_employee, cpf)
 
 rais_hash_table <- fread(
-    here("data/clean/id/rais_filiado_crosswalk_unique.csv")
+    here("data/clean/id/rais_filiado_crosswalk_mun.csv")
 )
 
 rais_hash_table[, cpf := as.double(cpf)]

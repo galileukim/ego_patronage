@@ -55,7 +55,10 @@ for (i in seq_along(years)) {
         rais = rais_t,
         filiados = filiados_t
     ) %>%
-        map_dfr(diagnose_duplicates, .id = "dataset") %>%
+        map_dfr(
+             ~ diagnose_duplicates(., group = .(state, name)),
+             .id = "dataset"
+             ) %>%
         mutate(year = t)
 
     message("extract only names that are unique by municipio")
