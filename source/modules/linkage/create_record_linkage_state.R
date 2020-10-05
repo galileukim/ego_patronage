@@ -12,7 +12,7 @@ source(
     here("source/utils/record_linkage.R")
 )
 
-debug <- TRUE
+debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 between <- data.table::between
 
@@ -21,8 +21,7 @@ source(
 )
 
 # ---------------------------------------------------------------------------- #
-rais_filiados <- list()
-record_diagnostic <- list()
+rais_filiados <- list()nrecord_diagnostic <- list()
 years <- 2003:2015
 
 for (i in seq_along(years)) {
