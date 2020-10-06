@@ -21,7 +21,8 @@ source(
 )
 
 # ---------------------------------------------------------------------------- #
-rais_filiados <- list()nrecord_diagnostic <- list()
+rais_filiados <- list()
+record_diagnostic <- list()
 years <- 2003:2015
 
 for (i in seq_along(years)) {
