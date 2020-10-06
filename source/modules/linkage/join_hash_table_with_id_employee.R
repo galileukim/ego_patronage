@@ -18,10 +18,15 @@ message("read in data.")
 
 rais_id_employee <- read_dta(
     "/home/BRDATA/RAIS/id/RAIS_employee_identifiers.dta",
+    col_select = c(id_employee, cpf),
     n_max = sample_size
 ) %>%
-    transmute(id_employee, cpf = as.character(cpf)) %>%
     as.data.table()
+
+# drop NA
+rais_id_employee <- na.omit(rais_id_employee)
+
+setkey(rais_id_employee, cpf)
 
 # first join ids with cpf
 filiado_with_cpf <- fread(
@@ -29,21 +34,42 @@ filiado_with_cpf <- fread(
   select = c("electoral_title", "cpf")
 )
 
+# drop NA
+filiado_with_cpf <- na.omit(filiado_with_cpf)
+
 rais_filiado_with_cpf <- unique(filiado_with_cpf)
+
+rais_filiado_with_cpf[, cpf := as.double(cpf)]
+
+setkey(rais_filiado_with_cpf, cpf)
 
 # join for id_employee
 rais_filiado_with_cpf <- rais_filiado_with_cpf[
   rais_id_employee,
+  all = FALSE,
   on = "cpf"
+][
+  ,
+  .(electoral_title, id_employee)
 ]
 
 level <- c("state", "mun")
 
-for (i in level) {
+for (i in seq_along(level)) {
   rais_filiado_table <- fread(
     here(
         sprintf("data/clean/id/rais_filiado_crosswalk_%s.csv", level[i])
-    )
+    ),
+    select = c("cpf", "electoral_title")
+  )
+
+  nrow_original <- nrow(rais_filiado_table)
+
+  # drop NA
+  rais_filiado_table <- na.omit(rais_filiado_table)
+
+  message(
+    "we drop ", nrow_original - nrow(rais_filiado_table), "observations."
   )
 
   rais_filiado_table[, cpf := as.double(cpf)]
@@ -52,6 +78,7 @@ for (i in level) {
   rais_filiado_table[
     as.data.table(rais_id_employee),
     id_employee := i.id_employee,
+    all = FALSE,
     on = "cpf"
   ]
 
@@ -77,8 +104,10 @@ for (i in level) {
   rais_filiado_table %>%
     select(
         id_employee,
-        cpf,
         electoral_title
+    ) %>%
+    bind_rows(
+      rais_filiado_with_cpf
     ) %>%
     fwrite(
         here(
@@ -86,6 +115,5 @@ for (i in level) {
         )
     )
 }
-
 
 message("generate rais id_employee to electoral title table...complete!")
