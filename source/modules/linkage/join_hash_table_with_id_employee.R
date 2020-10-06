@@ -20,30 +20,46 @@ rais_id_employee <- read_dta(
     "/home/BRDATA/RAIS/id/RAIS_employee_identifiers.dta",
     n_max = sample_size
 ) %>%
-    select(id_employee, cpf)
+    transmute(id_employee, cpf = as.character(cpf)) %>%
+    as.data.table()
+
+# first join ids with cpf
+filiado_with_cpf <- fread(
+  here("data/clean/id/filiado_id_with_cpf.csv.gz"),
+  select = c("electoral_title", "cpf")
+)
+
+rais_filiado_with_cpf <- unique(filiado_with_cpf)
+
+# join for id_employee
+rais_filiado_with_cpf <- rais_filiado_with_cpf[
+  rais_id_employee,
+  on = "cpf"
+]
 
 level <- c("state", "mun")
+
 for (i in level) {
-  rais_hash_table <- fread(
+  rais_filiado_table <- fread(
     here(
         sprintf("data/clean/id/rais_filiado_crosswalk_%s.csv", level[i])
     )
   )
 
-  rais_hash_table[, cpf := as.double(cpf)]
+  rais_filiado_table[, cpf := as.double(cpf)]
 
-  message("merge rais_hash_table with id_employees")
-  rais_hash_table[
+  message("merge rais_filiado_table with id_employees")
+  rais_filiado_table[
     as.data.table(rais_id_employee),
     id_employee := i.id_employee,
     on = "cpf"
   ]
 
-  rais_hash_table %>%
+  rais_filiado_table %>%
     setkey(id_employee)
 
   message("check if there are duplicated titles per id_employee")
-  rais_multiple_titles <- rais_hash_table[
+  rais_multiple_titles <- rais_filiado_table[
     !is.na(id_employee),
     .(count_titles = uniqueN(electoral_title), count_cpf = uniqueN(cpf)),
     by = id_employee
@@ -58,7 +74,7 @@ for (i in level) {
     defective_cpf, "entries with multiple cpfs for id_employee"
   )
 
-  rais_hash_table %>%
+  rais_filiado_table %>%
     select(
         id_employee,
         cpf,
@@ -70,7 +86,6 @@ for (i in level) {
         )
     )
 }
-
 
 
 message("generate rais id_employee to electoral title table...complete!")
