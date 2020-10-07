@@ -94,8 +94,8 @@ for (i in seq_along(level)) {
 
   message(
     "there are ",
-    defective_titles, "entries with multiple titles and ",
-    defective_cpf, "entries with multiple cpfs for id_employee"
+    defective_titles, " entries with multiple titles and ",
+    defective_cpf, " entries with multiple cpfs for id_employee"
   )
 
   rais_filiado_table_join %>%

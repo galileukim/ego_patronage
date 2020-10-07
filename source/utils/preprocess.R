@@ -9,6 +9,14 @@ extract_unique_records <- function(data, ...) {
     return(data_unique)
 }
 
+clean_name <- function(name) {
+    clean_name <- str_replace_all(name, "[^[:alpha:] ]", "") %>%
+        str_to_lower() %>%
+        iconv(to = "ASCII//TRANSLIT")
+
+    return(clean_name)
+}
+
 clean_filiados <- function(data, ...) {
     clean_data <- data %>%
         transmute(
