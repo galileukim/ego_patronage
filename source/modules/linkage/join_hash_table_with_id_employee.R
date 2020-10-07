@@ -46,11 +46,8 @@ setkey(rais_filiado_with_cpf, cpf)
 # join for id_employee
 rais_filiado_with_cpf <- rais_filiado_with_cpf[
   rais_id_employee,
-  all = FALSE,
-  on = "cpf"
-][
-  ,
-  .(electoral_title, id_employee)
+  .(electoral_title, id_employee),
+  nomatch = 0
 ]
 
 level <- c("state", "mun")
@@ -75,18 +72,18 @@ for (i in seq_along(level)) {
   rais_filiado_table[, cpf := as.double(cpf)]
 
   message("merge rais_filiado_table with id_employees")
-  rais_filiado_table[
-    as.data.table(rais_id_employee),
-    id_employee := i.id_employee,
-    all = FALSE,
-    on = "cpf"
+  setkey(rais_filiado_table, cpf)
+  
+  rais_filiado_table_join <- rais_filiado_table[
+    rais_id_employee,
+    nomatch = 0
   ]
 
-  rais_filiado_table %>%
+  rais_filiado_table_join %>%
     setkey(id_employee)
 
   message("check if there are duplicated titles per id_employee")
-  rais_multiple_titles <- rais_filiado_table[
+  rais_multiple_titles <- rais_filiado_table_join[
     !is.na(id_employee),
     .(count_titles = uniqueN(electoral_title), count_cpf = uniqueN(cpf)),
     by = id_employee
@@ -101,7 +98,7 @@ for (i in seq_along(level)) {
     defective_cpf, "entries with multiple cpfs for id_employee"
   )
 
-  rais_filiado_table %>%
+  rais_filiado_table_join %>%
     select(
         id_employee,
         electoral_title
