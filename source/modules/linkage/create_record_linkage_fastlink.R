@@ -44,19 +44,6 @@ for (i in seq_along(years)) {
     ]
     filiados_t[, year := t]
 
-    # number of names duplicated by municipality
-    # mass of names duplicated by municipality
-    message("produce diagnostics for duplicated names")
-    diagnostics_duplicate <- list(
-        rais = rais_t,
-        filiados = filiados_t
-    ) %>%
-        map_dfr(
-            ~ diagnose_duplicates(., group = .(cod_ibge_6, name)),
-            .id = "dataset"
-        ) %>%
-        mutate(year = t)
-
     message("extract only names that are unique by municipio")
     rais_t_dedupe <- rais_t %>%
         remove_duplicate_by_group(
@@ -68,7 +55,7 @@ for (i in seq_along(years)) {
             group = .(cod_ibge_6, name)
         )
 
-    # create name vars and nest
+    # create name vars and nest by municipality
     rais_t_nested <- rais_t %>%
         create_split_name() %>%
         nest(rais = -cod_ibge_6)
@@ -116,7 +103,7 @@ for (i in seq_along(years)) {
             )
         )
 
-    rais_filiados_linked %>%
+    rais_filiados_linked <- rais_filiados_linked %>%
         select(link) %>%
         unnest(
             col = c(link)
