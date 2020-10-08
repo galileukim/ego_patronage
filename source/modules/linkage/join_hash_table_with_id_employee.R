@@ -35,11 +35,11 @@ filiado_with_cpf <- fread(
 )
 
 # drop NA
-filiado_with_cpf <- na.omit(filiado_with_cpf)
-
-rais_filiado_with_cpf <- unique(filiado_with_cpf)
-
-rais_filiado_with_cpf[, cpf := as.double(cpf)]
+filiado_with_cpf <- na.omit(filiado_with_cpf) %>%
+  unique() %>%
+  mutate(
+    cpf = as.double(cpf)
+  )
 
 setkey(rais_filiado_with_cpf, cpf)
 
@@ -63,13 +63,15 @@ for (i in seq_along(level)) {
   nrow_original <- nrow(rais_filiado_table)
 
   # drop NA
-  rais_filiado_table <- na.omit(rais_filiado_table)
+  rais_filiado_table <- rais_filiado_table %>%
+    na.omit %>%
+    mutate(
+      cpf = as.double(cpf)
+    )
 
   message(
     "we drop ", nrow_original - nrow(rais_filiado_table), "observations."
   )
-
-  rais_filiado_table[, cpf := as.double(cpf)]
 
   message("merge rais_filiado_table with id_employees")
   setkey(rais_filiado_table, cpf)

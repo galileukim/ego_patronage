@@ -52,7 +52,7 @@ create_split_name <- function(data, var = name) {
         mutate(
             {{ var }} := clean_name({{ var }}),
             split_names = str_match(
-                {{ var }}, "(^[a-z]+)\\s([a-z\\.\\s]+)\\s([a-z]+$)"
+                {{ var }}, "(^\\w+)\\s*(.+)\\s*\\b(\\w+)$"
             ),
             first_name = split_names[, 2],
             middle_name = split_names[, 3],

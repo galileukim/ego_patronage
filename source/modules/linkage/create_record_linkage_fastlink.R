@@ -83,20 +83,42 @@ for (i in seq_along(years)) {
             by = "cod_ibge_6"
         )
 
+    if(isTRUE(debug)){
+        rais_filiados <- rais_filiados %>% 
+            sample_n(5)
+    }
+
     rais_filiados_linked <- rais_filiados %>%
         mutate(
             link = map2(
                 rais,
                 filiados,
-                ~ fastLink(
-                    dfA = .x,
-                    dfB = .y,
-                    varnames = c("first_name", "middle_name", "last_name"),
-                    # partial.match = c("first_name", "middle_name", "last_name"),
-                    dedupe.matches = TRUE,
-                    n.cores = 1
+                ~ match_fastLink(
+                    .x, .y
                 )
+            ),
+            n_matches = nrow_data(link)
+        ) %>%
+        filter(
+            n_matches > 0
+        )
+
+    linkage_diagnostics <- rais_filiados_linked %>%
+        mutate(
+            rais = nrow_data(rais),
+            filiados = nrow_data(filiados)
+        ) %>%
+        summarise(
+            across(
+                c(rais, filiados),
+                ~ round(n_matches/., 2),
+                .names = "prop_{.col}_matched"
             )
         )
 
+    rais_filiados_linked %>%
+        select(link) %>%
+        unnest(
+            col = c(link)
+        )
 }
