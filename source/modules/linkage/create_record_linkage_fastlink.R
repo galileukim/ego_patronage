@@ -22,8 +22,8 @@ source(
 
 # ---------------------------------------------------------------------------- #
 rais_filiados <- list()
-record_diagnostic <- list()
-years <- 2003:2015
+rais_filiados_diagnostic <- list()
+years <- 2003:2005
 
 for (i in seq_along(years)) {
     init_env <- ls()
@@ -64,18 +64,18 @@ for (i in seq_along(years)) {
         create_split_name() %>%
         nest(filiados = -cod_ibge_6)
 
-    rais_filiados <- rais_t_nested %>%
+    rais_filiados_t <- rais_t_nested %>%
         inner_join(
             filiados_t_nested,
             by = "cod_ibge_6"
         )
 
     if(isTRUE(debug)){
-        rais_filiados <- rais_filiados %>% 
+        rais_filiados_t <- rais_filiados_t %>% 
             sample_n(5)
     }
 
-    rais_filiados_linked <- rais_filiados %>%
+    rais_filiados_linked <- rais_filiados_t %>%
         mutate(
             link = map2(
                 rais,
@@ -90,6 +90,7 @@ for (i in seq_along(years)) {
             n_matches > 0
         )
 
+    # produce diagnostics
     linkage_diagnostics <- rais_filiados_linked %>%
         mutate(
             rais = nrow_data(rais),
@@ -103,9 +104,33 @@ for (i in seq_along(years)) {
             )
         )
 
+    # unnest hash table
     rais_filiados_linked <- rais_filiados_linked %>%
         select(link) %>%
         unnest(
             col = c(link)
         )
+
+    message("write out data")
+    rais_filiados[[i]] <- rais_filiados_linked
+    rais_filiados_diagnostic[[i]] <- linkage_diagnostics
 }
+
+rais_filiados <- rbindlist(rais_filiados, fill = TRUE) %>%
+    select(
+        cod_ibge_6, cpf, electoral_title, name
+    ) %>%
+    unique()
+
+record_diagnostic <- rbindlist(record_diagnostic, fill = TRUE)
+
+message("write-out data")
+rais_filiados %>%
+    fwrite(
+        here("data/clean/id/rais_filiado_crosswalk_fastlink.csv")
+    )
+
+record_diagnostic %>%
+    fwrite(
+        here("data/clean/id/rais_diagnostics_fastlink.csv")
+    )
