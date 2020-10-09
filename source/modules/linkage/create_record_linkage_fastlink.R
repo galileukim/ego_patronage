@@ -12,7 +12,7 @@ source(
     here("source/utils/record_linkage.R")
 )
 
-debug <- TRUE
+debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 between <- data.table::between
 
@@ -70,11 +70,6 @@ for (i in seq_along(years)) {
             by = "cod_ibge_6"
         )
 
-    if(isTRUE(debug)){
-        rais_filiados_t <- rais_filiados_t %>% 
-            sample_n(5)
-    }
-
     rais_filiados_linked <- rais_filiados_t %>%
         mutate(
             link = map2(
@@ -118,11 +113,11 @@ for (i in seq_along(years)) {
 
 rais_filiados <- rbindlist(rais_filiados, fill = TRUE) %>%
     select(
-        cod_ibge_6, cpf, electoral_title, name
+        cpf, electoral_title, name
     ) %>%
     unique()
 
-record_diagnostic <- rbindlist(record_diagnostic, fill = TRUE)
+rais_filiados_diagnostic <- rbindlist(rais_filiados_diagnostic, fill = TRUE)
 
 message("write-out data")
 rais_filiados %>%
@@ -130,7 +125,7 @@ rais_filiados %>%
         here("data/clean/id/rais_filiado_crosswalk_fastlink.csv")
     )
 
-record_diagnostic %>%
+rais_filiados_diagnostic %>%
     fwrite(
         here("data/clean/id/rais_diagnostics_fastlink.csv")
     )
