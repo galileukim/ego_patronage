@@ -23,7 +23,7 @@ source(
 # ---------------------------------------------------------------------------- #
 rais_filiados <- list()
 rais_filiados_diagnostic <- list()
-years <- 2003:2005
+years <- 2003:2015
 
 for (i in seq_along(years)) {
     init_env <- ls()
@@ -56,6 +56,7 @@ for (i in seq_along(years)) {
         )
 
     # create name vars and nest by municipality
+    message("create nested data frame")
     rais_t_nested <- rais_t %>%
         create_split_name() %>%
         nest(rais = -cod_ibge_6)
@@ -69,6 +70,11 @@ for (i in seq_along(years)) {
             filiados_t_nested,
             by = "cod_ibge_6"
         )
+
+    message("perform probabilistic linkage")
+    if(isTRUE(debug)){
+        rais_filiados_t <- sample_n(rais_filiados_t, 3)
+    }
 
     rais_filiados_linked <- rais_filiados_t %>%
         mutate(
@@ -86,6 +92,7 @@ for (i in seq_along(years)) {
         )
 
     # produce diagnostics
+    message("generate diagnostics")
     linkage_diagnostics <- rais_filiados_linked %>%
         mutate(
             rais = nrow_data(rais),
@@ -106,7 +113,7 @@ for (i in seq_along(years)) {
             col = c(link)
         )
 
-    message("write out data")
+    message("finalize linkage")
     rais_filiados[[i]] <- rais_filiados_linked
     rais_filiados_diagnostic[[i]] <- linkage_diagnostics
 }
