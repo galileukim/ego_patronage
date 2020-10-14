@@ -50,7 +50,7 @@ rais_filiado_with_cpf <- rais_filiado_with_cpf[
   nomatch = 0
 ]
 
-level <- c("state", "mun")
+level <- c("state", "mun", "fastLink")
 
 for (i in seq_along(level)) {
   rais_filiado_table <- fread(

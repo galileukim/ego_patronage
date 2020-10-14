@@ -72,6 +72,11 @@ for (i in seq_along(years)) {
             by = "state"
         )
 
+    message("perform probabilistic linkage")
+    if(isTRUE(debug)){
+        rais_filiados_t <- sample_n(rais_filiados_t, 3)
+    }
+
     rais_filiados_linked <- rais_filiados_t %>%
         mutate(
             link = map2(
@@ -88,6 +93,7 @@ for (i in seq_along(years)) {
         )
 
     # produce diagnostics
+    message("generate diagnostics")
     linkage_diagnostics <- rais_filiados_linked %>%
         mutate(
             rais = nrow_data(rais),
