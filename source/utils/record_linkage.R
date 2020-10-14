@@ -117,8 +117,8 @@ match_fastLink <- function(x, y, threshold = 0.85) {
     match_out <- fastLink(
         dfA = x,
         dfB = y,
-        varnames = c("first_name", "middle_name", "last_name"),
-        # partial.match = c("first_name", "middle_name", "last_name"),
+        varnames = c("first_name", "middle_name", "last_name", "cod_ibge_6"),
+        stringdist.match = c("first_name", "middle_name", "last_name"),
         dedupe.matches = TRUE,
         n.cores = 1
     )

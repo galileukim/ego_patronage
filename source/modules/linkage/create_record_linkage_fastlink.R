@@ -23,7 +23,7 @@ source(
 # ---------------------------------------------------------------------------- #
 rais_filiados <- list()
 rais_filiados_diagnostic <- list()
-years <- 2003:2005
+years <- 2003:2015
 
 for (i in seq_along(years)) {
     init_env <- ls()
@@ -55,19 +55,21 @@ for (i in seq_along(years)) {
             group = .(cod_ibge_6, name)
         )
 
-    # create name vars and nest by municipality
+    # create name vars and nest by state
     rais_t_nested <- rais_t %>%
         create_split_name() %>%
-        nest(rais = -cod_ibge_6)
+        mutate(state = str_sub(cod_ibge_6, 1, 2)) %>%
+        nest(rais = -state)
 
     filiados_t_nested <- filiados_t_dedupe %>%
         create_split_name() %>%
-        nest(filiados = -cod_ibge_6)
+        mutate(state = str_sub(cod_ibge_6, 1, 2)) %>%
+        nest(filiados = -state)
 
     rais_filiados_t <- rais_t_nested %>%
         inner_join(
             filiados_t_nested,
-            by = "cod_ibge_6"
+            by = "state"
         )
 
     rais_filiados_linked <- rais_filiados_t %>%
@@ -106,7 +108,7 @@ for (i in seq_along(years)) {
             col = c(link)
         )
 
-    message("write out data")
+    message("store data")
     rais_filiados[[i]] <- rais_filiados_linked
     rais_filiados_diagnostic[[i]] <- linkage_diagnostics
 }
