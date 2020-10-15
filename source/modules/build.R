@@ -3,7 +3,8 @@ build_from_source <- function(...) source(here("source", ...))
 module_deduplication <- c(
     "dedupe_candidates", 
     "dedupe_filiados", 
-    "dedupe_rais"
+    "dedupe_rais",
+    "triage_filiado_with_cpf"
 )
 
 module_deduplication <- paste0("deduplication/", module_deduplication, ".R") 
@@ -15,6 +16,7 @@ module_linkage <- c(
     "triage_filiado_with_cpf", 
     "create_record_linkage_mun",
     "create_record_linkage_state",
+    "create_record_linkage_fastLink",
     "join_hash_table_with_id_employee"
 )
 

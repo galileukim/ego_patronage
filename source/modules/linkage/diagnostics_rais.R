@@ -29,6 +29,3 @@ rais_diagnostics %>%
     fwrite(
         here("data/clean/debug/rais_diagnostics.csv")
     )
-
-# conclusion: there are 0.02 percent duplicated names per electoral title
-# which correspond to 0.02 percent of all entries
