@@ -55,7 +55,8 @@ for (i in seq_along(years)) {
             group = .(cod_ibge_6, name)
         )
 
-    # create name vars and nest by state
+    # create name vars and nest by municipio
+    message("nesting data")
     rais_t_nested <- rais_t %>%
         create_split_name() %>%
         mutate(state = str_sub(cod_ibge_6, 1, 2)) %>%
