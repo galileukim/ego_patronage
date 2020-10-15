@@ -12,7 +12,7 @@ source(
     here("source/utils/record_linkage.R")
 )
 
-debug <- FALSE
+debug <- TRUE
 sample_size <- ifelse(isTRUE(debug), 1e5, Inf)
 between <- data.table::between
 
@@ -59,18 +59,16 @@ for (i in seq_along(years)) {
     message("nesting data")
     rais_t_nested <- rais_t %>%
         create_split_name() %>%
-        mutate(state = str_sub(cod_ibge_6, 1, 2)) %>%
-        nest(rais = -state)
+        nest(rais = -cod_ibge_6)
 
     filiados_t_nested <- filiados_t_dedupe %>%
         create_split_name() %>%
-        mutate(state = str_sub(cod_ibge_6, 1, 2)) %>%
-        nest(filiados = -state)
+        nest(filiados = -cod_ibge_6)
 
     rais_filiados_t <- rais_t_nested %>%
         inner_join(
             filiados_t_nested,
-            by = "state"
+            by = "cod_ibge_6"
         )
 
     message("perform probabilistic linkage")
