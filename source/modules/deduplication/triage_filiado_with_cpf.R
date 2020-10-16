@@ -32,7 +32,7 @@ filiado_without_cpf <- filiado %>%
 print("write-out data")
 file_names <- sprintf(
     here("data/clean/id/%s.csv.gz"),
-    c("filiado_with_cpf", "filiado_without_cpf")
+    c("filiado_id_with_cpf", "filiado_id_without_cpf")
 )
 
 walk2(

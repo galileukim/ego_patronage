@@ -41,16 +41,16 @@ filiado_with_cpf <- na.omit(filiado_with_cpf) %>%
     cpf = as.double(cpf)
   )
 
-setkey(rais_filiado_with_cpf, cpf)
+setkey(filiado_with_cpf, cpf)
 
 # join for id_employee
-rais_filiado_with_cpf <- rais_filiado_with_cpf[
+filiado_with_cpf <- filiado_with_cpf[
   rais_id_employee,
   .(electoral_title, id_employee),
   nomatch = 0
 ]
 
-level <- c("state", "mun", "fastLink")
+level <- c("state", "mun")
 
 for (i in seq_along(level)) {
   rais_filiado_table <- fread(
