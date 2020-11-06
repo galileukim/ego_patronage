@@ -1,10 +1,11 @@
-build_from_source <- function(...) source(here("source", ...))
+build_from_source <- function(...) source(here::here("source/modules", ...))
+
+build_from_source("setup_preprocess.R")
 
 module_deduplication <- c(
     "dedupe_candidates", 
     "dedupe_filiados", 
-    "dedupe_rais",
-    "triage_filiado_with_cpf"
+    "dedupe_rais"
 )
 
 module_deduplication <- paste0("deduplication/", module_deduplication, ".R") 
@@ -21,7 +22,7 @@ module_linkage <- c(
 )
 
 module_linkage <- sprintf(
-    "deduplication/%s.R",
+    "linkage/%s.R",
     module_linkage
 )
 

@@ -14,18 +14,15 @@ source(
 )
 
 library(haven)
-library(hash)
-library(digest)
-library(microbenchmark)
 
 source(here("source/utils/preprocess_rais.R"))
 
-debug <- FALSE
+debug <- TRUE
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
 
 # ---------------------------------------------------------------------------- #
 id_path <- "/home/BRDATA/RAIS/rawtxt"
-years <- 2008:2016
+years <- 2003:2016
 n_unique_ids <- rep(NA, length(years))
 
 for (i in seq_along(years)) {
@@ -33,7 +30,7 @@ for (i in seq_along(years)) {
     t <- years[i]
 
     name_col <- if (t <= 2010) "NOME" else "Nome Trabalhador"
-    mun_col <- if(t <= 2010) "MUNICIPIO" else "Município"
+    mun_col <- if (t <= 2010) "MUNICIPIO" else "Município"
     select_cols <- c(mun_col, "CPF", name_col)
 
     print("initiate extraction for year t")

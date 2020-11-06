@@ -22,7 +22,8 @@ read_7z <- function(file_path, year, select = NULL, dest_dir = tempdir()) {
         extracted_file_path,
         colClasses = "character",
         select = select,
-        encoding = "Latin-1"
+        encoding = "Latin-1",
+        sep = ";"
     )
 
     unlink(dest_dir_temp, recursive = T)
