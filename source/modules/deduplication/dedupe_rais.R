@@ -17,7 +17,7 @@ library(haven)
 
 source(here("source/utils/preprocess_rais.R"))
 
-debug <- TRUE
+debug <- FALSE
 sample_size <- ifelse(isTRUE(debug), 1e3, Inf)
 
 # ---------------------------------------------------------------------------- #

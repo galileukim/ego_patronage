@@ -1,4 +1,3 @@
-
 read_7z <- function(file_path, year, select = NULL, dest_dir = tempdir()) {
     # extracts file from id folder
     # into a dest_folder, silently
@@ -17,6 +16,8 @@ read_7z <- function(file_path, year, select = NULL, dest_dir = tempdir()) {
         dest_dir_temp,
         full.names = T
     )
+
+    # separator <- if(year <= 2009) ";" else "auto"
 
     data <- fread(
         extracted_file_path,
