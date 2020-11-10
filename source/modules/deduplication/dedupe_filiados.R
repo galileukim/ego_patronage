@@ -31,8 +31,7 @@ filiados <- filiados %>%
     unique(
         by = c("member_name", "electoral_title", "party")
     ) %>%
-    select(
-        electoral_title,
+    mutate(
         name = clean_name(member_name)
     )
 
@@ -42,12 +41,12 @@ filiados <- filiados %>%
 #        between(year_start, 1950, 2019)
 #    )
 
-filiados_ordered <- filiados[order(last_name)]
+filiados_ordered <- filiados[order(name)]
 
 # ---------------------------------------------------------------------------- #
 print("write-out file")
 filiados_ordered %>%
     fwrite(
-        here("data/clean/id/filiados_deduped.csv.gz"),
+        here("data/clean/id/filiado_deduped.csv.gz"),
         compress = "gzip"
     )

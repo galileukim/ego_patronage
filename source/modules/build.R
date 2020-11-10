@@ -14,10 +14,10 @@ module_deduplication %>%
     walk(build_from_source)
 
 module_linkage <- c(
-    "triage_filiado_with_cpf", 
+    "triage_filiado_with_cpf",
     "create_record_linkage_mun",
     "create_record_linkage_state",
-    "create_record_linkage_fastLink",
+    # "create_record_linkage_fastLink",
     "join_hash_table_with_id_employee"
 )
 
@@ -27,4 +27,4 @@ module_linkage <- sprintf(
 )
 
 module_linkage %>%
-    walk(build_from_sourcez)
+    walk(build_from_source)

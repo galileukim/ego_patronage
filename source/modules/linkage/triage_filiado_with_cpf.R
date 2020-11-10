@@ -8,12 +8,12 @@ source(
 
 print("read-in data")
 candidate <- fread(
-    here("data/clean/candidate_deduped.csv.gz")
+    here("data/clean/id/candidate_deduped.csv.gz")
 ) %>%
     select(-name)
 
 filiado <- fread(
-    here("data/clean/id/filiados_deduped.csv.gz")
+    here("data/clean/id/filiado_deduped.csv.gz")
 )
 
 print("joining data files")
