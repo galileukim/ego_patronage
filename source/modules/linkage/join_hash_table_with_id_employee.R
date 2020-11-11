@@ -44,7 +44,7 @@ filiado_with_cpf <- na.omit(filiado_with_cpf) %>%
 setkey(filiado_with_cpf, cpf)
 
 # join for id_employee
-filiado_with_cpf <- filiado_with_cpf[
+rais_filiado_with_cpf <- filiado_with_cpf[
   rais_id_employee,
   .(electoral_title, id_employee),
   nomatch = 0
