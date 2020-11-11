@@ -95,7 +95,7 @@ rais_filiados <- rbindlist(rais_filiados, fill = TRUE) %>%
     unique()
 
 record_diagnostic <- rbindlist(record_diagnostic, fill = TRUE)
-``
+
 message("write-out data")
 rais_filiados %>%
     fwrite(
