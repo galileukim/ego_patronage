@@ -28,7 +28,6 @@ setkey(candidate, cpf)
 setkey(rais_id_employee, cpf)
 
 message("joining data")
-
 candidate_id <- candidate %>%
     merge(
         rais_id_employee,
@@ -37,10 +36,11 @@ candidate_id <- candidate %>%
     )
 
 message(
-    "there are ", nrow(candidate_id), " matches in the data, out of",
+    "there are ", nrow(candidate_id), " matches in the data, out of ",
     nrow(candidate), " possible in the candidate data"
 )
 
+message("write-out data")
 candidate_id %>%
     fwrite(
         here("data/clean/id/candidate_id.csv.gz"),
