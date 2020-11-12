@@ -6,11 +6,15 @@ library(here)
 # ---------------------------------------------------------------------------- #
 # read-in filiados
 filiado <- fread(here("data/raw/filiado.csv.gz")) %>%
-    transmute(
+    select(
         cod_ibge_6,
-        electoral_title = as.double(electoral_title),
+        electoral_title,
         party,
-        starts_with("date")
+        starts_with("date"),
+        -date_record_extraction
+    ) %>%
+    mutate(
+        electoral_title = as.double(electoral_title)
     )
 
 level <- c("mun", "state")
@@ -35,10 +39,10 @@ filiado_hash <- filiado_hash %>%
         ~ select(., -electoral_title)
     )
 
-filenames <- sprintf("~/SHARED/gkim/filiado_with_id_employee_%s.csv", level)
+filenames <- sprintf("~/SHARED/gkim/filiado_with_id_employee_%s.csv.gz", level)
 
 walk2(
     filiado_hash,
     filenames,
-    ~ fwrite(.x, .y)
+    ~ fwrite(.x, .y, compress = "gzip")
 )

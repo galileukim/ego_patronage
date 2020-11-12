@@ -13,13 +13,7 @@ candidate <- fread(
         cod_ibge_6,
         cpf = cpf_candidate,
         election_year,
-        campaign,
         candidate_num,
-        candidate_status,
-        coalition,
-        coalition_name,
-        coalition_type,
-        cod_tse,
         age,
         edu,
         edu_desc,
@@ -54,12 +48,13 @@ candidate_hash <- candidate %>%
 # trim out identifiers
 candidate_hash <- candidate_hash %>% 
     select(
+        -cpf,
         -name,
         -electoral_title
     )
 
 filenames <- fwrite(
     candidate_hash,
-    "~/SHARED/gkim/candidate_with_id_employee.csv",
+    "~/SHARED/gkim/candidate_with_id_employee.csv.gz",
     compress = "gzip"
     )
