@@ -17,7 +17,10 @@ module_deduplication <- c(
     "dedupe_rais"
 )
 
-module_deduplication <- paste0("deduplication/", module_deduplication, ".R") 
+module_deduplication <- sprintf(
+    "record_linkage/deduplication/%s.R",
+    module_deduplication
+)
 
 module_deduplication %>%
     walk(build_from_source)
@@ -31,11 +34,17 @@ module_linkage <- c(
 )
 
 module_linkage <- sprintf(
-    "linkage/%s.R",
+    "record_linkage/linkage/%s.R",
     module_linkage
 )
 
 module_linkage %>%
     walk(build_from_source)
 
+module_database <- c(
+    "create_sqlite_database"
+)
 
+module_selection <- c(
+    "identify_municipal_bureaucrats"
+)
