@@ -103,6 +103,7 @@ trim_rais <- function(data, ...) {
       year,
       cod_ibge_6 = municipio,
       cbo_02 = cbo2002,
+      cnae = cnae20classe,
       age,
       edu,
       gender = genero,
