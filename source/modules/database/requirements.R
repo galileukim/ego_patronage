@@ -97,35 +97,41 @@ fix_occupation <- function(data) {
 }
 
 trim_rais <- function(data, ...) {
-  data %>%
-    transmute(
+  data_trimmed <- data %>%
+    select(
       id_employee,
       year,
       cod_ibge_6 = municipio,
       cbo_02 = cbo2002,
-      cnae = cnae20classe,
+      matches("cnae_[0-9]{2}"),
       age,
       edu,
       gender = genero,
       race = racacor,
       work_experience = tempoempr,
       wage = vlremmedia,
-      hired = if_else(tipoadmissao == 1 | tipoadmissao == 2, 1, 0),
-      fired = if_else(causadesli == 10 | causadesli == 11, 1, 0),
-      departure = if_else(causadesli == 20 | causadesli == 21, 1, 0),
       date_admission,
       date_separation,
       contract = tipovinculo,
       nat_jur = naturjur,
-      municipal = if_else(naturjur == 1031, 1, 0),
+      hours = horascontr,
+      cpi,
+      type_admission = tipoadmissao,
+      cause_fired = causadesli,
+      ...
+    ) %>%
+    mutate(
+      hired = if_else(type_admission == 1 | type_admission == 2, 1, 0),
+      fired = if_else(cause_fired == 10 | cause_fired == 11, 1, 0),
+      departure = if_else(cause_fired == 20 | cause_fired == 21, 1, 0),
+      municipal = if_else(nat_jur == 1031, 1, 0),
       outcome = recode(fired, `0` = 0, `10` = 2, `11` = 2, .default = 1),
       state = substr(cod_ibge_6, 1, 2),
       cbo_02 = ifelse(nchar(cbo_02) == 5, paste0("0", cbo_02), cbo_02),
-      occupation = as.integer(substr(cbo_02, 1, 1)),
-      hours = horascontr,
-      cpi,
-      ...
+      occupation = as.integer(substr(cbo_02, 1, 1))
     )
+
+  return(data_trimmed)
 }
 
 make_dummy <- function(data, var) {
@@ -255,8 +261,8 @@ read_rais <- function(year) {
       "municipio",
       "cbo2002",
       "vlremmedia",
-      "tipoadmissao",
-      "causadesli",
+      "type_admission",
+      "cause_fired",
       "date_admission",
       "date_separation",
       "tipovinculo",

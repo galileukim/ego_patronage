@@ -9,7 +9,7 @@ library(DBI)
 set.seed(1789)
 here <- here::here
 path <- "/home/brdata/RAIS"
-debug <- TRUE
+debug <- FALSE
 nrows <- if (isTRUE(debug)) 1e3 else Inf
 rais_sql <- here("data/database/rais.sqlite3")
 
@@ -20,7 +20,7 @@ source(
 # data --------------------------------------------------------------------
 files <- list.files(
   path = path,
-  pattern = "RAIS200[7-9]|RAIS201[0-6]",
+  pattern = "RAIS200[3-9]|RAIS201[0-6]",
   full.names = T
 )
 
@@ -48,13 +48,28 @@ for (file in files) {
     filter(year == !!year) %>%
     pull(cpi)
 
-  rais <- read_dta(file, n_max = 100)
+  rais <- read_dta(file, n_max = 10)
 
   # fix wage (dollars of 2010) and age
   rais <- rais %>%
     mutate(
       cpi = !!cpi_year
     )
+
+  # fix cnae var
+  rais <- rais %>%
+    rename_with(
+      ~ str_replace(., "cnae([0-9]{2})classe", "cnae_\\1"),
+      matches("cnae[0-9]{2}classe")
+    )
+
+  # if first year, generate placeholder for cnae_20
+  if(as.numeric(year == 2003)){
+    rais <- rais %>%
+      mutate(
+        cnae_20 = NA_real_
+      )
+  }
 
   if (as.numeric(year) <= 2010) {
     rais <- rais %>%
@@ -90,3 +105,4 @@ for (file in files) {
 
   write_log(file)
 }
+
