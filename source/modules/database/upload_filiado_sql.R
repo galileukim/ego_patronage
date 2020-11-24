@@ -7,9 +7,10 @@ library(data.table)
 library(here)
 library(DBI)
 
-debug <- TRUE
+debug <- FALSE
 data_path <- "data/clean/"
 source_path <- "source/modules/database/"
+rais_sql <- here("data/database/rais.sqlite3")
 rais_con <- DBI::dbConnect(RSQLite::SQLite(), rais_sql)
 
 here_data <- partial(
