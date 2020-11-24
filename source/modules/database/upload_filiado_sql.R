@@ -1,4 +1,6 @@
 # ---------------------------------------------------------------------------- #
+message('setting up...')
+
 library(tidyverse)
 library(dbplyr)
 library(data.table)
@@ -25,14 +27,27 @@ source(
 )
 
 # ---------------------------------------------------------------------------- #
-filiado_mun <- fread(
-    here_data("id/filiado_with_id_employee_mun.csv.gz"),
-    integer64 = "character"
-)
+message("initiating upload")
 
-dbWriteTable(
-    rais_con,
-    "filiado_mun",
-    filiado_mun,
+levels <- c("mun", "state")
+files <- sprintf("id/filiado_with_id_employee_%s.csv.gz", levels) %>%
+    here_data()
+
+filiado <- files %>%
+    map(
+        fread,
+        integer64 = "character"
+    ) %>%
+    set_names(levels)
+
+pwalk(
+    list(
+        name = sprintf("filiado_%s", levels),
+        value = filiado
+    ),
+    dbWriteTable,
+    conn = rais_con,
     overwrite = TRUE
 )
+
+message("uploading filiados data complete!")
