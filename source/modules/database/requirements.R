@@ -1,3 +1,12 @@
+fread <- purrr::partial(
+  data.table::fread,
+  nThread = parallel::detectCores(),
+  nrows = nrows
+)
+
+nrows <- if (isTRUE(debug)) 1e3 else Inf
+rais_sql <- here("data/database/rais.sqlite3")
+
 # functions ---------------------------------------------------------------
 run_task <- function(task) {
   print(paste("running", task, "..."))
@@ -246,11 +255,6 @@ extract_employee_id <- function(data) {
 
 #   return(rais_t1)
 # }
-
-fread <- purrr::partial(
-  data.table::fread,
-  nThread = parallel::detectCores()
-)
 
 read_rais <- function(year) {
   data <- fread(

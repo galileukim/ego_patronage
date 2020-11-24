@@ -11,6 +11,7 @@ build_from_source <- function(...) source(
 
 build_from_source("setup_preprocess.R")
 
+# ---------------------------------------------------------------------------- #
 module_deduplication <- c(
     "dedupe_candidates", 
     "dedupe_filiados", 
@@ -25,6 +26,7 @@ module_deduplication <- sprintf(
 module_deduplication %>%
     walk(build_from_source)
 
+# ---------------------------------------------------------------------------- #
 module_linkage <- c(
     "triage_filiado_with_cpf",
     "create_record_linkage_mun",
@@ -41,8 +43,10 @@ module_linkage <- sprintf(
 module_linkage %>%
     walk(build_from_source)
 
+# ---------------------------------------------------------------------------- #
 module_database <- c(
-    "create_sqlite_database"
+    "create_rais_sql",
+    "record_link_filiado"
 )
 
 module_selection <- c(

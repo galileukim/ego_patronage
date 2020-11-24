@@ -10,8 +10,6 @@ set.seed(1789)
 here <- here::here
 path <- "/home/brdata/RAIS"
 debug <- FALSE
-nrows <- if (isTRUE(debug)) 1e3 else Inf
-rais_sql <- here("data/database/rais.sqlite3")
 
 source(
   here("source/modules/database/requirements.R")
@@ -105,4 +103,3 @@ for (file in files) {
 
   write_log(file)
 }
-
