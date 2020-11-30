@@ -1,32 +1,11 @@
 # ---------------------------------------------------------------------------- #
 message('setting up...')
 
-library(tidyverse)
-library(dbplyr)
-library(data.table)
-library(here)
-library(DBI)
+source(
+    here::here("source/modules/database/requirements.R")
+)
 
 debug <- FALSE
-data_path <- "data/clean/"
-source_path <- "source/modules/database/"
-rais_sql <- here("data/database/rais.sqlite3")
-rais_con <- DBI::dbConnect(RSQLite::SQLite(), rais_sql)
-
-here_data <- partial(
-    here,
-    data_path
-)
-
-here_source <- partial(
-    here,
-    source_path
-)
-
-source(
-    here_source("requirements.R")
-)
-
 # ---------------------------------------------------------------------------- #
 message("initiating upload")
 

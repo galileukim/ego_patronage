@@ -44,9 +44,12 @@ module_linkage %>%
     walk(build_from_source)
 
 # ---------------------------------------------------------------------------- #
+build_from_source("database", "requirements.R")
+
 module_database <- c(
     "create_rais_sql",
-    "record_link_filiado"
+    "record_link_filiado",
+    "structure_sql"
 )
 
 module_selection <- c(

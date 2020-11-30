@@ -1,3 +1,24 @@
+library(tidyverse)
+library(dbplyr)
+library(data.table)
+library(here)
+library(DBI)
+
+data_path <- "data/clean/"
+source_path <- "source/modules/database/"
+rais_sql <- here("data/database/rais.sqlite3")
+rais_con <- DBI::dbConnect(RSQLite::SQLite(), rais_sql)
+
+here_data <- partial(
+    here,
+    data_path
+)
+
+here_source <- partial(
+    here,
+    source_path
+)
+
 fread <- purrr::partial(
   data.table::fread,
   nThread = parallel::detectCores(),
