@@ -46,7 +46,7 @@ for (file in files) {
     filter(year == !!year) %>%
     pull(cpi)
 
-  rais <- read_dta(file, n_max = 10)
+  rais <- read_dta(file)
 
   # fix wage (dollars of 2010) and age
   rais <- rais %>%
@@ -54,7 +54,7 @@ for (file in files) {
       cpi = !!cpi_year
     )
 
-  # fix cnae var
+  # fix cnae var and include it in final table
   rais <- rais %>%
     rename_with(
       ~ str_replace(., "cnae([0-9]{2})classe", "cnae_\\1"),

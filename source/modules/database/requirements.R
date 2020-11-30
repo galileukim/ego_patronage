@@ -151,12 +151,11 @@ trim_rais <- function(data, ...) {
       ...
     ) %>%
     mutate(
+      gender = if_else(gender == 1, "male", "female"),
       hired = if_else(type_admission == 1 | type_admission == 2, 1, 0),
       fired = if_else(cause_fired == 10 | cause_fired == 11, 1, 0),
       departure = if_else(cause_fired == 20 | cause_fired == 21, 1, 0),
       municipal = if_else(nat_jur == 1031, 1, 0),
-      outcome = recode(fired, `0` = 0, `10` = 2, `11` = 2, .default = 1),
-      state = substr(cod_ibge_6, 1, 2),
       cbo_02 = ifelse(nchar(cbo_02) == 5, paste0("0", cbo_02), cbo_02),
       occupation = as.integer(substr(cbo_02, 1, 1))
     )
