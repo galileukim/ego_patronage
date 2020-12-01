@@ -6,7 +6,11 @@ library(DBI)
 
 data_path <- "data/clean/"
 source_path <- "source/modules/database/"
-rais_sql <- here("data/database/rais.sqlite3")
+rais_sql <- here(
+  sprintf("data/database/rais%s.sqlite3", 
+  ifelse(isTRUE(debug), "_sample", "")
+  )
+)
 rais_con <- DBI::dbConnect(RSQLite::SQLite(), rais_sql)
 
 here_data <- partial(
@@ -25,7 +29,7 @@ fread <- purrr::partial(
   nrows = nrows
 )
 
-nrows <- if (isTRUE(debug)) 1e3 else Inf
+nrows <- if (isTRUE(debug)) 1e5 else Inf
 rais_sql <- here("data/database/rais.sqlite3")
 
 # functions ---------------------------------------------------------------

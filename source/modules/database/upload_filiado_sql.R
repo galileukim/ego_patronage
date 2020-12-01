@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------------- #
 message('setting up...')
 
+debug <- TRUE
+
 source(
     here::here("source/modules/database/requirements.R")
 )
-
-debug <- FALSE
 # ---------------------------------------------------------------------------- #
 message("initiating upload")
 
