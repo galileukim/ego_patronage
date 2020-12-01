@@ -10,14 +10,15 @@ set.seed(1789)
 
 here <- here::here
 path <- "/home/brdata/RAIS"
+
 rais_files <- list.files(
   path = path,
   pattern = "RAIS200[3-9]|RAIS201[0-6]",
   full.names = T
 )
+
 log_file <- here("log/log_create_sql.txt")
 debug <- FALSE
-nrows <- ifelse(isTRUE(debug), 1e4, Inf)
 
 source(
   here("source/modules/database/requirements.R")
@@ -95,7 +96,7 @@ for (file in rais_files) {
 
   dbWriteTable(
     value = rais,
-    conn = con,
+    conn = rais_con,
     name = "rais",
     row.names = F,
     append = TRUE

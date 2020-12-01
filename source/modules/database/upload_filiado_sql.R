@@ -9,6 +9,11 @@ source(
 # ---------------------------------------------------------------------------- #
 message("initiating upload")
 
+id_employee_rais <- dbGetQuery(
+    rais_con,
+    "SELECT DISTINCT id_employee as id_employee FROM rais"
+)
+
 levels <- c("mun", "state")
 files <- sprintf("id/filiado_with_id_employee_%s.csv.gz", levels) %>%
     here_data()

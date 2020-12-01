@@ -11,13 +11,13 @@ rais_sql <- here(
   ifelse(isTRUE(debug), "_sample", "")
   )
 )
+
 rais_con <- DBI::dbConnect(RSQLite::SQLite(), rais_sql)
 
 here_data <- partial(
     here,
     data_path
 )
-
 here_source <- partial(
     here,
     source_path
@@ -28,9 +28,7 @@ fread <- purrr::partial(
   nThread = parallel::detectCores(),
   nrows = nrows
 )
-
-nrows <- if (isTRUE(debug)) 1e5 else Inf
-rais_sql <- here("data/database/rais.sqlite3")
+nrows <- if (isTRUE(debug)) 1e4 else Inf
 
 # functions ---------------------------------------------------------------
 run_task <- function(task) {
