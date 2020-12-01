@@ -95,7 +95,8 @@ fix_contract <- function(data) {
         between(contract, 40, 50) ~ "temporary",
         TRUE ~ "other"
       )
-    )
+    ) %>%
+    select(-contract)
 }
 
 fix_occupation <- function(data) {
@@ -123,6 +124,14 @@ fix_occupation <- function(data) {
         `8` = "industry",
         `9` = "maintenance"
       )
+    ) %>%
+    select(-occupation)
+}
+
+create_municipal_dummy <- function(data){
+  data %>%
+    mutate(
+      municipal = if_else(nat_jur == 1031, 1, 0)
     )
 }
 
@@ -155,15 +164,13 @@ trim_rais <- function(data, ...) {
       hired = if_else(type_admission == 1 | type_admission == 2, 1, 0),
       fired = if_else(cause_fired == 10 | cause_fired == 11, 1, 0),
       departure = if_else(cause_fired == 20 | cause_fired == 21, 1, 0),
-      municipal = if_else(nat_jur == 1031, 1, 0),
-      cbo_02 = ifelse(nchar(cbo_02) == 5, paste0("0", cbo_02), cbo_02),
-      occupation = as.integer(substr(cbo_02, 1, 1))
+      cbo_02 = ifelse(nchar(cbo_02) == 5, paste0("0", cbo_02), cbo_02)
     )
 
   return(data_trimmed)
 }
 
-make_dummy <- function(data, var) {
+create_dummy <- function(data, var) {
   dummy <- enquo(var)
 
   data %>%
@@ -193,7 +200,7 @@ filter_bureaucrat <- function(data) {
 exclude_id_null <- function(data) {
   data_out <- data %>%
     filter(
-      sql("id_employee IS NOT NULL")
+      !is.na(id_employee) & id_employee != ""
     )
 
   return(data_out)
@@ -336,15 +343,23 @@ calc_age <- function(from, to) {
 #   no.space = T
 # )
 
-print_log <- function(file, text = "upload to sql") {
+print_log <- function(file, text = "upload to sql", filepath = here("log/log.txt")) {
   year <- str_extract(file, "\\d{4}")
 
   msg <- paste(text, year, "started.")
+  
   print(msg)
+
+  cat(
+    msg,
+    file = filepath,
+    append = T
+  )
 }
 
-write_log <- function(file, text = "upload to sql", filepath = here("log.txt")) {
+write_log <- function(file, text = "upload to sql", filepath = here("log/log.txt")) {
   year <- str_extract(file, "\\d{4}")
+  
   msg <- paste(text, year, "completed.")
 
   print(msg)

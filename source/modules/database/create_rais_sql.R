@@ -1,4 +1,4 @@
-# set-up ------------------------------------------------------------------
+# set-up ------------------------------------------------------------------c
 library(tidyverse)
 library(data.table)
 library(haven)
@@ -7,21 +7,23 @@ library(dbplyr)
 library(DBI)
 
 set.seed(1789)
+
 here <- here::here
 path <- "/home/brdata/RAIS"
+rais_files <- list.files(
+  path = path,
+  pattern = "RAIS200[3-9]|RAIS201[0-6]",
+  full.names = T
+)
+log_file <- here("log/log_create_sql.txt")
 debug <- FALSE
+nrows <- ifelse(isTRUE(debug), 1e4, Inf)
 
 source(
   here("source/modules/database/requirements.R")
 )
 
 # data --------------------------------------------------------------------
-files <- list.files(
-  path = path,
-  pattern = "RAIS200[3-9]|RAIS201[0-6]",
-  full.names = T
-)
-
 cpi <- fread(
   here("data/raw/cpi.csv"),
   colClasses = c("year" = "numeric")
@@ -36,8 +38,8 @@ if (file.exists(rais_sql)) {
 src_sqlite(rais_sql, create = T)
 con <- DBI::dbConnect(RSQLite::SQLite(), rais_sql)
 
-for (file in files) {
-  print_log(file)
+for (file in rais_files) {
+  print_log(file, filepath = log_file)
 
   year <- str_extract(file, "\\d{4}")
   ref_date <- paste0(year, "-12-31")
@@ -46,7 +48,7 @@ for (file in files) {
     filter(year == !!year) %>%
     pull(cpi)
 
-  rais <- read_dta(file)
+  rais <- read_dta(file, n_max = nrows)
 
   # fix wage (dollars of 2010) and age
   rais <- rais %>%
@@ -88,7 +90,8 @@ for (file in files) {
   rais <- rais %>%
     year_to_char() %>%
     fix_wage() %>%
-    fix_contract()
+    fix_contract() %>%
+    exclude_id_null()
 
   dbWriteTable(
     value = rais,
@@ -101,5 +104,5 @@ for (file in files) {
   rm(rais)
   gc()
 
-  write_log(file)
+  write_log(file, filepath = log_file)
 }
