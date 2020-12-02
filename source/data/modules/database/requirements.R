@@ -30,46 +30,106 @@ fread <- purrr::partial(
 )
 nrows <- if (isTRUE(debug)) 1e4 else Inf
 
-# functions ---------------------------------------------------------------
-run_task <- function(task) {
-  print(paste("running", task, "..."))
+# ==============================================================================
+# data io
+# ==============================================================================
+here_data <- function(type, dir, file) {
+  path <- here("data", type, dir, file)
+  
+  return(path)
+}
 
-  source(here("scripts/", "tasks", task))
+read_data <- function(type, dir, file) {
+  file_path <- here_data(type, dir, file)
+
+  if (str_detect(file, ".rds$")) {
+    data <- read_rds(file_path)
+  } else {
+    data <- fread(file_path)
+  }
+  
+  return(data)
+}
+
+get_data <- function(type, dir, file, cols){
+  data <- read_data(type, dir, file)
+
+  data_subset <- select(data, all_of(cols))
+
+  return(data_subset)
+}
+
+write_data <- function(object, dir, file, type = "clean", compress = "gz") {
+  file_path <- here_data(type, dir, file)
+
+  if (str_detect(file, ".rds$")) {
+    write_rds(object, file_path, compress = compress)
+  } else {
+    fwrite(object, file_path, compress = "gz")
+  }
+}
+
+reset_env <- function(init_env){
+  final_env <- ls(.GlobalEnv)
+
+  rm(
+    envir = .GlobalEnv,
+    list = setdiff(final_env, init_env)
+  )
+
+  gc()
+}
+
+build_repo <- function(module){
+  repo <- here("data", "clean", module)
+
+  if(!dir.exists(repo)){
+    dir.create(repo)
+  }else{
+    unlink(repo, recursive = T)
+    dir.create(repo)
+    }
+  }
+
+run_module <- function(module, domain) {
+  print(
+    paste0("running module ", module, "...")
+  )
+
+  build_repo(module)
+
+  source_file <- paste0("datagen_", module, ".R")
+  path <- here("source", domain, "modules", source_file)
+
+  init_env <- ls(.GlobalEnv)
+  source(path)
+  reset_env(init_env)
 
   print(
-    paste(task, "complete!")
+    paste("module", module, "complete!")
   )
 }
 
-mutate_high_bureaucrat <- function(data) {
-  data_high_bureaucrat <- data %>%
-    mutate(
-      high_bureaucrat = if_else(occupation == 1 & municipal == 1, 1, 0)
-    )
+fread <- purrr::partial(
+  data.table::fread,
+  nThread = parallel::detectCores(),
+  integer64 = c("character")
+)
 
-  return(data_high_bureaucrat)
+list_files <- function(path, pattern) {
+  files <- map2(
+    path,
+    pattern,
+    list.files
+  ) %>%
+    flatten_chr()
+
+  return(files)
 }
 
-mutate_high_bureaucrat_lag <- function(data, .group_vars) {
-  data_lag <- data %>%
-    group_by(
-      across({{ .group_vars }})
-    ) %>%
-    mutate(
-      high_bureaucrat_lag = lag(high_bureaucrat, default = 0, order_by = year)
-    ) %>%
-    ungroup()
-
-  return(data_lag)
-}
-
-predict_wage <- function(model, data) {
-  wage <- predict(model, newdata = data)
-  exp_wage <- exp(wage)
-
-  return(exp_wage)
-}
-
+# ==============================================================================
+# rais wrangling
+# ==============================================================================
 year_to_char <- function(data) {
   data <- data %>%
     mutate_at(
@@ -254,56 +314,6 @@ extract_employee_id <- function(data) {
   return(temp)
 }
 
-# rais_panel_extract <- function(file, is_sample = F) {
-#   n_row <- ifelse(is_sample, 1e6, Inf)
-#   t0 <- str_extract(file, "\\d{4}")
-#   t1 <- as.character(as.numeric(t0) + 1)
-
-#   # rais_t0 <- read_dta(file, n_max = n_row)
-
-#   rais_bureau_t0 <- fread(file) %>%
-#     extract_bureau_id() %>%
-#     mutate(
-#       bureau_last_year = 1
-#     )
-
-#   rais_t1 <- fread(
-#     str_replace(file, t0, t1)
-#   ) %>%
-#     left_join(rais_bureau_t0) %>%
-#     filter(
-#       !!is_bureau | bureau_last_year == 1
-#     ) %>%
-#     trim_rais(bureau_last_year) %>%
-#     replace_na(
-#       list(bureau_last_year = 0)
-#     ) %>%
-#     fix_wage()
-
-#   gc()
-
-#   return(rais_t1)
-# }
-
-read_rais <- function(year) {
-  data <- fread(
-    here(sprintf("data/rais_%s.csv.gz", year)),
-    select = c(
-      "id_employee",
-      "year",
-      "municipio",
-      "cbo2002",
-      "vlremmedia",
-      "type_admission",
-      "cause_fired",
-      "date_admission",
-      "date_separation",
-      "tipovinculo",
-      "naturjur"
-    )
-  )
-}
-
 filter_bureau_year <- function(data, year) {
   t <- as.character(year)
 
@@ -338,46 +348,6 @@ calc_age <- function(from, to) {
   return(age)
 }
 
-# stargazer <- partial(
-#   stargazer::stargazer,
-#   font.size = "small",
-#   float = F,
-#   no.space = T
-# )
-
-print_log <- function(file, text = "upload to sql", filepath = here("log/log.txt")) {
-  year <- str_extract(file, "\\d{4}")
-
-  msg <- paste(text, year, "started.")
-  
-  print(msg)
-
-  cat(
-    msg,
-    file = filepath,
-    append = T
-  )
-}
-
-write_log <- function(file, text = "upload to sql", filepath = here("log/log.txt")) {
-  year <- str_extract(file, "\\d{4}")
-  
-  msg <- paste(text, year, "completed.")
-
-  print(msg)
-
-  cat(
-    msg,
-    file = filepath,
-    append = T
-  )
-}
-
-print_section <- function(text) {
-  print(
-    paste("estimating", text)
-  )
-}
 
 sample_sql <- function(tbl, n) {
   tbl <- tbl %>%
@@ -448,32 +418,45 @@ compute_median <- function(data, ...) {
   return(data_summarised)
 }
 
-pluck_reg <- function(oaxaca, group) {
-  reg <- fit_oaxaca %>%
-    pluck(
-      "reg",
-      paste0("reg.", group)
+
+scale_vars_to_baseline <- function(data, vars, baseline_year) {
+  data_out <- data %>%
+    mutate(
+      across(vars, function(var) var / var[year == baseline_year])
     )
 
-  return(reg)
+  return(data_out)
+}
+# ==============================================================================
+# logistics of implementation
+# ==============================================================================
+
+print_log <- function(file, text = "upload to sql", filepath = here("log/log.txt")) {
+  year <- str_extract(file, "\\d{4}")
+
+  msg <- paste(text, year, "started.")
+  
+  print(msg)
+
+  cat(
+    msg,
+    file = filepath,
+    append = T
+  )
 }
 
-fm <- function(dv, predictor, ...) {
-  controls <- enquos(...) %>%
-    purrr::map_chr(
-      rlang::as_label
-    )
+write_log <- function(file, text = "upload to sql", filepath = here("log/log.txt")) {
+  year <- str_extract(file, "\\d{4}")
+  
+  msg <- paste(text, year, "completed.")
 
-  covariate <- paste0(
-    c(substitute(predictor), controls),
-    collapse = "+"
+  print(msg)
+
+  cat(
+    msg,
+    file = filepath,
+    append = T
   )
-
-  fm <- as.formula(
-    paste(substitute(dv), covariate, sep = "~")
-  )
-
-  return(fm)
 }
 
 plot_summary_stats <- function(data, dependent_variable, title) {
@@ -502,13 +485,4 @@ plot_summary_stats <- function(data, dependent_variable, title) {
     )
 
   return(plot)
-}
-
-scale_vars_to_baseline <- function(data, vars, baseline_year) {
-  data_out <- data %>%
-    mutate(
-      across(vars, function(var) var / var[year == baseline_year])
-    )
-
-  return(data_out)
 }
