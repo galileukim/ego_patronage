@@ -37,7 +37,7 @@ if (file.exists(rais_sql)) {
 }
 
 src_sqlite(rais_sql, create = T)
-con <- DBI::dbConnect(RSQLite::SQLite(), rais_sql)
+rais_con <- DBI::dbConnect(RSQLite::SQLite(), rais_sql)
 
 for (file in rais_files) {
   print_log(file, filepath = log_file)
