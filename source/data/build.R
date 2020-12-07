@@ -6,7 +6,7 @@
 
 # 1) join partisan affiliation to rais identifiers
 build_from_source <- function(...) source(
-    here::here("source/modules/", ...)
+    here::here("source/data/modules/", ...)
 )
 
 build_from_source("setup_preprocess.R")
