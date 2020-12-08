@@ -49,9 +49,6 @@ build_from_source("database", "requirements.R")
 module_database <- c(
     "create_rais_sql",
     "record_link_filiado",
-    "structure_sql"
-)
-
-module_selection <- c(
-    "identify_municipal_bureaucrats"
+    "upload_filiado_sql",
+    "upload_additional_data"
 )
