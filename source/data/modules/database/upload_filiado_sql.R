@@ -1,10 +1,10 @@
 # ---------------------------------------------------------------------------- #
 message("setting up...")
 
-debug <- TRUE
+debug <- FALSE
 levels <- c("mun", "state")
 source(
-    here::here("source/modules/database/requirements.R")
+    here::here("source/data/modules/database/requirements.R")
 )
 
 # ---------------------------------------------------------------------------- #
@@ -38,14 +38,12 @@ create_table %>%
         conn = rais_con
     )
 
-files <- sprintf("id/filiado_with_id_employee_%s.csv.gz", levels) %>%
-    here_data()
-
+files <- sprintf("filiado_with_id_employee_%s.csv.gz", levels) %>%
+    here_data(type = "clean", dir = "id", file = .)
 
 filiado <- files %>%
     map(
-        fread,
-        integer64 = "character"
+        fread
     ) %>%
     set_names(levels)
 

@@ -403,10 +403,10 @@ geom_errorbar_tidy <- geom_errorbarh(
   )
 
 # missingness
-gg_miss_var <- partial(
-  naniar::gg_miss_var,
-  show_pct = T
-)
+# gg_miss_var <- partial(
+#   naniar::gg_miss_var,
+#   show_pct = T
+# )
 
 # hex
 gg_hex <- function(data, mapping = aes(), n_bin = 30, ...){

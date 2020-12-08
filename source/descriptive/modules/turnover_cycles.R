@@ -2,7 +2,7 @@
 # input: sql database
 # output: descriptive statistics of turnover cycles in bureaucracy
 # ==============================================================================
-debug <- TRUE
+debug <- FALSE
 
 source(
     here::here("source/descriptive/modules/requirements.R")
