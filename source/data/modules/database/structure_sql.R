@@ -6,7 +6,7 @@
 debug <- TRUE
 
 source(
-    here::here("source/modules/database/requirements.R")
+    here::here("source/data/modules/database/requirements.R")
 )
 
 rais <- tbl(rais_con, "rais")
@@ -22,6 +22,4 @@ filiado_rais <- filiado %>%
 
 filiado_rais <- filiado_rais %>%
     collect()
-
-# ---------------------------------------------------------------------------- #
-# additional tables containing demographic characteristics
+    

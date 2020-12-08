@@ -7,7 +7,7 @@ library(DBI)
 data_path <- "data/clean/"
 source_path <- "source/modules/database/"
 rais_sql <- here(
-  sprintf("data/database/rais%s.sqlite3", 
+  sprintf("data/clean/database/rais%s.sqlite3", 
   ifelse(isTRUE(debug), "_sample", "")
   )
 )
