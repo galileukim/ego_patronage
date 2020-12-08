@@ -311,3 +311,218 @@ scale_vars_to_baseline <- function(data, vars, baseline_year) {
 
   return(data_out)
 }
+
+# ==============================================================================
+# ggplot aux functions
+# ==============================================================================
+# set theme
+theme_clean <- theme(
+  panel.background = element_blank(),
+  # panel.border = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  axis.line = element_line(colour = "grey35"),
+  legend.position = "bottom",
+  text = element_text(
+    # family = "Inconsolata",
+    color = "grey30",
+    size = 10
+  ),
+  axis.text = element_text(color = "grey30", size = 8),
+  axis.title = element_text(size = 10),
+  plot.margin = unit(rep(0.25, 4), "cm")
+)
+
+theme_set(
+  theme_minimal() +
+    theme_clean
+)
+
+tidycoef <- function(fit, vars = ".", ...){
+  tidyfit(fit, vars) %>%
+    GGally::ggcoef(
+      mapping = aes_string(
+        y = "term", 
+        x = "estimate",
+        ...
+      ),
+      vline_color = "grey85",
+      vline_linetype = "dotted",
+      color = "steelblue3",
+      sort = "ascending",
+      errorbar_color = "steelblue3"
+    ) +
+    xlab("") +
+    theme_clean
+}
+
+# add mandate year vertical lines
+mandate_year <- function(years = seq(2005, 2013, 4)){
+  geom_vline(
+    xintercept = years,
+    linetype = "dotted",
+    color = "grey65"
+  )
+}
+
+gg_point_smooth <- function(data, mapping = aes(),...){
+  ggplot(
+    data = data,
+    mapping
+  ) +
+    geom_point(
+      alpha = 0.25
+    ) +
+    geom_smooth(
+      method = "lm",
+      col = "coral3"
+    ) 
+}
+
+gg_point_line <- function(data, mapping = aes(), ...) {
+  ggplot(
+    data = data,
+    mapping
+  ) +
+    geom_point(
+      ...
+    ) +
+    geom_line(
+      ...
+    )
+}
+
+geom_errorbar_tidy <- geom_errorbarh(
+    aes(
+      xmin = conf.low,
+      xmax = conf.high
+    ),
+    height = 0,
+    linetype = "solid",
+    position = ggstance::position_dodgev(height=0.3)
+  )
+
+# missingness
+gg_miss_var <- partial(
+  naniar::gg_miss_var,
+  show_pct = T
+)
+
+# hex
+gg_hex <- function(data, mapping = aes(), n_bin = 30, ...){
+  ggplot(
+    data = data,
+    mapping
+  ) +
+    geom_hex(
+      bins = n_bin,
+      ...
+    ) +
+    scale_fill_distiller(
+      palette = "RdYlBu",
+      direction = -1
+    )
+}
+  
+# histogram
+gg_histogram <- function(data, mapping = aes(), ...){
+  ggplot(
+    data = data,
+    mapping
+  ) +
+    geom_histogram(
+      ...,
+      col = "#375b7c",
+      fill = "steelblue3",
+      aes(y = stat(width*density))
+    )
+}
+
+gg_point <- function(data, mapping = aes(), ...){
+  ggplot(
+    data = data,
+    mapping
+  ) +
+    geom_point(...)
+}
+
+gg_summary <- function(data, x, y, fun = 'mean', color = matte_indigo, smooth = T, ...){
+  plot <- data %>% 
+    ggplot(
+      aes(
+        !!sym(x),
+        !!sym(y),
+        color,
+        ...
+      )
+    ) +
+    stat_summary_bin(
+      fun = fun,
+      size = 1,
+      geom = "point"
+    )
+  
+  if(smooth == T){
+    plot <- plot +
+      geom_smooth(
+        method = 'gam',
+        formula = y ~ splines::bs(x, 3)
+      ) 
+  }
+  
+  return(plot)
+}
+
+# change default ggplot settings
+scale_colour_discrete <- function(palette = "OrRd", ...) scale_color_brewer(
+  palette = palette, direction = -1, ...
+)
+
+scale_fill_discrete <- function(palette = "OrRd", ...) scale_fill_brewer(
+  palette = palette, direction = -1, ...
+)
+
+matte_indigo <- "#375b7c"
+matte_indigo2 <- "#4c6e8d"
+tulip_red <- "#E64538"
+
+update_geom_defaults(
+  "bar",
+  list(color = matte_indigo, fill = matte_indigo2)
+)
+
+update_geom_defaults(
+  "point",
+  list(color = matte_indigo, size = 1.5)
+)
+
+update_geom_defaults(
+  "vline",
+  list(linetype = "dashed", color = "grey65")
+)
+
+update_geom_defaults(
+  "line",
+  list(color = matte_indigo, size = 1)
+)
+
+update_geom_defaults(
+  "smooth",
+  list(color = tulip_red)
+)
+
+group_split <- function(data, ...) {
+  vars <- enquos(...)
+  
+  data <- data %>% 
+    group_by(!!!vars)
+  
+  group_names <- group_keys(data) %>% 
+    pull()
+  
+  data %>% 
+    dplyr::group_split() %>% 
+    set_names(
+      group_names
+    )
+}
