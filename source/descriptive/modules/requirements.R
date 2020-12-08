@@ -49,6 +49,9 @@ list_files <- function(path, pattern) {
 # ==============================================================================
 # rais wrangling
 # ==============================================================================
+is_municipal <- rlang::quo(nat_jur == 1031)
+is_bureau <- rlang::quo(nat_jur == 1031 & occupation == 1)
+
 year_to_char <- function(data) {
   data <- data %>%
     mutate_at(
@@ -133,8 +136,6 @@ create_dummy <- function(data, var) {
     select(-row) %>%
     return()
 }
-
-is_bureau <- rlang::quo(nat_jur == 1031 & occupation == 1)
 
 filter_bureaucrat <- function(data) {
   data_bureaucrats <- data %>%
