@@ -1,7 +1,7 @@
-# this script is divided into two main components
-# the first one is to provide a linkage between party affiliation data and rais
+# this script is divided into two main components:
+# 1) provide a linkage between party affiliation data and rais
 # to extract anonymized identifiers and use them to analyze political careers
-# thes second one is the use of the party affiliation data to explore careers
+# 2) use of the party affiliation data to explore careers
 # in the bureaucracy
 
 # 1) join partisan affiliation to rais identifiers
@@ -50,5 +50,14 @@ module_database <- c(
     "create_rais_sql",
     "record_link_filiado",
     "upload_filiado_sql",
-    "upload_additional_data"
+    "upload_additional_data",
+    "generate_municipal_tables"
 )
+
+module_database <- sprintf(
+    "database/%s.R",
+    module_linkage
+)
+
+module_database %>%
+    walk(build_from_source)
