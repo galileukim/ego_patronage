@@ -2,7 +2,7 @@
 # input: sql database
 # output: descriptive statistics of turnover cycles in bureaucracy
 # ==============================================================================
-debug <- FALSE
+debug <- TRUE
 
 source(
     here::here("source/descriptive/modules/requirements.R")
@@ -23,11 +23,13 @@ rais_filiado <- rais %>%
         year,
         id_employee,
         hired,
-        fired
+        fired,
+        age,
+        edu,
+        work_experience,
+        wage
     ) %>%
-    mutate(
-        occupation = str_sub(cbo_02, 1, 1)
-    )  %>%
+    
     left_join(
         filiado_join,
         by = "id_employee"
@@ -39,9 +41,9 @@ rais_filiado <- rais_filiado %>%
         is_filiado = coalesce(is_filiado, "non_partisan")
     )
 
-vars_to_plot <- c("hired", "fired")
+vars_to_plot <- c("hired", "fired", "age", "edu", "work_experience", "wage")
 plot_turnover <- map(
-    c("hired", "fired"),
+    vars_to_plot,
     ~ gg_summary(
         x = "year", 
         y = ., 
