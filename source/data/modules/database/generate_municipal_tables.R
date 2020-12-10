@@ -3,8 +3,7 @@
 # output: municipal level table of summary statistics
 # requirement: reduce query times by generating readily available tables
 # ==============================================================================
-debug <- TRUE
-# vars_to_plot <- c("hired", "fired", "age", "edu", "work_experience")
+debug <- FALSE
 
 source(
     here::here("source/data/modules/database/requirements.R")
@@ -20,7 +19,7 @@ sprintf(
         conn = rais_con
     )
 
-dbExecute(
+rais_mun_non_partisan <- dbGetQuery(
     rais_con,
     "
     CREATE TABLE IF NOT EXISTS
