@@ -21,14 +21,11 @@ this document outlines the vision for the third paper in my dissertation.
 * partisanship data:
   - complete
 * city councilors - and their own earnings
-  - ongoing
+  - complete
 * qualitative evidence
 * create sql database using SQLite
   - in progress
 
 ## timeline
-* for next week:
-  - merge filiado data with rais.
-  - identify prevalence of patronage.
 * give a sense of the magnitude of the gains from employment.
 * compare private gains vs. public gains from better services.
