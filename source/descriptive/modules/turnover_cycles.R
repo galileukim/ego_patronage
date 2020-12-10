@@ -2,7 +2,7 @@
 # input: sql database
 # output: descriptive statistics of turnover cycles in bureaucracy
 # ==============================================================================
-debug <- TRUE
+debug <- FALSE
 
 source(
     here::here("source/descriptive/modules/requirements.R")
@@ -11,36 +11,17 @@ source(
 rais <- tbl(rais_con, "rais")
 filiado <- tbl(rais_con, "filiado_mun")
 
-filiado_join <- filiado %>% 
-    select(-cod_ibge_6) %>%
-    mutate(
-        is_filiado = "partisan"
-    )
+rais_tables <- c(
+    partisan = "rais_mun_partisan", non_partisan =  "rais_mun_non_partisan"
+)
 
-rais_filiado <- rais %>%
-    filter(is_municipal) %>%
-    select(
-        year,
-        id_employee,
-        hired,
-        fired,
-        age,
-        edu,
-        work_experience,
-        wage
-    ) %>%
-    
-    left_join(
-        filiado_join,
-        by = "id_employee"
-    ) %>%
-    collect()
+rais_filiado <- map_dfr(
+    rais_tables,
+    ~ dbGetQuery(rais_con, sprintf("SELECT * FROM %s", .)),
+    .id = "is_filiado"
+)
 
-rais_filiado <- rais_filiado %>%
-    mutate(
-        is_filiado = coalesce(is_filiado, "non_partisan")
-    )
-
+message("generate plots")
 vars_to_plot <- c("hired", "fired", "age", "edu", "work_experience", "wage")
 plot_turnover <- map(
     vars_to_plot,
@@ -57,8 +38,9 @@ path_to_figs <- "paper/figures/"
 file_names <- sprintf(
     "plot_%s.pdf", vars_to_plot
 )
-path_out <- here(path_to_figs, file_names)
 
+message("save plots")
+path_out <- here(path_to_figs, file_names)
 pwalk(
     list(
         filename = path_out,
