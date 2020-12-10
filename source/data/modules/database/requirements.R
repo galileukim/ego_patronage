@@ -127,6 +127,18 @@ list_files <- function(path, pattern) {
   return(files)
 }
 
+write_tables_to_sql <- function(tables, names, conn, overwrite = TRUE){
+  pwalk(
+      list(
+          name = names,
+          value = tables
+      ),
+      dbWriteTable,
+      conn = rais_con,
+      overwrite = overwrite
+  )
+}
+
 # ==============================================================================
 # rais wrangling
 # ==============================================================================
