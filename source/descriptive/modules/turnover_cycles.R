@@ -23,7 +23,7 @@ rais_filiado <- map_dfr(
 )
 
 message("generate plots")
-vars_to_plot <- c("hired", "fired", "age", "edu", "work_experience", "wage")
+vars_to_plot <- c("hired", "fired", "work_experience")
 plot_turnover <- map(
     vars_to_plot,
     ~ gg_summary(
