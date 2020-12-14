@@ -5,7 +5,7 @@
 # 3) date of each exit into the bureaucracy
 # requirement: reduce query times by generating readily available tables
 # ==============================================================================
-debug <- FALSE
+debug <- TRUE
 
 source(
     here::here("source/data/modules/database/requirements.R")

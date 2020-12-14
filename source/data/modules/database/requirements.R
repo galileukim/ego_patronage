@@ -34,6 +34,11 @@ dbExecute <- purrr::partial(
   conn = rais_con
 )
 
+dbGetQuery <- purrr::partial(
+  DBI::dbGetQuery,
+  conn = rais_con
+)
+
 nrows <- if (isTRUE(debug)) 1e4 else Inf
 
 # ==============================================================================

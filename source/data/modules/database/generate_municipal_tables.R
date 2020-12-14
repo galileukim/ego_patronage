@@ -3,7 +3,7 @@
 # output: municipal level table of summary statistics
 # requirement: reduce query times by generating readily available tables
 # ==============================================================================
-debug <- FALSE
+debug <- TRUE
 
 source(
     here::here("source/data/modules/database/requirements.R")
@@ -14,14 +14,11 @@ RSQLite::initExtension(rais_con)
 sprintf(
     "DROP TABLE IF EXISTS %s", c("rais_mun_partisan", "rais_mun_non_partisan")
 ) %>%
-    walk(
-        dbExecute,
-        conn = rais_con
-    )
+    walk(dbExecute)
 
-rais_mun_non_partisan <- dbGetQuery(
-    rais_con,
+dbExecute(
     "
+    CREATE TABLE IF NOT EXISTS rais_mun_non_partisan AS
     SELECT
         rais.cod_ibge_6,
         rais.year,
@@ -40,9 +37,9 @@ rais_mun_non_partisan <- dbGetQuery(
     "
 )
 
-rais_mun_partisan <- dbGetQuery(
-    rais_con,
+dbExecute(
     "
+    CREATE TABLE IF NOT EXISTS rais_mun_partisan AS
     SELECT
         rais.cod_ibge_6,
         rais.year,
@@ -59,12 +56,6 @@ rais_mun_partisan <- dbGetQuery(
     WHERE rais.nat_jur = 1031
     GROUP BY rais.cod_ibge_6, rais.year
     "
-)
-
-write_tables_to_sql(
-    tables = list(rais_mun_non_partisan, rais_mun_partisan),
-    names = c("rais_mun_non_partisan", "rais_mun_partisan"),
-    conn = rais_con
 )
 
 message("create municipal tables complete!")
