@@ -28,6 +28,12 @@ fread <- purrr::partial(
   nThread = parallel::detectCores(),
   nrows = nrows
 )
+
+dbExecute <- purrr::partial(
+  DBI::dbExecute,
+  conn = rais_con
+)
+
 nrows <- if (isTRUE(debug)) 1e4 else Inf
 
 # ==============================================================================

@@ -5,13 +5,21 @@
 # 3) date of each exit into the bureaucracy
 # requirement: reduce query times by generating readily available tables
 # ==============================================================================
-debug <- TRUE
+debug <- FALSE
 
 source(
     here::here("source/data/modules/database/requirements.R")
 )
 
 RSQLite::initExtension(rais_con)
+
+sprintf(
+    "DROP TABLE IF EXISTS %s", 
+    c("rais_bureaucrat_entry", "rais_bureaucrat_exit")
+) %>%
+    walk(
+        dbExecute
+    )
 
 message("begin extracting records")
 
@@ -22,10 +30,10 @@ message("begin extracting records")
 #     rais WHERE nat_jur = 1031
 #     "
 # )
-
-rais_bureaucrat_entries <- dbGetQuery(
+dbExecute(
     rais_con,
     "
+    CREATE TABLE IF NOT EXISTS rais_bureaucrat_entry AS
     SELECT cod_ibge_6, year, id_employee
     FROM (
         SELECT *,
@@ -34,13 +42,14 @@ rais_bureaucrat_entries <- dbGetQuery(
         FROM rais
     )
     WHERE hired = 1 AND nat_jur = 1031 AND year = min_year
-    ORDER BY id_employee, year
+    ORDER BY id_employee, year;
     "
 )
 
-rais_bureaucrat_exits <- dbGetQuery(
+dbExecute(
     rais_con,
     "
+    CREATE TABLE IF NOT EXISTS rais_bureaucrat_exit AS
     SELECT cod_ibge_6, year, id_employee
     FROM (
         SELECT *, 
@@ -53,24 +62,24 @@ rais_bureaucrat_exits <- dbGetQuery(
     "
 )
 
-message("write out tables to sqlite")
+# message("write out tables to sqlite")
 
-sql_tables <- list(
-    rais_bureaucrat_entries, rais_bureaucrat_exits
-)
+# sql_tables <- list(
+#     rais_bureaucrat_entries, rais_bureaucrat_exits
+# )
 
-sql_table_names <- c(
-    "rais_bureaucrat_entries", "rais_bureaucrat_exits"
-)
+# sql_table_names <- c(
+#     "rais_bureaucrat_entries", "rais_bureaucrat_exits"
+# )
 
-pwalk(
-    list(
-        name = sql_table_names,
-        value = sql_tables
-    ),
-    dbWriteTable,
-    conn = rais_con,
-    overwrite = TRUE
-)
+# pwalk(
+#     list(
+#         name = sql_table_names,
+#         value = sql_tables
+#     ),
+#     dbWriteTable,
+#     conn = rais_con,
+#     overwrite = TRUE
+# )
 
 message("write out tables to sqlite complete!")
