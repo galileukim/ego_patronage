@@ -66,3 +66,5 @@ write_tables_to_sql(
     names = c("rais_mun_non_partisan", "rais_mun_partisan"),
     conn = rais_con
 )
+
+message("create municipal tables complete!")

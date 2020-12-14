@@ -13,20 +13,22 @@ source(
 
 RSQLite::initExtension(rais_con)
 
-rais_bureaucrat_id <- dbGetQuery(
-    rais_con,
-    "
-    SELECT DISTINCT id_employee FROM
-    rais WHERE nat_jur = 1031
-    "
-)
+message("begin extracting records")
+
+# rais_bureaucrat_id <- dbGetQuery(
+#     rais_con,
+#     "
+#     SELECT DISTINCT id_employee FROM
+#     rais WHERE nat_jur = 1031
+#     "
+# )
 
 rais_bureaucrat_entries <- dbGetQuery(
     rais_con,
     "
     SELECT cod_ibge_6, year, id_employee
     FROM (
-        SELECT *, 
+        SELECT *,
         FIRST_VALUE(year) OVER 
         (PARTITION BY id_employee ORDER BY year) AS min_year
         FROM rais
@@ -54,11 +56,11 @@ rais_bureaucrat_exits <- dbGetQuery(
 message("write out tables to sqlite")
 
 sql_tables <- list(
-    rais_bureaucrat_id, rais_bureaucrat_entries, rais_bureaucrat_exits
+    rais_bureaucrat_entries, rais_bureaucrat_exits
 )
 
 sql_table_names <- c(
-    "rais_bureaucrat_id", "rais_bureaucrat_entries", "rais_bureaucrat_exits"
+    "rais_bureaucrat_entries", "rais_bureaucrat_exits"
 )
 
 pwalk(
@@ -70,3 +72,5 @@ pwalk(
     conn = rais_con,
     overwrite = TRUE
 )
+
+message("write out tables to sqlite complete!")
