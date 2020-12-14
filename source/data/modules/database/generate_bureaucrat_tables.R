@@ -17,9 +17,7 @@ sprintf(
     "DROP TABLE IF EXISTS %s", 
     c("rais_bureaucrat_entry", "rais_bureaucrat_exit")
 ) %>%
-    walk(
-        dbExecute
-    )
+    walk(dbExecute)
 
 message("begin extracting records")
 
@@ -30,8 +28,8 @@ message("begin extracting records")
 #     rais WHERE nat_jur = 1031
 #     "
 # )
+
 dbExecute(
-    rais_con,
     "
     CREATE TABLE IF NOT EXISTS rais_bureaucrat_entry AS
     SELECT cod_ibge_6, year, id_employee
@@ -47,7 +45,6 @@ dbExecute(
 )
 
 dbExecute(
-    rais_con,
     "
     CREATE TABLE IF NOT EXISTS rais_bureaucrat_exit AS
     SELECT cod_ibge_6, year, id_employee

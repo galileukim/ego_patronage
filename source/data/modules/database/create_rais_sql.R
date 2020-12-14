@@ -21,7 +21,7 @@ log_file <- here("log/log_create_sql.txt")
 debug <- FALSE
 
 source(
-  here("source/modules/database/requirements.R")
+  here("source/data/modules/database/requirements.R")
 )
 
 # data --------------------------------------------------------------------
@@ -107,3 +107,44 @@ for (file in rais_files) {
 
   write_log(file, filepath = log_file)
 }
+
+
+# ==============================================================================
+# generate indexes to spee dd up query
+# ==============================================================================
+dbExecute(
+  "
+  CREATE INDEX IF NOT EXISTS natureza_juridica_idx ON
+  rais(nat_jur)
+  "
+)
+
+dbExecute(
+  "
+  CREATE INDEX IF NOT EXISTS year_idx ON
+  rais(year)
+  "
+)
+# ==============================================================================
+# generate sample sql file
+# ==============================================================================
+rais_sample_con <- DBI::dbConnect(
+  RSQLite::SQLite(),
+  here("data/clean/database/rais_sample.sqlite3")
+  )
+
+rais_sample <- dbGetQuery(
+  rais_con,
+  "
+  SELECT * FROM rais
+  WHERE cod_ibge_6 = 110001
+  "
+)
+
+rais_sample %>%
+  dbWriteTable(
+    rais_sample_con,
+    name = "rais",
+    value = .,
+    overwrite = TRUE
+  )
