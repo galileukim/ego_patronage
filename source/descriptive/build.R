@@ -4,5 +4,6 @@
 build_from_source("descriptive", "requirements.R")
 
 module_selection <- c(
-    "identify_municipal_bureaucrats"
+    "turnover_cycle",
+    "heterogeneity"
 )

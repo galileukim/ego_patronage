@@ -64,7 +64,7 @@ filiado <- filiado %>%
 # sample out
 if(isTRUE(debug)){
     filiado <- filiado %>%
-        filter(cod_ibge_6 == 110001)
+        map(~ filter(., cod_ibge_6 == 110001))
 }
 
 pwalk(

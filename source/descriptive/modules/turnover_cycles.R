@@ -32,10 +32,14 @@ plot_turnover <- map(
         data = rais_filiado,
         smooth = FALSE
     ) +
-    facet_wrap(. ~ is_filiado)
+    facet_wrap(. ~ is_filiado) +
+    ggtitle(.)
 )
 
-path_to_figs <- "paper/figures/"
+path_to_figs <- ifelse(
+    isTRUE(debug), "paper/figures/turnover/sample/", "paper/figures/turnover/"
+)
+
 file_names <- sprintf(
     "plot_%s.pdf", vars_to_plot
 )
