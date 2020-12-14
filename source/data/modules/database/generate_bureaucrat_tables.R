@@ -15,19 +15,19 @@ RSQLite::initExtension(rais_con)
 
 sprintf(
     "DROP TABLE IF EXISTS %s", 
-    c("rais_bureaucrat_entry", "rais_bureaucrat_exit")
+    c("rais_bureaucrat_id", "rais_bureaucrat_entry", "rais_bureaucrat_exit")
 ) %>%
     walk(dbExecute)
 
-message("begin extracting records")
+message("generate new table records")
 
-# rais_bureaucrat_id <- dbGetQuery(
-#     rais_con,
-#     "
-#     SELECT DISTINCT id_employee FROM
-#     rais WHERE nat_jur = 1031
-#     "
-# )
+dbExecute(
+    "
+    CREATE TABLE IF NOT EXISTS rais_bureaucrat_id AS
+    SELECT DISTINCT id_employee FROM
+    rais WHERE nat_jur = 1031
+    "
+)
 
 dbExecute(
     "
