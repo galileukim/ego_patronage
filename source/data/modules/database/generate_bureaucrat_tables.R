@@ -5,7 +5,7 @@
 # 3) date of each exit into the bureaucracy
 # requirement: reduce query times by generating readily available tables
 # ==============================================================================
-debug <- FALSE
+debug <- TRUE
 
 source(
     here::here("source/data/modules/database/requirements.R")
@@ -46,7 +46,7 @@ rais_bureaucrat_exits <- dbGetQuery(
         (PARTITION BY id_employee ORDER BY year DESC) AS min_year
         FROM rais
     )
-    WHERE hired = 1 AND nat_jur = 1031 AND year = min_year
+    WHERE fired = 1 AND nat_jur = 1031 AND year = min_year
     ORDER BY id_employee, year
     "
 )
@@ -56,6 +56,7 @@ message("write out tables to sqlite")
 sql_tables <- list(
     rais_bureaucrat_id, rais_bureaucrat_entries, rais_bureaucrat_exits
 )
+
 sql_table_names <- c(
     "rais_bureaucrat_id", "rais_bureaucrat_entries", "rais_bureaucrat_exits"
 )

@@ -3,7 +3,7 @@
 # output: municipal level table of summary statistics
 # requirement: reduce query times by generating readily available tables
 # ==============================================================================
-debug <- TRUE
+debug <- FALSE
 
 source(
     here::here("source/data/modules/database/requirements.R")
@@ -63,6 +63,6 @@ rais_mun_partisan <- dbGetQuery(
 
 write_tables_to_sql(
     tables = list(rais_mun_non_partisan, rais_mun_partisan),
-    names = c("rais_mun_non_partisan", "rais_partisan"),
+    names = c("rais_mun_non_partisan", "rais_mun_partisan"),
     conn = rais_con
 )
