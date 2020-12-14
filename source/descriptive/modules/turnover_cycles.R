@@ -2,7 +2,7 @@
 # input: sql database
 # output: descriptive statistics of turnover cycles in bureaucracy
 # ==============================================================================
-debug <- FALSE
+debug <- TRUE
 
 source(
     here::here("source/descriptive/modules/requirements.R")
@@ -12,7 +12,8 @@ rais <- tbl(rais_con, "rais")
 filiado <- tbl(rais_con, "filiado_mun")
 
 rais_tables <- c(
-    partisan = "rais_mun_partisan", non_partisan =  "rais_mun_non_partisan"
+    partisan = "rais_mun_partisan", 
+    non_partisan = "rais_mun_non_partisan"
 )
 
 rais_filiado <- map_dfr(

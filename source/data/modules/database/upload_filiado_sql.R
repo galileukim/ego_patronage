@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------- #
 message("setting up...")
 
-debug <- FALSE
+debug <- TRUE
 levels <- c("mun", "state")
 source(
     here::here("source/data/modules/database/requirements.R")
@@ -33,10 +33,7 @@ create_table <- sprintf(
 )
 
 create_table %>%
-    walk(
-        dbExecute,
-        conn = rais_con
-    )
+    walk(dbExecute)
 
 files <- sprintf("filiado_with_id_employee_%s.csv.gz", levels) %>%
     here_data(type = "clean", dir = "id", file = .)
@@ -63,6 +60,12 @@ filiado <- filiado %>%
             )
         )
     )
+
+# sample out
+if(isTRUE(debug)){
+    filiado <- filiado %>%
+        filter(cod_ibge_6 == 110001)
+}
 
 pwalk(
     list(

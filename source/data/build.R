@@ -48,10 +48,10 @@ build_from_source("database", "requirements.R")
 
 module_database <- c(
     "create_rais_sql",
-    "record_link_filiado",
     "upload_filiado_sql",
     "upload_additional_data",
-    "generate_municipal_tables"
+    "generate_municipal_tables",
+    "generate_bureaucrat_tables"
 )
 
 module_database <- sprintf(
