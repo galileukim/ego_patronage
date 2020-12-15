@@ -1,0 +1,105 @@
+across                  package:dplyr                  R Documentation
+
+_A_p_p_l_y _a _f_u_n_c_t_i_o_n (_o_r _a _s_e_t _o_f _f_u_n_c_t_i_o_n_s) _t_o _a _s_e_t _o_f _c_o_l_u_m_n_s
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     ‘across()’ makes it easy to apply the same transformation to
+     multiple columns, allowing you to use ‘select()’ semantics inside
+     in ‘summarise()’ and ‘mutate()’. ‘across()’ supersedes the family
+     of "scoped variants" like ‘summarise_at()’, ‘summarise_if()’, and
+     ‘summarise_all()’. See ‘vignette("colwise")’ for more details.
+
+     ‘c_across()’ is designed to work with ‘rowwise()’ to make it easy
+     to perform row-wise aggregations. It has two differences from
+     ‘c()’:
+
+        • It uses tidy select semantics so you can easily select
+          multiple variables. See ‘vignette("rowwise")’ for more
+          details.
+
+        • It uses ‘vctrs::vec_c()’ in order to give safer outputs.
+
+_U_s_a_g_e:
+
+     across(.cols = everything(), .fns = NULL, ..., .names = NULL)
+     
+     c_across(cols = everything())
+     
+_A_r_g_u_m_e_n_t_s:
+
+    .fns: Functions to apply to each of the selected columns. Possible
+          values are:
+
+            • ‘NULL’, to returns the columns untransformed.
+
+            • A function, e.g. ‘mean’.
+
+            • A purrr-style lambda, e.g. ‘~ mean(.x, na.rm = TRUE)’
+
+            • A list of functions/lambdas, e.g. list(mean = mean,
+              n_miss = ~ sum(is.na(.x))
+
+          Within these functions you can use ‘cur_column()’ and
+          ‘cur_group()’ to access the current column and grouping keys
+          respectively.
+
+     ...: Additional arguments for the function calls in ‘.fns’.
+
+  .names: A glue specification that describes how to name the output
+          columns. This can use ‘{col}’ to stand for the selected
+          column name, and ‘{fn}’ to stand for the name of the function
+          being applied. The default (‘NULL’) is equivalent to
+          ‘"{col}"’ for the single function case and ‘"{col}_{fn}"’ for
+          the case where a list is used for ‘.fns’.
+
+cols, .cols: <‘tidy-select’> Columns to transform. Because ‘across()’
+          is used within functions like ‘summarise()’ and ‘mutate()’,
+          you can't select or compute upon grouping variables.
+
+_V_a_l_u_e:
+
+     A tibble with one column for each column in ‘.cols’ and each
+     function in ‘.fns’.
+
+_E_x_a_m_p_l_e_s:
+
+     # across() -----------------------------------------------------------------
+     iris %>%
+       group_by(Species) %>%
+       summarise(across(starts_with("Sepal"), mean))
+     iris %>%
+       as_tibble() %>%
+       mutate(across(where(is.factor), as.character))
+     
+     # A purrr-style formula
+     iris %>%
+       group_by(Species) %>%
+       summarise(across(starts_with("Sepal"), ~mean(.x, na.rm = TRUE)))
+     
+     # A named list of functions
+     iris %>%
+       group_by(Species) %>%
+       summarise(across(starts_with("Sepal"), list(mean = mean, sd = sd)))
+     
+     # Use the .names argument to control the output names
+     iris %>%
+       group_by(Species) %>%
+       summarise(across(starts_with("Sepal"), mean, .names = "mean_{col}"))
+     iris %>%
+       group_by(Species) %>%
+       summarise(across(starts_with("Sepal"), list(mean = mean, sd = sd), .names = "{col}.{fn}"))
+     iris %>%
+       group_by(Species) %>%
+       summarise(across(starts_with("Sepal"), list(mean, sd), .names = "{col}.fn{fn}"))
+     
+     # c_across() ---------------------------------------------------------------
+     df <- tibble(id = 1:4, w = runif(4), x = runif(4), y = runif(4), z = runif(4))
+     df %>%
+       rowwise() %>%
+       mutate(
+         sum = sum(c_across(w:z)),
+         sd = sd(c_across(w:z))
+      )
+     
+
