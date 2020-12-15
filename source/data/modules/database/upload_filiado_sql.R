@@ -1,7 +1,10 @@
-# ---------------------------------------------------------------------------- #
+# ==============================================================================
+# upload party membership data to sql database
+# notes: only contains memebership data for those employed
+# ==============================================================================
 message("setting up...")
 
-debug <- TRUE
+debug <- FALSE
 levels <- c("mun", "state")
 source(
     here::here("source/data/modules/database/requirements.R")

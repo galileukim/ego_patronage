@@ -36,7 +36,7 @@ dbExecute(
     FROM (
         SELECT *,
         FIRST_VALUE(year) OVER 
-        (PARTITION BY id_employee ORDER BY year) AS min_year
+        (PARTITION BY id_employee ORDER BY year ASC) AS min_year
         FROM rais
     )
     WHERE hired = 1 AND nat_jur = 1031 AND year = min_year

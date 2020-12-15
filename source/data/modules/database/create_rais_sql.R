@@ -108,7 +108,6 @@ for (file in rais_files) {
   write_log(file, filepath = log_file)
 }
 
-
 # ==============================================================================
 # generate indexes to spee dd up query
 # ==============================================================================
@@ -134,7 +133,6 @@ rais_sample_con <- DBI::dbConnect(
   )
 
 rais_sample <- dbGetQuery(
-  rais_con,
   "
   SELECT * FROM rais
   WHERE cod_ibge_6 = 110001

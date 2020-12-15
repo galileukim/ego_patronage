@@ -245,6 +245,7 @@ trim_rais <- function(data, ...) {
       ...
     ) %>%
     mutate(
+      across(starts_with("date"), ~ format(., "%Y%m%d")),
       gender = if_else(gender == 1, "male", "female"),
       hired = if_else(type_admission == 1 | type_admission == 2, 1, 0),
       fired = if_else(cause_fired == 10 | cause_fired == 11, 1, 0),
