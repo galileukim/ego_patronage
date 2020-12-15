@@ -34,38 +34,30 @@ career_prior_to_bureaucracy <- dbGetQuery(
     "
 )
 
-career_prior_filiado <- career_prior_to_bureaucracy %>%
+career_filiado <- career_prior_to_bureaucracy %>%
     mutate(cod_ibge_6 = as.character(cod_ibge_6)) %>%
     left_join(
         collect(filiado),
         by = c("cod_ibge_6", "id_employee")
     ) %>%
-    mutate(
-        across(starts_with("date"),
-            ~ str_sub(., 1, 4) %>% as.integer(),
-            .names = "year_{col}"
-        )
-    ) %>%
+    generate_year_filiado() %>%
     mutate(
         prior_partisan = if_else(
             year >= year_date_start &
-                year <= year_date_end, 1L, 0L
+            year <= year_date_end, 1L, 0L
         )
     )
 
-"
-    LEFT JOIN (
-            SELECT 
-                cod_ibge_6,
-                id_employee,
-                1.0 AS is_filiado,
-                SUBSTR(date_start, 1, 4) AS year_start,
-                SUBSTR(date_end, 1, 4) AS year_end
-                FROM filiado_mun
-            ) AS filiado
-        ON (rais.id_employee = filiado.id_employee AND
-        rais.cod_ibge_6 = filiado.cod_ibge_6 AND 
-        rais.year >= year_start AND rais.year <= year_end)
-        "
-# figure out why there are so few entries
+# note that the majority of partisans become party members after
+# joining the bureau
+career_filiado %>%
+    mutate(
+        prior_partisan = recode(prior_partisan, `0` = "post", `1` = "pre")
+    ) %>%
+    filter(!is.na(prior_partisan)) %>%
+    ggplot() +
+    geom_bar(
+        aes(prior_partisan),
+        stat = "count"
+    )
 # extract last_job and combine it with data from filiado

@@ -7,21 +7,22 @@ library(DBI)
 data_path <- "data/clean/"
 source_path <- "source/modules/database/"
 rais_sql <- here(
-  sprintf("data/clean/database/rais%s.sqlite3", 
-  ifelse(isTRUE(debug), "_sample", "")
+  sprintf(
+    "data/clean/database/rais%s.sqlite3",
+    ifelse(isTRUE(debug), "_sample", "")
   )
 )
 
 rais_con <- DBI::dbConnect(RSQLite::SQLite(), rais_sql)
 
 here_data <- partial(
-    here,
-    data_path
+  here,
+  data_path
 )
 
 here_source <- partial(
-    here,
-    source_path
+  here,
+  source_path
 )
 
 fread <- purrr::partial(
@@ -67,10 +68,10 @@ year_to_char <- function(data) {
   return(data)
 }
 
-convert_to_date <- function(data){
+convert_to_date <- function(data) {
   data %>%
-  mutate(
-        across(starts_with("date"), lubridate::ymd)
+    mutate(
+      across(starts_with("date"), lubridate::ymd)
     )
 }
 
@@ -124,7 +125,27 @@ fix_occupation <- function(data) {
     select(-occupation)
 }
 
-create_municipal_dummy <- function(data){
+filter_active_filiado <- function(data) {
+  data %>%
+    generate_year_filiado() %>%
+    filter(
+      year >= year_date_start &
+        year <= year_date_end
+    )
+}
+
+generate_year_filiado <- function(data) {
+  data %>%
+    mutate(
+      across(
+        c(date_start, date_end),
+        ~ str_sub(., 1, 4) %>% as.integer(),
+        .names = "year_{col}"
+      )
+    )
+}
+
+create_municipal_dummy <- function(data) {
   data %>%
     mutate(
       municipal = if_else(nat_jur == 1031, 1, 0)
@@ -350,11 +371,11 @@ theme_set(
     theme_clean
 )
 
-tidycoef <- function(fit, vars = ".", ...){
+tidycoef <- function(fit, vars = ".", ...) {
   tidyfit(fit, vars) %>%
     GGally::ggcoef(
       mapping = aes_string(
-        y = "term", 
+        y = "term",
         x = "estimate",
         ...
       ),
@@ -369,7 +390,7 @@ tidycoef <- function(fit, vars = ".", ...){
 }
 
 # add mandate year vertical lines
-mandate_year <- function(years = seq(2005, 2013, 4)){
+mandate_year <- function(years = seq(2005, 2013, 4)) {
   geom_vline(
     xintercept = years,
     linetype = "dotted",
@@ -377,7 +398,7 @@ mandate_year <- function(years = seq(2005, 2013, 4)){
   )
 }
 
-gg_point_smooth <- function(data, mapping = aes(),...){
+gg_point_smooth <- function(data, mapping = aes(), ...) {
   ggplot(
     data = data,
     mapping
@@ -388,7 +409,7 @@ gg_point_smooth <- function(data, mapping = aes(),...){
     geom_smooth(
       method = "lm",
       col = "coral3"
-    ) 
+    )
 }
 
 gg_point_line <- function(data, mapping = aes(), ...) {
@@ -405,14 +426,14 @@ gg_point_line <- function(data, mapping = aes(), ...) {
 }
 
 geom_errorbar_tidy <- geom_errorbarh(
-    aes(
-      xmin = conf.low,
-      xmax = conf.high
-    ),
-    height = 0,
-    linetype = "solid",
-    position = ggstance::position_dodgev(height=0.3)
-  )
+  aes(
+    xmin = conf.low,
+    xmax = conf.high
+  ),
+  height = 0,
+  linetype = "solid",
+  position = ggstance::position_dodgev(height = 0.3)
+)
 
 # missingness
 # gg_miss_var <- partial(
@@ -421,7 +442,7 @@ geom_errorbar_tidy <- geom_errorbarh(
 # )
 
 # hex
-gg_hex <- function(data, mapping = aes(), n_bin = 30, ...){
+gg_hex <- function(data, mapping = aes(), n_bin = 30, ...) {
   ggplot(
     data = data,
     mapping
@@ -435,9 +456,9 @@ gg_hex <- function(data, mapping = aes(), n_bin = 30, ...){
       direction = -1
     )
 }
-  
+
 # histogram
-gg_histogram <- function(data, mapping = aes(), ...){
+gg_histogram <- function(data, mapping = aes(), ...) {
   ggplot(
     data = data,
     mapping
@@ -446,11 +467,11 @@ gg_histogram <- function(data, mapping = aes(), ...){
       ...,
       col = "#375b7c",
       fill = "steelblue3",
-      aes(y = stat(width*density))
+      aes(y = stat(width * density))
     )
 }
 
-gg_point <- function(data, mapping = aes(), ...){
+gg_point <- function(data, mapping = aes(), ...) {
   ggplot(
     data = data,
     mapping
@@ -458,8 +479,8 @@ gg_point <- function(data, mapping = aes(), ...){
     geom_point(...)
 }
 
-gg_summary <- function(data, x, y, fun = 'mean', color = matte_indigo, smooth = T, ...){
-  plot <- data %>% 
+gg_summary <- function(data, x, y, fun = "mean", color = matte_indigo, smooth = T, ...) {
+  plot <- data %>%
     ggplot(
       aes(
         !!sym(x),
@@ -473,26 +494,30 @@ gg_summary <- function(data, x, y, fun = 'mean', color = matte_indigo, smooth = 
       size = 1,
       geom = "point"
     )
-  
-  if(smooth == T){
+
+  if (smooth == T) {
     plot <- plot +
       geom_smooth(
-        method = 'gam',
+        method = "gam",
         formula = y ~ splines::bs(x, 3)
-      ) 
+      )
   }
-  
+
   return(plot)
 }
 
 # change default ggplot settings
-scale_colour_discrete <- function(palette = "OrRd", ...) scale_color_brewer(
-  palette = palette, direction = -1, ...
-)
+scale_colour_discrete <- function(palette = "OrRd", ...) {
+  scale_color_brewer(
+    palette = palette, direction = -1, ...
+  )
+}
 
-scale_fill_discrete <- function(palette = "OrRd", ...) scale_fill_brewer(
-  palette = palette, direction = -1, ...
-)
+scale_fill_discrete <- function(palette = "OrRd", ...) {
+  scale_fill_brewer(
+    palette = palette, direction = -1, ...
+  )
+}
 
 matte_indigo <- "#375b7c"
 matte_indigo2 <- "#4c6e8d"
@@ -525,24 +550,24 @@ update_geom_defaults(
 
 group_split <- function(data, ...) {
   vars <- enquos(...)
-  
-  data <- data %>% 
+
+  data <- data %>%
     group_by(!!!vars)
-  
-  group_names <- group_keys(data) %>% 
+
+  group_names <- group_keys(data) %>%
     pull()
-  
-  data %>% 
-    dplyr::group_split() %>% 
+
+  data %>%
+    dplyr::group_split() %>%
     set_names(
       group_names
     )
 }
 
 # add mandate year vertical lines
-plot_mandate_year <- function(years = seq(2005, 2013, 4)){
+plot_mandate_year <- function(years = seq(2005, 2013, 4)) {
   geom_vline(
-        xintercept = 
-        as.numeric(as.Date(sprintf("%s-01-01", years)))
-    )
+    xintercept =
+      as.numeric(as.Date(sprintf("%s-01-01", years)))
+  )
 }
