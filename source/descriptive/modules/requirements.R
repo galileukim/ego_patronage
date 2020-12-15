@@ -526,3 +526,12 @@ group_split <- function(data, ...) {
       group_names
     )
 }
+
+# add mandate year vertical lines
+plot_mandate_year <- function(years = seq(2005, 2013, 4)){
+  geom_vline(
+    xintercept = years,
+    linetype = "dotted",
+    color = "grey65"
+  )
+}

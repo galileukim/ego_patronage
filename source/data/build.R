@@ -36,7 +36,7 @@ module_linkage <- c(
 )
 
 module_linkage <- sprintf(
-    "record_linkage/linkage/%s.R",
+"record_linkage/linkage/%s.R",
     module_linkage
 )
 
