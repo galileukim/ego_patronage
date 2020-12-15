@@ -67,6 +67,13 @@ year_to_char <- function(data) {
   return(data)
 }
 
+convert_to_date <- function(data){
+  data %>%
+  mutate(
+        across(starts_with("date"), lubridate::ymd)
+    )
+}
+
 fix_wage <- function(data) {
   data %>%
     mutate(
@@ -535,8 +542,7 @@ group_split <- function(data, ...) {
 # add mandate year vertical lines
 plot_mandate_year <- function(years = seq(2005, 2013, 4)){
   geom_vline(
-    xintercept = years,
-    linetype = "dotted",
-    color = "grey65"
-  )
+        xintercept = 
+        as.numeric(as.Date(sprintf("%s-01-01", years)))
+    )
 }
