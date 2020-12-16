@@ -57,6 +57,9 @@ list_files <- function(path, pattern) {
 # ==============================================================================
 is_municipal <- rlang::quo(nat_jur == 1031)
 is_bureau <- rlang::quo(nat_jur == 1031 & occupation == 1)
+is_partisan <- rlang::quo(
+  year >= year_date_start & (year <= year_date_end | is.na(year_date_end))
+)
 
 year_to_char <- function(data) {
   data <- data %>%
