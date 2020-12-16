@@ -8,6 +8,8 @@ source(
     here::here("source/descriptive/modules/requirements.R")
 )
 
+message("extract records and join with filiado data")
+
 rais_filiado <- dbGetQuery(
     "
     SELECT 
@@ -31,6 +33,7 @@ rais_filiado <- dbGetQuery(
     "
 )
 
+message("generate party dummy and compute partisanship by group")
 rais_filiado <- rais_filiado %>%
     generate_year_filiado() %>%
     filter(
@@ -49,6 +52,8 @@ rais_filiado_occupation <- rais_filiado %>%
     ) %>% 
     fix_occupation() 
 
+message("computing means...")
+
 group_vars <- c(
     "cbo_group", "cbo_group_detail", "contract_type", "edu", "hours"
 ) 
@@ -64,12 +69,34 @@ partisan_summary <- map(
 ) %>%
     set_names(group_vars)
 
+message("printing out plots")
+
 inputs_to_plot <- list(
     data = partisan_summary,
     x = group_vars
 ) 
 
-pmap(
+plot_partisan <- pmap(
     inputs_to_plot,
     gg_bar, y = mean_is_partisan
     )
+
+message("exporting plots")
+path_to_figs <- ifelse(
+    isTRUE(debug), 
+    "paper/figures/partisanship/sample/", 
+    "paper/figures/partisanship/"
+)
+
+export_plots <- list(
+    filename = sprintf(
+        here(path_to_figs, "plot_partisanship_by_%s.pdf"),
+        group_vars
+        ),
+    plot = plot_partisan
+)
+
+pwalk(
+    export_plots,
+    ggsave
+)
