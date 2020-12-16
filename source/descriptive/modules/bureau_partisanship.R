@@ -16,6 +16,8 @@ rais_filiado <- dbGetQuery(
         rais.id_employee,
         rais.cbo_02,
         rais.cnae_95,
+        rais.edu,
+        rais.hours,
         rais.wage,
         rais.contract_type,
         filiado_mun.filiado_id,
@@ -29,9 +31,45 @@ rais_filiado <- dbGetQuery(
     "
 )
 
-rais_filiado %>%
+rais_filiado <- rais_filiado %>%
     generate_year_filiado() %>%
     filter(
         is.na(filiado_id) |
-        !!is_partisan
+        {{is_partisan}}
+    ) %>%
+    mutate(
+        is_partisan = if_else(
+            is.na(filiado_id), 0L, 1L
+        )
+    )
+
+rais_filiado_occupation <- rais_filiado %>%
+    mutate(
+        occupation = str_sub(cbo_02, 1, 1)
+    ) %>% 
+    fix_occupation() 
+
+group_vars <- c(
+    "cbo_group", "cbo_group_detail", "contract_type", "edu", "hours"
+) 
+
+partisan_summary <- map(
+    group_vars,
+    ~ compute_mean(
+        data = rais_filiado_occupation,
+        .group_vars = .,
+        .summary_vars = c(is_partisan)
+    ) %>%
+    arrange(desc(mean_is_partisan))
+) %>%
+    set_names(group_vars)
+
+inputs_to_plot <- list(
+    data = partisan_summary,
+    x = group_vars
+) 
+
+pmap(
+    inputs_to_plot,
+    gg_bar, y = mean_is_partisan
     )

@@ -310,11 +310,14 @@ grouped_lead <- function(data, .group_vars, .lag_vars, .ordering) {
   return(data_lead)
 }
 
-compute_mean <- function(data, ...) {
+compute_mean <- function(data, .group_vars, .summary_vars) {
   data_summarised <- data %>%
+    group_by(
+      across({{.group_vars}})
+    ) %>%
     summarise(
       across(
-        c(...),
+        {{.summary_vars}},
         ~ mean(., na.rm = T),
         .names = "mean_{col}"
       ),
@@ -505,6 +508,16 @@ gg_summary <- function(data, x, y, fun = "mean", color = matte_indigo, smooth = 
         formula = y ~ splines::bs(x, 3)
       )
   }
+
+  return(plot)
+}
+
+gg_bar <- function(data, x, y){
+  plot <- data %>%
+    ggplot(
+      aes(!!sym(x), {{y}})
+    ) +
+    geom_col()
 
   return(plot)
 }
