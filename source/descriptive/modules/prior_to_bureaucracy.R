@@ -64,19 +64,42 @@ career_filiado %>%
     )
 
 # compute summary statistics for partisans and non-partisans
-career_filiado %>%
+group_vars <- c("year", "partisan")
+
+career_filiado_mean <- career_filiado %>%
     mutate(
         partisan = if_else(prior_partisan == 1, 1, 0)
     ) %>%
     compute_mean(
-        partisan,
+        all_of(group_vars),
         c(age, work_experience, edu)
     )
 
-career_filiado %>%
+career_filiado_median <- career_filiado %>%
     mutate(
         partisan = if_else(prior_partisan == 1, 1, 0)
     ) %>%
-    group_by(partisan) %>%
+    group_by(
+        across(all_of(group_vars))
+    ) %>%
     compute_median(wage)
 
+career_filiado_summary <- career_filiado_mean %>%
+    left_join(
+        career_filiado_median,
+        by = group_vars
+    ) %>%
+    filter(!is.na(partisan))
+
+vars_to_plot <- c("age", "work_experience", "edu") %>%
+    sprintf(fmt = "mean_%s", .) %>%
+    c("median_wage")
+
+plot_summary <- map(
+    vars_to_plot,
+    ~ gg_point(
+        data = career_filiado_summary,
+        aes_string("year", .)
+    ) +
+    facet_wrap(. ~ partisan)
+)
