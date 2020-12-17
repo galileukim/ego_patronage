@@ -63,7 +63,9 @@ career_filiado %>%
         stat = "count"
     )
 
+# ---------------------------------------------------------------------------- #
 # compute summary statistics for partisans and non-partisans
+message("computing summary statistics...")
 group_vars <- c("year", "partisan")
 
 career_filiado_mean <- career_filiado %>%
@@ -91,6 +93,10 @@ career_filiado_summary <- career_filiado_mean %>%
     ) %>%
     filter(!is.na(partisan))
 
+message("complete!")
+
+# ---------------------------------------------------------------------------- #
+message("generating plots")
 vars_to_plot <- c("age", "work_experience", "edu") %>%
     sprintf(fmt = "mean_%s", .) %>%
     c("median_wage")
@@ -102,4 +108,18 @@ plot_summary <- map(
         aes_string("year", .)
     ) +
     facet_wrap(. ~ partisan)
+)
+
+plot_filenames <- generate_plot_filenames(
+    "paper/figures/partisanship/",
+    vars_to_plot,
+    debug
+)
+
+pmap(
+    list(
+        plot = plot_summary,
+        filename = plot_filenames
+    ),
+    ggsave
 )

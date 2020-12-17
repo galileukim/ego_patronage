@@ -522,6 +522,20 @@ gg_bar <- function(data, x, y){
   return(plot)
 }
 
+generate_plot_filenames <- function(dir, vars, debug){
+path_to_figs <- ifelse(
+    isTRUE(debug), paste0(dir, "sample/"), dir
+)
+
+file_names <- sprintf(
+    "plot_%s.pdf", vars
+)
+
+path_out <- here(path_to_figs, file_names)
+
+return(path_out)
+}
+
 # change default ggplot settings
 scale_colour_discrete <- function(palette = "OrRd", ...) {
   scale_color_brewer(

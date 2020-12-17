@@ -12,7 +12,7 @@ rais <- tbl(rais_con, "rais")
 filiado <- tbl(rais_con, "filiado_mun")
 
 rais_tables <- c(
-    partisan = "rais_mun_partisan", 
+    partisan = "rais_mun_partisan",
     non_partisan = "rais_mun_non_partisan"
 )
 
@@ -27,13 +27,13 @@ vars_to_plot <- c("hired", "fired", "work_experience")
 plot_turnover <- map(
     vars_to_plot,
     ~ gg_summary(
-        x = "year", 
-        y = ., 
+        x = "year",
+        y = .,
         data = rais_filiado,
         smooth = FALSE
     ) +
-    facet_wrap(. ~ is_filiado) +
-    ggtitle(.)
+        facet_wrap(. ~ is_filiado) +
+        ggtitle(.)
 )
 
 path_to_figs <- ifelse(
@@ -49,7 +49,7 @@ path_out <- here(path_to_figs, file_names)
 pwalk(
     list(
         filename = path_out,
-    plot = plot_turnover
+        plot = plot_turnover
     ),
     ggsave
 )
