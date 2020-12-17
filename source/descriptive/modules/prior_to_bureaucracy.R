@@ -34,6 +34,7 @@ career_prior_to_bureaucracy <- dbGetQuery(
     "
 )
 
+message("join data with partisan affiliation")
 career_filiado <- career_prior_to_bureaucracy %>%
     mutate(cod_ibge_6 = as.character(cod_ibge_6)) %>%
     left_join(
@@ -44,7 +45,8 @@ career_filiado <- career_prior_to_bureaucracy %>%
     mutate(
         prior_partisan = if_else(
             year >= year_date_start &
-            year <= year_date_end, 1L, 0L
+            (year <= year_date_end | is.na(year_date_end)),
+            1L, 0L
         )
     )
 
@@ -60,4 +62,21 @@ career_filiado %>%
         aes(prior_partisan),
         stat = "count"
     )
-# extract last_job and combine it with data from filiado
+
+# compute summary statistics for partisans and non-partisans
+career_filiado %>%
+    mutate(
+        partisan = if_else(prior_partisan == 1, 1, 0)
+    ) %>%
+    compute_mean(
+        partisan,
+        c(age, work_experience, edu)
+    )
+
+career_filiado %>%
+    mutate(
+        partisan = if_else(prior_partisan == 1, 1, 0)
+    ) %>%
+    group_by(partisan) %>%
+    compute_median(wage)
+
