@@ -43,44 +43,36 @@ career_filiado <- career_prior_to_bureaucracy %>%
     ) %>%
     generate_year_filiado() %>%
     mutate(
-        prior_partisan = if_else(
+        is_partisan = if_else(
             year >= year_date_start &
             (year <= year_date_end | is.na(year_date_end)),
-            1L, 0L
-        )
+            "pre_partisan", "post_partisan",
+            missing = "non_partisan"
+        ),
     )
 
 # note that the majority of partisans become party members after
 # joining the bureau
 career_filiado %>%
-    mutate(
-        prior_partisan = recode(prior_partisan, `0` = "post", `1` = "pre")
-    ) %>%
-    filter(!is.na(prior_partisan)) %>%
+    filter(!is.na(is_partisan)) %>%
     ggplot() +
     geom_bar(
-        aes(prior_partisan),
+        aes(is_partisan),
         stat = "count"
     )
 
 # ---------------------------------------------------------------------------- #
 # compute summary statistics for partisans and non-partisans
 message("computing summary statistics...")
-group_vars <- c("year", "partisan")
+group_vars <- c("year", "is_partisan")
 
 career_filiado_mean <- career_filiado %>%
-    mutate(
-        partisan = if_else(prior_partisan == 1, 1, 0)
-    ) %>%
     compute_mean(
         all_of(group_vars),
         c(age, work_experience, edu)
     )
 
 career_filiado_median <- career_filiado %>%
-    mutate(
-        partisan = if_else(prior_partisan == 1, 1, 0)
-    ) %>%
     group_by(
         across(all_of(group_vars))
     ) %>%
@@ -91,7 +83,7 @@ career_filiado_summary <- career_filiado_mean %>%
         career_filiado_median,
         by = group_vars
     ) %>%
-    filter(!is.na(partisan))
+    filter(!is.na(is_partisan))
 
 message("complete!")
 
@@ -105,9 +97,9 @@ plot_summary <- map(
     vars_to_plot,
     ~ gg_point(
         data = career_filiado_summary,
-        aes_string("year", .)
+        aes_string("year", ., color = "is_partisan")
     ) +
-    facet_wrap(. ~ partisan)
+    facet_wrap(. ~ is_partisan)
 )
 
 plot_filenames <- generate_plot_filenames(
@@ -123,3 +115,5 @@ pmap(
     ),
     ggsave
 )
+
+message("completed: generating plots for prior to bureaucracy.")

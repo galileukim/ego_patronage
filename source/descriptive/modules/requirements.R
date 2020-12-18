@@ -537,13 +537,13 @@ return(path_out)
 }
 
 # change default ggplot settings
-scale_colour_discrete <- function(palette = "OrRd", ...) {
+scale_colour_discrete <- function(palette = "Set2", ...) {
   scale_color_brewer(
     palette = palette, direction = -1, ...
   )
 }
 
-scale_fill_discrete <- function(palette = "OrRd", ...) {
+scale_fill_discrete <- function(palette = "Set2", ...) {
   scale_fill_brewer(
     palette = palette, direction = -1, ...
   )
