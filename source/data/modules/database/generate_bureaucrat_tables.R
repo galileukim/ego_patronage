@@ -38,8 +38,9 @@ dbExecute(
         FIRST_VALUE(year) OVER 
         (PARTITION BY id_employee ORDER BY year ASC) AS min_year
         FROM rais
+        WHERE nat_jur = 1031
     )
-    WHERE hired = 1 AND nat_jur = 1031 AND year = min_year
+    WHERE type_admission > 0 AND nat_jur = 1031 AND year = min_year
     ORDER BY id_employee, year;
     "
 )
@@ -53,8 +54,9 @@ dbExecute(
         FIRST_VALUE(year) OVER 
         (PARTITION BY id_employee ORDER BY year DESC) AS min_year
         FROM rais
+        WHERE nat_jur = 1031
     )
-    WHERE fired = 1 AND nat_jur = 1031 AND year = min_year
+    WHERE cause_fired > 0 AND nat_jur = 1031 AND year = min_year
     ORDER BY id_employee, year
     "
 )

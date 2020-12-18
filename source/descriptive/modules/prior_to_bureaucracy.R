@@ -1,6 +1,6 @@
 # ==============================================================================
 # input: sql database of party affiliation
-# output: compare differential comps for partisans and non-partisans
+# output: compare differential observables for partisans and non-partisans
 # before they enter the bureaucracy
 # ==============================================================================
 debug <- TRUE
@@ -88,7 +88,7 @@ career_filiado_summary <- career_filiado_mean %>%
 message("complete!")
 
 # ---------------------------------------------------------------------------- #
-message("generating plots")
+message("generating descriptive plots")
 vars_to_plot <- c("age", "work_experience", "edu") %>%
     sprintf(fmt = "mean_%s", .) %>%
     c("median_wage")
