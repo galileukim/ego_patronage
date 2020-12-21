@@ -35,14 +35,15 @@ bureaucracy_entry_job <- rais_selected %>%
 
 # prepare data for join
 bureaucracy_entry_job <- bureaucracy_entry_job %>%
-    mutate(
-        year = year - 1
-    ) %>%
     rename(
-        cbo_02_lead = cbo_02,
-        wage_lead = wage
+        year_entry = year,
+        cbo_02_entry = cbo_02,
+        wage_entry = wage
     ) %>%
-    collect()
+    collect() %>%
+    filter(
+        !is.na(cbo_02_entry)
+    )
 
 # last private sector job
 private_last_job <- dbGetQuery(
@@ -56,21 +57,21 @@ private_last_job <- dbGetQuery(
     FROM rais
     INNER JOIN rais_bureaucrat_entry
     ON rais.id_employee = rais_bureaucrat_entry.id_employee
-    AND rais.year < rais_bureaucrat_entry.year
+    AND rais.year <= rais_bureaucrat_entry.year
     WHERE nat_jur != 1031
     "
 )
 
 private_last_job <- private_last_job %>%
     group_by(id_employee) %>%
-    filter(year == max(year)) %>%
+    filter(year == max(year) & !is.na(cbo_02)) %>%
     ungroup()
 
 # join at the individual level last private sector job and bureaucracy job
 transition_private_bureaucracy <- private_last_job %>%
     left_join(
         bureaucracy_entry_job,
-        by = c("cod_ibge_6", "year", "id_employee")
+        by = c("cod_ibge_6", "id_employee")
     ) %>%
     mutate(
         across(starts_with("cbo_02"), ~str_sub(., 1, 1))
@@ -79,16 +80,44 @@ transition_private_bureaucracy <- private_last_job %>%
 transition_occupation <- transition_private_bureaucracy %>%
     count(
         cbo_02,
-        cbo_02_lead
+        cbo_02_entry
+    )
+
+transition_occupation <- transition_occupation %>%
+    complete(
+        cbo_02,
+        cbo_02_entry,
+        fill = list(n = 0)
     )
 
 # plot out
-transition_occupation %>%
+plot_transition_occupation <- transition_occupation %>%
     ggplot() +
     geom_tile(
         aes(
             x = cbo_02,
-            y = cbo_02_lead,
+            y = cbo_02_entry,
             fill = n
         )
+    ) +
+    scale_fill_continuous(
+        name = "Total",
+        type = "viridis"
+    ) +
+    labs(
+        x = "private sector occupation",
+        y = "bureaucracy occupation",
+        caption = "Total"
     )
+
+message("export plot")
+path_to_figs <- ifelse(
+    isTRUE(debug), 
+    "paper/figures/turnover/sample/", 
+    "paper/figures/turnover/"
+)
+
+ggsave(
+    plot_transition_occupation,
+    filename = here(path_to_figs, "plot_transition_occupation.pdf")
+)
