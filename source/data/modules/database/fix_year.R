@@ -4,26 +4,38 @@ source(
     here::here("source/data/modules/database/requirements.R")
 )
 
-if (dbExistsTable(rais_con, "rais_corrected")) {
-    dbRemoveTable(rais_con, "rais_corrected")
+if (dbExistsTable(rais_con, "rais_correct")) {
+    dbRemoveTable(rais_con, "rais_correct")
 }
 
-res <- dbSendQuery(rais_con, "SELECT * FROM rais")
+dbExecute(
+    "
+    CREATE TABLE rais_correct AS
+    SELECT 
+    id_employee,
+    CAST(year AS INT) AS year,
+    cod_ibge_6,
+    cbo_02,
+    cnae_95,
+    cnae_20,
+    age,
+    edu,
+    gender,
+    race,
+    work_experience,
+    wage, date_admission,
+    date_separation,
+    nat_jur,
+    hours,
+    type_admission,
+    cause_fired, hired,fired, departure, contract_type
+    FROM rais"
+)
 
-while (!dbHasCompleted(res)) {
-    rais <- dbFetch(res, n = 1e4)
-    rais_corrected <- rais %>% mutate(across(year, as.integer))
-    print(dbHasCompleted(res))
-    print(nrow(rais_corrected))
+if (collect(count(tbl(rais_con, "rais"))) >= 1e6) {
+    dbRemoveTable(rais_con, "rais")
 
-    # dbWriteTable(
-    #     conn = rais_con,
-    #     name = "rais_corrected",
-    #     value = rais_corrected,
-    #     row.names = F,
-    #     append = TRUE
-    # )
+    dbExecute(
+        "ALTER TABLE rais_correct RENAME TO rais"
+    )
 }
-
-dbClearResult(res)
-dbDisconnect(rais_con)

@@ -36,25 +36,59 @@ bureaucracy_entry_job <- rais_selected %>%
 # prepare data for join
 bureaucracy_entry_job <- bureaucracy_entry_job %>%
     mutate(
-        year = as.character(as.integer(as.integer(year) - 1.0))
+        year = year - 1
     ) %>%
     rename(
         cbo_02_lead = cbo_02,
         wage_lead = wage
-    )
+    ) %>%
+    collect()
 
 # last private sector job
 private_last_job <- dbGetQuery(
     "
-    SELECT * FROM rais
-    LEFT JOIN rais_bureaucrat_entry
+    SELECT 
+    rais.id_employee,
+    rais.year,
+    rais.cod_ibge_6,
+    rais.cbo_02,
+    rais.wage
+    FROM rais
+    INNER JOIN rais_bureaucrat_entry
     ON rais.id_employee = rais_bureaucrat_entry.id_employee
     AND rais.year < rais_bureaucrat_entry.year
+    WHERE nat_jur != 1031
     "
 )
 
-rais_entry_job <- rais_selected %>% 
+private_last_job <- private_last_job %>%
+    group_by(id_employee) %>%
+    filter(year == max(year)) %>%
+    ungroup()
+
+# join at the individual level last private sector job and bureaucracy job
+transition_private_bureaucracy <- private_last_job %>%
     left_join(
         bureaucracy_entry_job,
-        on = c("id_employee", "cod_ibge_6", "year")
+        by = c("cod_ibge_6", "year", "id_employee")
+    ) %>%
+    mutate(
+        across(starts_with("cbo_02"), ~str_sub(., 1, 1))
+    )
+
+transition_occupation <- transition_private_bureaucracy %>%
+    count(
+        cbo_02,
+        cbo_02_lead
+    )
+
+# plot out
+transition_occupation %>%
+    ggplot() +
+    geom_tile(
+        aes(
+            x = cbo_02,
+            y = cbo_02_lead,
+            fill = n
+        )
     )
