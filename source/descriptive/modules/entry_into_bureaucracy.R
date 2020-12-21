@@ -19,14 +19,15 @@ message("generate transition matrix")
 # extract entry into bureaucracy
 join_cols <- c("id_employee", "cod_ibge_6", "year")
 outcome_cols <- c("cbo_02", "wage")
-
-# generate entry level job for bureaucracy
-bureaucracy_entry_job <- rais %>%
+rais_selected <- rais %>%
     select(
         all_of(
             c(join_cols, outcome_cols)
         )
-    ) %>%
+    )
+
+# generate entry level job for bureaucracy
+bureaucracy_entry_job <- rais_selected %>%
     inner_join(
         bureaucracy_entry,
         on = c("id_employee", "cod_ibge_6", "year")
@@ -41,16 +42,19 @@ bureaucracy_entry_job <- bureaucracy_entry_job %>%
         cbo_02_lead = cbo_02,
         wage_lead = wage
     )
-    
-rais_entry_job <- rais %>% 
-    select(
-        all_of(
-            c(join_cols, outcome_cols)
-        )
-    ) %>%
+
+# last private sector job
+private_last_job <- dbGetQuery(
+    "
+    SELECT * FROM rais
+    LEFT JOIN rais_bureaucrat_entry
+    ON rais.id_employee = rais_bureaucrat_entry.id_employee
+    AND rais.year < rais_bureaucrat_entry.year
+    "
+)
+
+rais_entry_job <- rais_selected %>% 
     left_join(
         bureaucracy_entry_job,
         on = c("id_employee", "cod_ibge_6", "year")
     )
-
-bureaucracy_entry %>% distinct(id_employee) %>% inner_join(rais) %>% arrange(id_employee, year) %>% glimpse

@@ -5,7 +5,7 @@
 # 3) date of each exit into the bureaucracy
 # requirement: reduce query times by generating readily available tables
 # ==============================================================================
-debug <- TRUE
+debug <- FALSE
 
 source(
     here::here("source/data/modules/database/requirements.R")
@@ -60,25 +60,5 @@ dbExecute(
     ORDER BY id_employee, year
     "
 )
-
-# message("write out tables to sqlite")
-
-# sql_tables <- list(
-#     rais_bureaucrat_entries, rais_bureaucrat_exits
-# )
-
-# sql_table_names <- c(
-#     "rais_bureaucrat_entries", "rais_bureaucrat_exits"
-# )
-
-# pwalk(
-#     list(
-#         name = sql_table_names,
-#         value = sql_tables
-#     ),
-#     dbWriteTable,
-#     conn = rais_con,
-#     overwrite = TRUE
-# )
 
 message("write out tables to sqlite complete!")

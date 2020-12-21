@@ -224,7 +224,7 @@ trim_rais <- function(data, ...) {
   data_trimmed <- data %>%
     select(
       id_employee,
-      year,
+      year = as.integer(year),
       cod_ibge_6 = municipio,
       cbo_02 = cbo2002,
       matches("cnae_[0-9]{2}"),
