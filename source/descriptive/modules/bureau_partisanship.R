@@ -49,12 +49,16 @@ rais_filiado_occupation <- rais_filiado %>%
     mutate(
         occupation = str_sub(cbo_02, 1, 1)
     ) %>% 
-    fix_occupation() 
+    fix_occupation() %>%
+    fix_edu() %>%
+    filter(
+        !is.na(cbo_group) & !is.na(cbo_group_detail)
+    )
 
 message("computing means...")
 
 group_vars <- c(
-    "cbo_group", "cbo_group_detail", "contract_type", "edu", "hours"
+    "cbo_group", "cbo_group_detail", "contract_type", "edu_category"
 )
 
 partisan_summary <- map(
@@ -70,13 +74,19 @@ partisan_summary <- map(
 message("printing out plots")
 
 inputs_to_plot <- list(
-    data = partisan_summary,
-    x = group_vars
+    .x = partisan_summary,
+    .y = group_vars
 ) 
 
-plot_partisan <- pmap(
-    inputs_to_plot,
-    gg_bar, y = mean_is_partisan
+plot_partisan <- map2(
+    partisan_summary,
+    group_vars,
+    ~ gg_bar(
+        data = .x, 
+        x = .y, 
+        y = is_partisan_mean
+        ) + 
+        coord_flip()
     )
 
 message("exporting plots")

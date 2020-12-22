@@ -78,6 +78,19 @@ convert_to_date <- function(data) {
     )
 }
 
+fix_edu <- function(data){
+  data %>%
+  mutate(
+            edu_category = case_when(
+                edu <= 2 ~ "illiterate",
+                between(edu, 3, 4) ~ "lower school",
+                between(edu, 5, 6) ~ "middle school",
+                between(edu, 7, 8) ~ "high school",
+                edu >= 9 ~ "higher education"
+            )
+  )
+}
+
 fix_wage <- function(data) {
   data %>%
     mutate(
@@ -566,7 +579,7 @@ gg_summary <- function(data, x, y, fun = "mean", color = matte_indigo, smooth = 
 gg_bar <- function(data, x, y){
   plot <- data %>%
     ggplot(
-      aes(!!sym(x), {{y}})
+      aes(reorder(!!sym(x), {{y}}), {{y}})
     ) +
     geom_col()
 
