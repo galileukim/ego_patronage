@@ -42,14 +42,7 @@ career_filiado <- career_prior_to_bureaucracy %>%
         by = c("cod_ibge_6", "id_employee")
     ) %>%
     generate_year_filiado() %>%
-    mutate(
-        is_partisan = if_else(
-            year >= year_date_start &
-            (year <= year_date_end | is.na(year_date_end)),
-            "pre_partisan", "post_partisan",
-            missing = "non_partisan"
-        ),
-    )
+    classify_partisanship()
 
 # note that the majority of partisans become party members after
 # joining the bureau
@@ -89,17 +82,17 @@ message("complete!")
 
 # ---------------------------------------------------------------------------- #
 message("generating descriptive plots")
+
 vars_to_plot <- c("age", "work_experience", "edu") %>%
     sprintf(fmt = "mean_%s", .) %>%
     c("median_wage")
 
 plot_summary <- map(
     vars_to_plot,
-    ~ gg_point(
+    ~ gg_point_line(
         data = career_filiado_summary,
         aes_string("year", ., color = "is_partisan")
-    ) +
-    facet_wrap(. ~ is_partisan)
+    )
 )
 
 plot_filenames <- generate_plot_filenames(

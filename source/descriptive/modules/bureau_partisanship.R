@@ -36,14 +36,13 @@ rais_filiado <- dbGetQuery(
 message("generate party dummy and compute partisanship by group")
 rais_filiado <- rais_filiado %>%
     generate_year_filiado() %>%
-    filter(
-        is.na(filiado_id) |
-        {{is_partisan}}
-    ) %>%
+    # filter(
+    #     is.na(filiado_id) |
+    #     {{is_partisan}}
+    # ) %>%
+    classify_partisanship() %>%
     mutate(
-        is_partisan = if_else(
-            is.na(filiado_id), 0L, 1L
-        )
+        is_partisan = if_else(is_partisan == "non_partisan", 0, 1)
     )
 
 rais_filiado_occupation <- rais_filiado %>%
@@ -56,16 +55,15 @@ message("computing means...")
 
 group_vars <- c(
     "cbo_group", "cbo_group_detail", "contract_type", "edu", "hours"
-) 
+)
 
 partisan_summary <- map(
     group_vars,
-    ~ compute_mean(
+    ~ compute_summary_stats(
         data = rais_filiado_occupation,
         .group_vars = .,
         .summary_vars = c(is_partisan)
-    ) %>%
-    arrange(desc(mean_is_partisan))
+    )
 ) %>%
     set_names(group_vars)
 

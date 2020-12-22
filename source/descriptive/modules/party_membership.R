@@ -11,7 +11,9 @@ source(
 # ==============================================================================
 # generate descriptive statistics of party members
 # ==============================================================================
-rais_sql <- tbl(rais_con, "rais")
+rais_sql <- tbl(rais_con, "rais") %>%
+    filter_municipal()
+    
 filiado_sql <- tbl(rais_con, "filiado_mun")
 
 rais_tables <- c(
@@ -21,7 +23,7 @@ rais_tables <- c(
 
 rais_filiado <- map_dfr(
     rais_tables,
-    ~ dbGetQuery(rais_con, sprintf("SELECT * FROM %s", .)),
+    ~ dbGetQuery(sprintf("SELECT * FROM %s", .)),
     .id = "is_filiado"
 )
 
