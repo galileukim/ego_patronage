@@ -1,5 +1,5 @@
 # fix year
-debug <- TRUE
+debug <- FALSE
 source(
     here::here("source/data/modules/database/requirements.R")
 )
