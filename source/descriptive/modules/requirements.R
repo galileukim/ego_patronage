@@ -581,7 +581,8 @@ gg_bar <- function(data, x, y){
     ggplot(
       aes(reorder(!!sym(x), {{y}}), {{y}})
     ) +
-    geom_col()
+    geom_col() +
+    labs(x = x)
 
   return(plot)
 }
