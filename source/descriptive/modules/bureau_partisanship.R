@@ -2,10 +2,12 @@
 # input: sql database of party affiliation
 # output: assess extent to which there is party dominance
 # ==============================================================================
-debug <- TRUE
+source(
+    here::here("source/descriptive/modules/globals.R")
+)
 
 source(
-    here::here("source/descriptive/modules/requirements.R")
+    here("source/descriptive/modules/requirements.R")
 )
 
 message("extract records and join with filiado data")

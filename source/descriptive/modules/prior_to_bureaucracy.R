@@ -3,10 +3,12 @@
 # output: compare differential observables for partisans and non-partisans
 # before they enter the bureaucracy
 # ==============================================================================
-debug <- TRUE
+source(
+    here::here("source/descriptive/modules/globals.R")
+)
 
 source(
-    here::here("source/descriptive/modules/requirements.R")
+    here("source/descriptive/modules/requirements.R")
 )
 
 rais <- tbl(rais_con, "rais")
