@@ -4,14 +4,25 @@
 # ==============================================================================
 message("setting up...")
 
-debug <- FALSE
 levels <- c("mun", "state")
+
+source(
+    here::here("source/data/modules/database/globals.R")
+)
+
 source(
     here::here("source/data/modules/database/requirements.R")
 )
 
 # ---------------------------------------------------------------------------- #
-message("initiating upload")
+message("initiating upload raw filiado")
+
+filiado <- fread(
+    here("data/raw/tse/filiado.csv.gz")
+)
+
+# ---------------------------------------------------------------------------- #
+message("initiating upload joined filiado")
 
 # initiate tables
 walk(

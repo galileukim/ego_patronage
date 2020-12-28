@@ -44,20 +44,20 @@ module_linkage %>%
     walk(build_from_source)
 
 # ---------------------------------------------------------------------------- #
-build_from_source("database", "requirements.R")
+# build_from_source("database", "requirements.R")
 
-module_database <- c(
-    "create_rais_sql",
-    "upload_filiado_sql",
-    "upload_additional_data",
-    "generate_municipal_tables",
-    "generate_bureaucrat_tables"
-)
+# module_database <- c(
+#     "create_rais_sql",
+#     "upload_filiado_sql",
+#     "upload_additional_data",
+#     "generate_municipal_tables",
+#     "generate_bureaucrat_tables"
+# )
 
-module_database <- sprintf(
-    "database/%s.R",
-    module_linkage
-)
+# module_database <- sprintf(
+#     "database/%s.R",
+#     module_linkage
+# )
 
-module_database %>%
-    walk(build_from_source)
+# module_database %>%
+#     walk(build_from_source)

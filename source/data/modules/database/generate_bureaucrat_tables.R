@@ -34,7 +34,7 @@ dbExecute(
 dbExecute(
     "
     CREATE TABLE IF NOT EXISTS rais_bureaucrat_entry AS
-    SELECT cod_ibge_6 id_employee, year
+    SELECT cod_ibge_6, id_employee, year
     FROM rais 
     WHERE type_admission = 1 AND nat_jur = 1031
     GROUP BY id_employee
@@ -45,7 +45,7 @@ dbExecute(
 dbExecute(
     "
     CREATE TABLE IF NOT EXISTS rais_bureaucrat_exit AS
-    SELECT cod_ibge_6 id_employee, year
+    SELECT cod_ibge_6, id_employee, year
     FROM rais
     WHERE (cause_fired >= 10 AND cause_fired <= 21) AND nat_jur = 1031
     GROUP BY id_employee

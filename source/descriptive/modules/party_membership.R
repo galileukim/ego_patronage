@@ -2,10 +2,12 @@
 # input: sql database of party affiliation
 # output: compare membership cycles for workers and non-workers
 # ==============================================================================
-debug <- TRUE
+source(
+    here::here("source/descriptive/modules/globals.R")
+)
 
 source(
-    here::here("source/descriptive/modules/requirements.R")
+    here("source/descriptive/modules/requirements.R")
 )
 
 # ==============================================================================
@@ -74,3 +76,5 @@ filiado_turnover %>%
     facet_wrap(. ~ date + is_employed) +
     coord_cartesian(ylim = c(0, 50)) +
     scale_x_date(limit = as.Date(c("2003-01-01", "2019-01-01")))
+
+# compare membership spells
