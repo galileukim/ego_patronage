@@ -111,4 +111,4 @@ pmap(
     ggsave
 )
 
-message("completed: generating plots for prior to bureaucracy.")
+message("module completed: generating plots for prior to bureaucracy.")

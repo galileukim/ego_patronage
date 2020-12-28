@@ -571,9 +571,15 @@ gg_bar <- function(data, x, y){
 }
 
 generate_plot_filenames <- function(dir, vars, debug){
+   # note that this generates a new dir
+
 path_to_figs <- ifelse(
     isTRUE(debug), paste0(dir, "sample/"), dir
 )
+
+if(!dir.exists(path_to_figs)){
+  dir.create(path_to_figs, recursive = TRUE)
+}
 
 file_names <- sprintf(
     "plot_%s.pdf", vars

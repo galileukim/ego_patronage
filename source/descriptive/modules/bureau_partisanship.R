@@ -23,6 +23,7 @@ rais_filiado <- dbGetQuery(
         rais.edu,
         rais.hours,
         rais.wage,
+        rais.work_experience,
         rais.contract_type,
         filiado_mun.filiado_id,
         filiado_mun.date_start,
@@ -57,7 +58,10 @@ rais_filiado_occupation <- rais_filiado %>%
         !is.na(cbo_group) & !is.na(cbo_group_detail)
     )
 
-message("computing means...")
+# ==============================================================================
+# compute party dominance across different categories
+# ==============================================================================
+message("computing dominance...")
 
 group_vars <- c(
     "cbo_group", "cbo_group_detail", "contract_type", "edu_category"
@@ -67,7 +71,7 @@ partisan_summary <- map(
     group_vars,
     ~ compute_summary_stats(
         data = rais_filiado_occupation,
-        .group_vars = .,
+        .group_vars = all_of(.),
         .summary_vars = c(is_partisan)
     )
 ) %>%
@@ -75,12 +79,7 @@ partisan_summary <- map(
 
 message("printing out plots")
 
-inputs_to_plot <- list(
-    .x = partisan_summary,
-    .y = group_vars
-) 
-
-plot_partisan <- map2(
+plot_partisan <- map2(  
     partisan_summary,
     group_vars,
     ~ gg_bar(
@@ -89,8 +88,11 @@ plot_partisan <- map2(
         y = is_partisan_mean
         ) + 
         coord_flip()
-    )
+)
 
+# ==============================================================================
+# exporting plots
+# ==============================================================================
 message("exporting plots")
 path_to_figs <- ifelse(
     isTRUE(debug), 
