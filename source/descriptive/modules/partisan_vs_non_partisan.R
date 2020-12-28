@@ -35,13 +35,17 @@ outcome_vars <- c(
     Wage = "wage"
 )
 
+# compute statistics per year
+rais_filiado <- rais_filiado %>%
+
 plot_descriptive <- map2(
         outcome_vars,
         names(outcome_vars),
-        ~ gg_point_line(
+        ~ gg_plot(
             aes_string("year", .x, color = "is_partisan"),
             data = rais_filiado
         ) +
+        geom_smooth() +
         guides(color = guide_legend("Partisanship")) +
         labs(x = "Year", y = .y)
     )
