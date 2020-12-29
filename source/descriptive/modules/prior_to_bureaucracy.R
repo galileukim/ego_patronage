@@ -66,9 +66,18 @@ plot_breakdown <- career_filiado %>%
     geom_bar(
         aes(is_partisan),
         stat = "count"
-    )
+    ) +
+    scale_x_discrete(
+        name = "Partisanship",
+        labels = c(
+            "pre_partisan" = "pre-partisan",
+            "post_partisan" = "post-partisan",
+            "non_partisan" = "non-partisan"
+        )
+    ) +
+    ylab("Count")
 
-group_vars <- c("cod_ibge_6", "year", "is_partisan")
+group_vars <- c("year", "is_partisan")
 
 career_filiado_mean <- career_filiado %>%
     compute_mean(
@@ -89,8 +98,6 @@ career_filiado_summary <- career_filiado_mean %>%
     ) %>%
     filter(!is.na(is_partisan))
 
-message("uploading summary statistics to sql data.")
-
 message("complete!")
 
 # ---------------------------------------------------------------------------- #
@@ -100,12 +107,24 @@ vars_to_plot <- c("age", "work_experience", "edu") %>%
     sprintf(fmt = "mean_%s", .) %>%
     c("median_wage")
 
-plot_summary <- map(
+label_vars <- c("Age", "Work Experience", "Education", "Wage")
+
+plot_summary <- map2(
     vars_to_plot,
+    label_vars,
     ~ gg_point_line(
         data = career_filiado_summary,
-        aes_string("year", ., color = "is_partisan")
-    )
+        aes_string("year", .x, color = "is_partisan")
+    ) +
+    scale_colour_discrete(
+        name = "Partisanship",
+        labels = c(
+            "pre_partisan" = "pre-partisan",
+            "post_partisan" = "post-partisan",
+            "non_partisan" = "non-partisan"
+        )
+    ) +
+    labs(x = "Year", y = .y)
 )
 
 plot_summary[["breakdown"]] <- plot_breakdown

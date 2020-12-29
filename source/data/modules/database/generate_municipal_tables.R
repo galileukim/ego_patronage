@@ -3,7 +3,9 @@
 # output: municipal level table of summary statistics
 # requirement: reduce query times by generating readily available tables
 # ==============================================================================
-debug <- TRUE
+source(
+    here::here("source/data/modules/database/globals.R")
+)
 
 source(
     here::here("source/data/modules/database/requirements.R")

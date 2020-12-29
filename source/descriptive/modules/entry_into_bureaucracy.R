@@ -3,7 +3,9 @@
 # output: compare transition matrices for partisans and non-partisans
 # into the bureaucracy
 # ==============================================================================
-debug <- TRUE
+source(
+    here::here("source/descriptive/modules/globals.R")
+)
 
 source(
     here::here("source/descriptive/modules/requirements.R")
@@ -58,13 +60,14 @@ private_last_job <- dbGetQuery(
     INNER JOIN rais_bureaucrat_entry
     ON rais.id_employee = rais_bureaucrat_entry.id_employee
     AND rais.year <= rais_bureaucrat_entry.year
-    WHERE nat_jur != 1031
+    WHERE nat_jur != 1031 AND cbo_02 IS NOT NULL
+    GROUP BY rais.id_employee
+    HAVING rais.year = MAX(rais.year)
     "
 )
 
 private_last_job <- private_last_job %>%
     group_by(id_employee) %>%
-    filter(year == max(year) & !is.na(cbo_02)) %>%
     ungroup()
 
 # join at the individual level last private sector job and bureaucracy job
