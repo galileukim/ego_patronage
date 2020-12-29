@@ -8,7 +8,7 @@ source(
 )
 
 source(
-    here::here("source/data/modules/database/requirements.R")
+    here("source/data/modules/database/requirements.R")
 )
 
 RSQLite::initExtension(rais_con)
