@@ -31,19 +31,27 @@ outcome_vars <- c(
     Education = "edu",
     Dismissals = "fired",
     Hires = "hired",
-    `Work Experience` = "work_experience",
+    Experience = "work_experience",
     Wage = "wage"
 )
 
-# compute statistics per year
-rais_filiado <- rais_filiado %>%
+# # compute statistics per year
+# rais_filiado_summary <- rais_filiado %>%
+#     group_by(is_partisan, year) %>%
+#     summarise(
+#         across(
+#             c("age", "edu", "fired", "hired", "work_experience"),
+#             mean, na.rm = TRUE
+#             ),
+#             wage = median(wage, na.rm = TRUE)
+#     )
 
 plot_descriptive <- map2(
         outcome_vars,
         names(outcome_vars),
-        ~ gg_plot(
+        ~ ggplot(
             aes_string("year", .x, color = "is_partisan"),
-            data = rais_filiado
+            data = rais_filiado_summary
         ) +
         geom_smooth() +
         guides(color = guide_legend("Partisanship")) +
