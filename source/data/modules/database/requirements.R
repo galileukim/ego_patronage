@@ -318,6 +318,26 @@ filter_bureau_only_mun <- function(data) {
   return(temp)
 }
 
+filter_active_filiado <- function(data) {
+  data %>%
+    generate_year_filiado() %>%
+    filter(
+      year >= year_date_start &
+        year <= year_date_end
+    )
+}
+
+generate_year_filiado <- function(data) {
+  data %>%
+    mutate(
+      across(
+        c(date_start, date_end),
+        ~ str_sub(., 1, 4) %>% as.integer(),
+        .names = "year_{col}"
+      )
+    )
+}
+
 extract_employee_id <- function(data) {
   temp <- data %>%
     distinct(id_employee)
@@ -401,13 +421,50 @@ grouped_lead <- function(data, .group_vars, .lag_vars, .ordering) {
   return(data_lead)
 }
 
-compute_mean <- function(data, ...) {
+
+compute_summary_stats <- function(data, .group_vars, .summary_vars){
   data_summarised <- data %>%
+    group_by(
+      across({{.group_vars}})
+    ) %>%
     summarise(
       across(
-        c(...),
+        {{.summary_vars}},
+        list(mean = mean, sd = sd),
+        na.rm = TRUE,
+        .names = "{col}_{fn}"
+      ),
+      .groups = "drop"
+    )
+
+  data_count <- data %>%
+    group_by(
+      across({{.group_vars}})
+    ) %>%
+    summarise(
+      n = n(),
+    .groups = "drop"
+    )
+
+  data_summary_stats <- data_summarised %>%
+    inner_join(
+      data_count,
+      by = .group_vars
+    )
+
+  return(data_summary_stats)
+}
+
+compute_mean <- function(data, .group_vars, .summary_vars) {
+  data_summarised <- data %>%
+    group_by(
+      across({{.group_vars}})
+    ) %>%
+    summarise(
+      across(
+        {{.summary_vars}},
         ~ mean(., na.rm = T),
-        .names = "mean_{col}"
+        .names = "{col}_mean"
       ),
       .groups = "drop"
     )
@@ -421,7 +478,7 @@ compute_median <- function(data, ...) {
       across(
         c(...),
         ~ median(., na.rm = T),
-        .names = "median_{col}"
+        .names = "{col}_median"
       ),
       .groups = "drop"
     )
@@ -429,6 +486,17 @@ compute_median <- function(data, ...) {
   return(data_summarised)
 }
 
+classify_partisanship <- function(data){
+  data %>%
+    mutate(
+        is_partisan = if_else(
+            year >= year_date_start &
+            (year <= year_date_end | is.na(year_date_end)),
+            "pre_partisan", "post_partisan",
+            missing = "non_partisan"
+        ),
+    )
+}
 
 scale_vars_to_baseline <- function(data, vars, baseline_year) {
   data_out <- data %>%
