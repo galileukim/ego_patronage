@@ -61,7 +61,12 @@ filiado <- files %>%
 # add primary key
 filiado <- filiado %>%
     map(
-        ~ mutate(., filiado_id = row_number())
+        ~ distinct(
+            .,
+            id_employee, date_start, date_end, party, 
+            .keep_all = TRUE
+        ) %>%
+            mutate(., filiado_id = row_number())
     )
 
 # fix date columns

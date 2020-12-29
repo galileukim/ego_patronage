@@ -1,6 +1,7 @@
 # ==============================================================================
 # input: filiado data and rais, rais_bureaucracy tables
 # output: summary statistics of observable covariates for partisans
+# including only last private sector job and earliest party record
 # ==============================================================================
 source(
     here::here("source/data/modules/database/globals.R")
@@ -30,13 +31,20 @@ career_prior_to_bureaucracy <- dbGetQuery(
         filiado_mun.date_end,
         filiado_mun.date_cancel
     FROM rais
-    LEFT JOIN filiado_mun
+    LEFT JOIN 
+        (
+             SELECT * FROM filiado_mun
+             GROUP BY filiado_mun.id_employee
+             HAVING filiado_mun.date_start = MIN(filiado_mun.date_start)
+        ) AS filiado_mun
         ON rais.cod_ibge_6 = filiado_mun.cod_ibge_6
         AND rais.id_employee = filiado_mun.id_employee
     INNER JOIN rais_bureaucrat_entry
         ON (rais.cod_ibge_6 = rais_bureaucrat_entry.cod_ibge_6
         AND rais.id_employee = rais_bureaucrat_entry.id_employee
         AND rais.year <= rais_bureaucrat_entry.year)
+    GROUP BY rais.id_employee
+    HAVING rais.year = MAX(rais.year)
     "
 )
 
@@ -78,10 +86,8 @@ career_filiado_summary <- career_filiado_mean %>%
         career_filiado_median,
         by = group_vars
     ) %>%
-    filter(!is.na(is_partisan))
-
-# ---------------------------------------------------------------------------- #
-message("uploading summary statistics to sql data.")
+    remo()
+filter(!is.na(is_partisan))
 
 
 message("module complete: generate summary statistics prior to entry!")
