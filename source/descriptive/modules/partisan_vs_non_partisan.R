@@ -51,7 +51,7 @@ plot_descriptive <- map2(
         names(outcome_vars),
         ~ ggplot(
             aes_string("year", .x, color = "is_partisan"),
-            data = rais_filiado_summary
+            data = rais_filiado
         ) +
         geom_smooth() +
         guides(color = guide_legend("Partisanship")) +

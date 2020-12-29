@@ -48,7 +48,7 @@ career_filiado <- career_prior_to_bureaucracy %>%
 
 # note that the majority of partisans become party members after
 # joining the bureau
-career_filiado %>%
+plot_breakdown <- career_filiado %>%
     filter(!is.na(is_partisan)) %>%
     ggplot() +
     geom_bar(
