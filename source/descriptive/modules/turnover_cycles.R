@@ -2,7 +2,9 @@
 # input: sql database
 # output: descriptive statistics of turnover cycles in bureaucracy
 # ==============================================================================
-debug <- TRUE
+source(
+    here::here("source/descriptive/modules/globals.R")
+)
 
 source(
     here::here("source/descriptive/modules/requirements.R")
@@ -18,7 +20,7 @@ rais_tables <- c(
 
 rais_filiado <- map_dfr(
     rais_tables,
-    ~ dbGetQuery(rais_con, sprintf("SELECT * FROM %s", .)),
+    ~ dbGetQuery(sprintf("SELECT * FROM %s", .)),
     .id = "is_filiado"
 )
 
@@ -30,11 +32,20 @@ plot_turnover <- map(
         x = "year",
         y = .,
         data = rais_filiado,
-        smooth = FALSE
+        smooth = FALSE,
+        color = !!sym("is_filiado")
     ) +
-        facet_wrap(. ~ is_filiado) +
         ggtitle(.)
 )
+
+rais_filiado %>%
+    ggplot(
+        aes(year, hired, color = is_filiado)
+    ) +
+    stat_summary_bin(
+        fun = "mean",
+        geom = "point"
+    )
 
 path_to_figs <- ifelse(
     isTRUE(debug), "paper/figures/turnover/sample/", "paper/figures/turnover/"
