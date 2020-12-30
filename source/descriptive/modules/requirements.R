@@ -35,6 +35,22 @@ list_files <- function(path, pattern) {
   return(files)
 }
 
+write_data <- function(dir, filename, data){
+  file_extension <- str_extract(filename, "(?<=\\.)[a-z]+")
+
+  switch(
+    file_extension,
+    csv = fwrite(
+      data,
+      here(dir, filename)
+    ),
+    rds = write_rds(
+      data,
+      here(dir, filename)
+    )
+  )
+}
+
 # ==============================================================================
 # rais wrangling
 # ==============================================================================

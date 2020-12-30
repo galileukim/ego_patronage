@@ -91,7 +91,7 @@ plot_partisan <- map2(
 )
 
 # ==============================================================================
-# exporting plots
+# exporting plots and data
 # ==============================================================================
 message("exporting plots")
 path_to_figs <- ifelse(
@@ -112,3 +112,9 @@ pwalk(
     export_plots,
     ggsave
 )
+
+partisan_summary %>%
+    write_data(
+        dir = "data/clean/summary_tables/",
+        filename = "partisan_dominance.rds"
+    )
