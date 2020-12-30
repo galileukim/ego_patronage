@@ -19,7 +19,7 @@ rais_mun_tables <- c(
 )
 
 rais_filiado <- rais_mun_tables %>%
-    map_dfr(
+map_dfr(
         ~ tbl(rais_con, .) %>%
             mutate(year = as.integer(year)) %>%
             collect(),
