@@ -36,18 +36,39 @@ rais_filiado <- dbGetQuery(
     "
 )
 
-message("generate party dummy and compute partisanship by group")
-rais_filiado <- rais_filiado %>%
-    generate_year_filiado() %>%
-    # filter(
-    #     is.na(filiado_id) |
-    #     {{is_partisan}}
-    # ) %>%
-    classify_partisanship() %>%
+rais_filiado <- tbl(rais_con, "rais") %>%
     mutate(
-        is_partisan = if_else(is_partisan == "non_partisan", 0, 1)
+        occupation = str_sub(cbo_02, 1, 1)
+    ) %>%
+    mutate(
+        cbo_group_detail = case_when(
+        occupation == 0 ~ "army",
+        `1` = "executive",
+        `2` = "liberal arts",
+        `3` = "engineer",
+        `4` = "administration",
+        `5` = "services",
+        `6` = "agriculture",
+        `7` = "industry",
+        `8` = "industry",
+        `9` = "maintenance"
+      )
     )
 
+dbGetQuery(
+    "
+    SELECT
+    edu,
+    AVG(COALESCE(is_filiado, 0)) AS party_dominance
+    FROM rais
+    LEFT JOIN (SELECT *, 1.0 AS is_filiado FROM filiado_mun) AS filiado_mun
+    ON rais.cod_ibge_6 = filiado_mun.cod_ibge_6 AND
+    rais.id_employee = filiado_mun.id_employee
+    GROUP BY edu
+    "   
+)
+
+message("generate party dummy and compute partisanship by group")
 rais_filiado_occupation <- rais_filiado %>%
     mutate(
         occupation = str_sub(cbo_02, 1, 1)
@@ -110,7 +131,7 @@ export_plots <- list(
 
 pwalk(
     export_plots,
-    ggsave
+    save_plot
 )
 
 partisan_summary %>%

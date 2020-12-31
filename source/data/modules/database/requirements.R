@@ -56,12 +56,23 @@ get_data <- function(type, dir, file, cols){
 
 write_data <- function(object, dir, file, type = "clean", compress = "gz") {
   file_path <- here_data(type, dir, file)
+  
+  create_dir(dir)
 
   if (str_detect(file, ".rds$")) {
     write_rds(object, file_path, compress = compress)
   } else {
     fwrite(object, file_path, compress = "gz")
   }
+}
+
+create_dir <- function(dir){
+  if(!dir.exists(dir)){
+    dir.create(dir)
+  }else{
+    unlink(dir, recursive = T)
+    dir.create(dir)
+    }
 }
 
 reset_env <- function(init_env){
@@ -195,6 +206,19 @@ fix_occupation <- function(data) {
       )
     ) %>%
     select(-occupation)
+}
+
+fix_edu <- function(data){
+  data %>%
+  mutate(
+            edu_category = case_when(
+                edu <= 2 ~ "illiterate",
+                between(edu, 3, 4) ~ "lower school",
+                between(edu, 5, 6) ~ "middle school",
+                between(edu, 7, 8) ~ "high school",
+                edu >= 9 ~ "higher education"
+            )
+  )
 }
 
 create_municipal_dummy <- function(data){

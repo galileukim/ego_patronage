@@ -120,7 +120,7 @@ path_to_figs <- ifelse(
     "paper/figures/turnover/"
 )
 
-ggsave(
+save_plot(
     plot_transition_occupation,
     filename = here(path_to_figs, "plot_transition_occupation.pdf")
 )

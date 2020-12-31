@@ -671,3 +671,19 @@ plot_mandate_year <- function(years = seq(2005, 2013, 4)) {
       as.numeric(as.Date(sprintf("%s-01-01", years)))
   )
 }
+
+save_plot <- function(plot, filename){
+  dir <- dirname(filename)
+
+    if(!dir.exists(dir)){
+    dir.create(dir, recursive = TRUE)
+  }else{
+    unlink(dir, recursive = T)
+    dir.create(dir, recursive = TRUE)
+    }
+
+    ggsave(
+      filename,
+      plot
+    )
+}

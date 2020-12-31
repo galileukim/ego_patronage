@@ -62,5 +62,5 @@ pwalk(
         filename = path_out,
         plot = plot_turnover
     ),
-    ggsave
+    save_plot
 )
