@@ -22,8 +22,6 @@ career_prior_to_bureaucracy <- dbGetQuery(
         cbo_02,
         age,
         edu,
-        gender,
-        nat_jur,
         wage,
         work_experience,
         filiado_mun.party,
