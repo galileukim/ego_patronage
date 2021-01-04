@@ -139,8 +139,15 @@ INPUT /home/gali/gdrive/princeton/dissertation/papers/ego_patronage/paper/draft.
 INPUT /home/gali/gdrive/princeton/dissertation/papers/ego_patronage/paper/draft.out
 OUTPUT /home/gali/gdrive/princeton/dissertation/papers/ego_patronage/paper/draft.out
 OUTPUT /home/gali/gdrive/princeton/dissertation/papers/ego_patronage/paper/draft.pdf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr10.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
 INPUT /home/gali/gdrive/princeton/dissertation/papers/ego_patronage/paper/draft.aux
 INPUT /home/gali/gdrive/princeton/dissertation/papers/ego_patronage/paper/draft.out
 INPUT /home/gali/gdrive/princeton/dissertation/papers/ego_patronage/paper/draft.out
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb
