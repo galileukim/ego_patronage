@@ -18,7 +18,10 @@ rais_files <- list.files(
 )
 
 log_file <- here("log/log_create_sql.txt")
-debug <- FALSE
+
+source(
+    here::here("source/descriptive/modules/globals.R")
+)
 
 source(
   here("source/data/modules/database/requirements.R")
@@ -115,6 +118,13 @@ dbExecute(
   "
   CREATE INDEX IF NOT EXISTS natureza_juridica_idx ON
   rais(nat_jur)
+  "
+)
+
+dbExecute(
+  "
+  CREATE INDEX IF NOT EXISTS id_employee_idx ON
+  rais(id_employee)
   "
 )
 
