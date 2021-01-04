@@ -5,7 +5,7 @@ library(here)
 library(DBI)
 
 debug <- ifelse(
-    Sys.getenv("USER") == "gali",
+    Sys.getenv("USER") == "gali" & dirname(getwd()) != "/media/gali/gali",
     TRUE,
     FALSE
 )
