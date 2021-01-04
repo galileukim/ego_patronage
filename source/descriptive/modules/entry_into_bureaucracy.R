@@ -100,7 +100,7 @@ plot_transition_occupation <- transition_occupation %>%
         aes(
             x = cbo_02,
             y = cbo_02_entry,
-            fill = n
+            fill = round(n/1000, 2)
         )
     ) +
     scale_fill_continuous(
@@ -110,7 +110,7 @@ plot_transition_occupation <- transition_occupation %>%
     labs(
         x = "private sector occupation",
         y = "bureaucracy occupation",
-        caption = "Total"
+        caption = "Total (thousands)"
     )
 
 message("export plot")
