@@ -17,7 +17,8 @@ The following object is masked from ‘package:purrr’:
     transpose
 
 here() starts at /hdd/ego_patronage
-join data with partisan affiliation
-computing summary statistics...
-uploading to sql database...
-module complete: generate summary tables career pre-bureaucracy!
+generate new table records
+[1] 0
+[1] 0
+[1] 0
+write out tables to sqlite complete!
