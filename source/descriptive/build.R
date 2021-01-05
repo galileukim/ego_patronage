@@ -7,6 +7,6 @@ module_selection <- c(
     # "party_membership",
     "bureau_partisanship",
     "prior_to_bureaucy",
-    # "turnover_cycles",
+    "entry_into_bureaucracy",
     "partisan_vs_non_partisan"
-)   
+)
