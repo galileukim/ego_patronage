@@ -112,30 +112,6 @@ for (file in rais_files) {
 }
 
 # ==============================================================================
-# generate indexes to spee dd up query
-# ==============================================================================
-dbExecute(
-  "
-  CREATE INDEX IF NOT EXISTS natureza_juridica_idx ON
-  rais(nat_jur)
-  "
-)
-
-dbExecute(
-  "
-  CREATE INDEX IF NOT EXISTS id_employee_idx ON
-  rais(id_employee)
-  "
-)
-
-dbExecute(
-  "
-  CREATE INDEX IF NOT EXISTS year_idx ON
-  rais(year)
-  "
-)
-
-# ==============================================================================
 # generate sample sql file
 # ==============================================================================
 rais_sample_con <- DBI::dbConnect(
