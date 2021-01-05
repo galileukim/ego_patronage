@@ -56,6 +56,6 @@ rais_filiado <- rais_filiado %>%
 
 rais_filiado %>%
     write_data(
-        dir = "summary",
+        dir = "data/clean/summary",
         file = "partisan_dominance.rds"
     )

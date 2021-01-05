@@ -38,6 +38,13 @@ list_files <- function(path, pattern) {
 write_data <- function(dir, filename, data){
   file_extension <- str_extract(filename, "(?<=\\.)[a-z]+")
 
+    if(!dir.exists(dir)){
+    dir.create(dir, recursive = TRUE)
+  }else{
+    unlink(dir, recursive = T)
+    dir.create(dir, recursive = TRUE)
+    }
+
   switch(
     file_extension,
     csv = fwrite(
