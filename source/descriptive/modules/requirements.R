@@ -38,6 +38,10 @@ list_files <- function(path, pattern) {
 write_data <- function(dir, filename, data){
   file_extension <- str_extract(filename, "(?<=\\.)[a-z]+")
 
+  if(!dir.exists(dir)){
+    dir.create(dir, recursive = TRUE)
+  }
+
   switch(
     file_extension,
     csv = fwrite(
@@ -581,7 +585,20 @@ gg_bar <- function(data, x, y){
       aes(reorder(!!sym(x), {{y}}), {{y}})
     ) +
     geom_col() +
-    labs(x = x)
+    labs(x = x) +
+    coord_flip()
+
+  return(plot)
+}
+
+gg_boxplot <- function(data, x, y, xlab){
+  plot <- data %>%
+    ggplot(
+      aes(reorder(!!sym(x), {{y}}), {{y}})
+    ) +
+    geom_boxplot() +
+    labs(x = xlab) +
+    coord_flip()
 
   return(plot)
 }
@@ -675,12 +692,9 @@ plot_mandate_year <- function(years = seq(2005, 2013, 4)) {
 save_plot <- function(plot, filename){
   dir <- dirname(filename)
 
-    if(!dir.exists(dir)){
+  if(!dir.exists(dir)){
     dir.create(dir, recursive = TRUE)
-  }else{
-    unlink(dir, recursive = T)
-    dir.create(dir, recursive = TRUE)
-    }
+  }
 
     ggsave(
       filename,
