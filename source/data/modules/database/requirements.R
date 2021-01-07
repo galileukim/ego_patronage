@@ -62,17 +62,14 @@ write_data <- function(object, dir, file, type = "clean", compress = "gz") {
   if (str_detect(file, ".rds$")) {
     write_rds(object, file_path, compress = compress)
   } else {
-    fwrite(object, file_path, compress = "gz")
+    fwrite(object, file_path, compress = "gzip")
   }
 }
 
 create_dir <- function(dir){
   if(!dir.exists(dir)){
-    dir.create(dir)
-  }else{
-    unlink(dir, recursive = T)
-    dir.create(dir)
-    }
+    dir.create(dir, recursive = TRUE)
+  }
 }
 
 reset_env <- function(init_env){

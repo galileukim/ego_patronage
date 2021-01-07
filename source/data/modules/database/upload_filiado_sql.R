@@ -40,7 +40,11 @@ create_table <- sprintf(
         party TEXT,
         date_start DATE,
         date_end DATE,
-        date_cancel DATE
+        date_cancel DATE,
+        year_start INTEGER,
+        year_end INTEGER,
+        year_cancel INTEGER,
+        year_termination INTEGER
     );
     ",
     levels
@@ -63,10 +67,26 @@ filiado <- filiado %>%
     map(
         ~ distinct(
             .,
-            id_employee, date_start, date_end, party, 
+            id_employee, date_start, date_end, party,
             .keep_all = TRUE
         ) %>%
-            mutate(., filiado_id = row_number())
+            mutate(
+                .,
+                across(
+                    starts_with("date"),
+                    list(year = ~str_extract(., pattern = "\\d{4}")),
+                    .names = "{fn}_{col}"
+                ),
+                year_termination = pmax(
+                    year_date_end, year_date_cancel,
+                    na.rm = T
+                ) %>%
+                    replace_na(2019),
+                filiado_id = row_number()
+            ) %>%
+            rename_with(
+                ~ stringr::str_replace(., "year_date", "year")
+            )
     )
 
 # fix date columns
@@ -75,13 +95,16 @@ filiado <- filiado %>%
         ~ mutate(
             .,
             across(
-                starts_with("date"), ~ format(., "%Y%m%d")
+                starts_with("date"), ~ str_remove_all(., "-")
+            ),
+            across(
+                starts_with("year"), as.integer
             )
         )
     )
 
 # sample out
-if(isTRUE(debug)){
+if (isTRUE(debug)) {
     filiado <- filiado %>%
         map(~ filter(., cod_ibge_6 == 110001))
 }

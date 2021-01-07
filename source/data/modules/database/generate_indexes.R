@@ -62,8 +62,6 @@ dbExecute(
 )
 
 # filiado_mun
-
-
 dbExecute(
   "
   CREATE INDEX IF NOT EXISTS filiado_id_employee_idx ON
