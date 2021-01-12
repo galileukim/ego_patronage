@@ -35,6 +35,24 @@ list_files <- function(path, pattern) {
   return(files)
 }
 
+here_data <- function(type, dir, file) {
+  path <- here("data", type, dir, file)
+  
+  return(path)
+}
+
+read_data <- function(type, dir, file) {
+  file_path <- here_data(type, dir, file)
+
+  if (str_detect(file, ".rds$")) {
+    data <- read_rds(file_path)
+  } else {
+    data <- fread(file_path)
+  }
+  
+  return(data)
+}
+
 write_data <- function(dir, filename, data){
   file_extension <- str_extract(filename, "(?<=\\.)[a-z]+")
 
@@ -496,6 +514,22 @@ gg_point_line <- function(data, mapping = aes(), ...) {
     geom_line(
       ...
     )
+}
+
+gg_map <- function(data, var){
+  ggplot(
+    data = data,
+        aes(
+            fill = {{var}},
+            color = NA
+        )
+    ) +
+    geom_sf() +
+    scale_fill_distiller(
+        palette = "YlGnBu",
+        direction = 1
+    ) +
+    theme_void()
 }
 
 geom_errorbar_tidy <- geom_errorbarh(

@@ -3,6 +3,7 @@ library(dbplyr)
 library(data.table)
 library(here)
 library(DBI)
+library(sf)
 
 debug <- ifelse(
     Sys.getenv("USER") == "gali" & dirname(Sys.getenv("PWD")) != "/hdd",

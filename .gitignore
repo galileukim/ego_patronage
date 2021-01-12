@@ -6,6 +6,7 @@
 .RData
 /data/
 *.rds
+*.csv
 
 # User-specific files
 .Ruserdata

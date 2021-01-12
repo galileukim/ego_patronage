@@ -38,9 +38,9 @@ create_table <- sprintf(
         id_employee INTEGER,
         cod_ibge_6 TEXT,
         party TEXT,
-        date_start DATE,
-        date_end DATE,
-        date_cancel DATE,
+        date_start INTEGER,
+        date_end INTEGER,
+        date_cancel INTEGER,
         year_start INTEGER,
         year_end INTEGER,
         year_cancel INTEGER,
@@ -95,7 +95,8 @@ filiado <- filiado %>%
         ~ mutate(
             .,
             across(
-                starts_with("date"), ~ str_remove_all(., "-")
+                starts_with("date"), ~ str_remove_all(., "-") %>% 
+                as.integer
             ),
             across(
                 starts_with("year"), as.integer

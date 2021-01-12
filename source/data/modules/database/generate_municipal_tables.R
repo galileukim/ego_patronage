@@ -18,6 +18,7 @@ RSQLite::initExtension(rais_con)
 # ) %>%
 #     walk(dbExecute)
 
+message("non partisan")
 rais_mun_non_partisan <- dbGetQuery(
     "
     SELECT
@@ -32,13 +33,15 @@ rais_mun_non_partisan <- dbGetQuery(
         COUNT(*) AS n
     FROM rais
     LEFT JOIN filiado_mun
-    ON rais.cod_ibge_6 = filiado_mun.cod_ibge_6, 
+    ON rais.cod_ibge_6 = filiado_mun.cod_ibge_6 AND
     rais.id_employee = filiado_mun.id_employee
-    WHERE rais.nat_jur = 1031 AND filiado_mun.id_employee IS NULL
+    WHERE rais.nat_jur = 1031 AND
+    filiado_mun.id_employee IS NULL
     GROUP BY rais.cod_ibge_6, rais.year
     "
 )
 
+message("partisan")
 rais_mun_partisan <- dbGetQuery(
     "
     SELECT
@@ -55,38 +58,20 @@ rais_mun_partisan <- dbGetQuery(
     INNER JOIN filiado_mun
     ON rais.cod_ibge_6 = filiado_mun.cod_ibge_6 AND
     rais.id_employee = filiado_mun.id_employee
-    WHERE rais.nat_jur = 1031
+    WHERE rais.nat_jur = 1031 AND
+    CAST(rais.year AS INT) >= filiado_mun.year_start AND
+    CAST(rais.year AS INT) <= filiado_mun.year_termination
     GROUP BY rais.cod_ibge_6, rais.year
     "
 )
 
 message("write out tables")
-rais_mun_non_partisan %>%
-    write_data(
-        dir = "summary",
-        "rais_mun_non_partisan.csv"
-    )
-
-rais_mun_partisan <- dbGetQuery(
-    "
-    SELECT
-        rais.cod_ibge_6,
-        rais.year,
-        rais.hired,
-        rais.fired,
-        rais.age,
-        rais.edu,
-        rais.work_experience,
-        rais.wage,
-        filiado_mun.party,
-        filiado_mun.date_start,
-        filiado_mun.date_end,
-        filiado_mun.date_cancel
-    FROM rais
-    INNER JOIN filiado_mun
-    ON rais.id_employee = filiado_mun.id_employee
-    WHERE rais.nat_jur = 1031
-    "
+export <- list(
+    object = list(rais_mun_partisan, rais_mun_non_partisan),
+    file = c("rais_mun_partisan.csv.gz", "rais_mun_non_partisan.csv.gz")
 )
+
+export %>%
+    pwalk(write_data, dir = "summary")
 
 message("create municipal tables complete!")

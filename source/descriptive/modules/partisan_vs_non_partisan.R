@@ -14,15 +14,13 @@ source(
 # load-in data
 # ==============================================================================
 rais_mun_tables <- c(
-    partisan = "rais_mun_partisan",
-    non_partisan = "rais_mun_non_partisan"
+    partisan = "rais_mun_partisan.csv.gz",
+    non_partisan = "rais_mun_non_partisan.csv.gz"
 )
 
 rais_filiado <- rais_mun_tables %>%
-map_dfr(
-        ~ tbl(rais_con, .) %>%
-            mutate(year = as.integer(year)) %>%
-            collect(),
+    map_dfr(
+        ~read_data(., type = "clean", dir = "summary"),
         .id = "is_partisan"
     )
 
