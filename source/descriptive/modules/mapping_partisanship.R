@@ -110,7 +110,7 @@ map_education <- map_br_disaggregated %>%
 export_maps <- list(
     plot = list(map_occupation, map_contract, map_education),
     filename = sprintf(
-        here("paper/figures/maps/%s.pdf"), names(party_dominance)
+        here("paper/figures/maps/%s.png"), names(party_dominance)
         )
 )
 
