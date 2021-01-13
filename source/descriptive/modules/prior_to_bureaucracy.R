@@ -15,6 +15,18 @@ career_filiado <- tbl(rais_con, "career_pre_bureaucracy_mun") %>%
     collect() %>%
     mutate(year = as.numeric(year))
 
+career_filiado <- career_filiado %>%
+    filter(
+        is_partisan != "post_partisan"
+    ) %>%
+    mutate(
+        is_partisan = recode(
+            is_partisan,
+            "non_partisan" = "non_partisan",
+            "pre_partisan" = "partisan"
+        )
+    )
+
 # ---------------------------------------------------------------------------- #
 message("generating descriptive plots")
 

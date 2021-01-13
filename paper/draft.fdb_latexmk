@@ -1,5 +1,5 @@
 # Fdb version 3
-["bibtex draft"] 1609778750 "draft.aux" "draft.bbl" "draft" 1610490336
+["bibtex draft"] 1609778750 "draft.aux" "draft.bbl" "draft" 1610553724
   "./apsr.bst" 1609794837 25357 c990a86d1a60aa9370f76a9507b609ec ""
   "draft.aux" 1610490336 1541 a0e059464be2de40ec5f02109fc5538c ""
   "draft.bcf" 0 -1 0 ""
@@ -7,10 +7,10 @@
   (generated)
   "draft.blg"
   "draft.bbl"
-["pdflatex"] 1610490336 "/hdd/ego_patronage/paper/draft.tex" "/hdd/ego_patronage/paper/draft.pdf" "draft" 1610490336
+["pdflatex"] 1610490336 "/hdd/ego_patronage/paper/draft.tex" "/hdd/ego_patronage/paper/draft.pdf" "draft" 1610553724
   "/etc/texmf/web2c/texmf.cnf" 1585227716 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/hdd/ego_patronage/paper/draft.aux" 1610490336 1541 a0e059464be2de40ec5f02109fc5538c ""
-  "/hdd/ego_patronage/paper/draft.tex" 1610490336 3098 67718b7a4a4f7819b758f96da077ead7 ""
+  "/hdd/ego_patronage/paper/draft.tex" 1610553724 3098 67718b7a4a4f7819b758f96da077ead7 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1480098701 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1480098701 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -91,13 +91,13 @@
   "draft.aux" 1610490336 1541 a0e059464be2de40ec5f02109fc5538c ""
   "draft.bbl" 1609794837 611 69c049666103d037e70c846afb6a549d "bibtex draft"
   "draft.out" 1610490336 196 4aa0e000dfe4dd79459836d037870a39 ""
-  "draft.tex" 1610490336 3098 67718b7a4a4f7819b758f96da077ead7 ""
+  "draft.tex" 1610553724 3098 67718b7a4a4f7819b758f96da077ead7 ""
   (generated)
-  "draft.aux"
-  "draft.out"
+  "/hdd/ego_patronage/paper/draft.pdf"
   "/media/gali/gali/ego_patronage/paper/draft.pdf"
+  "draft.aux"
   "draft.log"
   "/hdd/ego_patronage/paper/draft.log"
-  "draft.pdf"
-  "/hdd/ego_patronage/paper/draft.pdf"
   "/media/gali/gali/ego_patronage/paper/draft.log"
+  "draft.out"
+  "draft.pdf"
