@@ -24,7 +24,7 @@ this document outlines the vision for the third paper in my dissertation.
   - complete
 * qualitative evidence
 * create sql database using SQLite
-  - in progress
+  - complete
 
 ## timeline
 * give a sense of the magnitude of the gains from employment.

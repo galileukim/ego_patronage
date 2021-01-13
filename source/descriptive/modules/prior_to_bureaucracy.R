@@ -45,7 +45,9 @@ plot_summary <- map2(
         data = career_filiado,
         aes_string(x = "year", y = .x, color = "is_partisan")
     ) +
-    geom_smooth() +
+    geom_smooth(
+        span = 3
+    ) +
     scale_colour_discrete(
         name = "Partisanship",
         labels = c(
