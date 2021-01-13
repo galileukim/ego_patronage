@@ -1,16 +1,16 @@
 # Fdb version 3
-["bibtex draft"] 1610556298 "draft.aux" "draft.bbl" "draft" 1610566155
+["bibtex draft"] 1610575278 "draft.aux" "draft.bbl" "draft" 1610575393
   "./apsr.bst" 1609794837 25357 c990a86d1a60aa9370f76a9507b609ec ""
-  "draft.aux" 1610566142 1541 a0e059464be2de40ec5f02109fc5538c ""
+  "draft.aux" 1610575393 2647 6bc8f8dc6739f9a9d6992f858c63121b ""
   "draft.bcf" 0 -1 0 ""
-  "patronage.bib" 1610556297 1995 2dbcb59c8d0ab3c7e35af31fae1d3650 ""
+  "patronage.bib" 1610575269 4915 4af20a881e9d9d7aec9c4743fcc67e4b ""
   (generated)
-  "draft.blg"
   "draft.bbl"
-["pdflatex"] 1610566142 "/hdd/ego_patronage/paper/draft.tex" "/hdd/ego_patronage/paper/draft.pdf" "draft" 1610566155
+  "draft.blg"
+["pdflatex"] 1610575393 "/hdd/ego_patronage/paper/draft.tex" "/hdd/ego_patronage/paper/draft.pdf" "draft" 1610575393
   "/etc/texmf/web2c/texmf.cnf" 1585227716 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/hdd/ego_patronage/paper/draft.aux" 1610566142 1541 a0e059464be2de40ec5f02109fc5538c ""
-  "/hdd/ego_patronage/paper/draft.tex" 1610566155 3228 0b9c1e2b0d69ddd6c23cacd6f2eb2ff8 ""
+  "/hdd/ego_patronage/paper/draft.aux" 1610575393 2647 6bc8f8dc6739f9a9d6992f858c63121b ""
+  "/hdd/ego_patronage/paper/draft.tex" 1610575393 5441 71a739eeca7c227e46b65f38b07da0ff ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1480098701 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1480098701 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -88,16 +88,14 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1520210507 32485 c64754543d8ac501bea6e75e209ea521 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1585227723 127853 b41f58aff49fe1af38af8d065f49d51c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1593121643 859410 7e9db4a2b17af51ef47308844b7ed2cf ""
-  "draft.aux" 1610566142 1541 a0e059464be2de40ec5f02109fc5538c ""
-  "draft.bbl" 1610556298 611 69c049666103d037e70c846afb6a549d "bibtex draft"
-  "draft.out" 1610566142 196 4aa0e000dfe4dd79459836d037870a39 ""
-  "draft.tex" 1610566155 3228 0b9c1e2b0d69ddd6c23cacd6f2eb2ff8 ""
+  "draft.aux" 1610575393 2647 6bc8f8dc6739f9a9d6992f858c63121b ""
+  "draft.bbl" 1610575278 3358 7faba2faca0a6d4ac2b143b541febb2f "bibtex draft"
+  "draft.out" 1610575393 196 4aa0e000dfe4dd79459836d037870a39 ""
+  "draft.tex" 1610575393 5441 71a739eeca7c227e46b65f38b07da0ff ""
   (generated)
-  "draft.out"
-  "/media/gali/gali/ego_patronage/paper/draft.pdf"
-  "draft.aux"
-  "draft.log"
   "/hdd/ego_patronage/paper/draft.pdf"
-  "draft.pdf"
   "/hdd/ego_patronage/paper/draft.log"
-  "/media/gali/gali/ego_patronage/paper/draft.log"
+  "draft.log"
+  "draft.aux"
+  "draft.out"
+  "draft.pdf"
