@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.6.25)  14 JAN 2021 12:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.6.25)  15 JAN 2021 13:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -765,30 +765,30 @@ LaTeX Info: Redefining \nameref on input line 36.
 
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] (/hdd/ego_patronage/paper/draft.bbl [4])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 78.
- [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 78.
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] (/hdd/ego_patronage/paper/draft.bbl [5])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 87.
+ [6]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 87.
  (/hdd/ego_patronage/paper/draft.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 78.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 78.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 87.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 87.
 Package rerunfilecheck Info: File `draft.out' has not changed.
-(rerunfilecheck)             Checksum: 4AA0E000DFE4DD79459836D037870A39;196.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 78.
+(rerunfilecheck)             Checksum: 5CDC1A08F271E01DD0BB162ED0F4608C;332.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 87.
  ) 
 Here is how much of TeX's memory you used:
- 9510 strings out of 494880
- 137506 string characters out of 6179601
- 238728 words of memory out of 5000000
- 12687 multiletter control sequences out of 15000+600000
- 6095 words of font info for 22 fonts, out of 8000000 for 9000
+ 9533 strings out of 494880
+ 137992 string characters out of 6179601
+ 238893 words of memory out of 5000000
+ 12703 multiletter control sequences out of 15000+600000
+ 6402 words of font info for 23 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 41i,5n,43p,901b,453s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,5n,43p,910b,455s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on /hdd/ego_patronage/paper/draft.pdf (5 pages, 100573 bytes).
+Output written on /hdd/ego_patronage/paper/draft.pdf (6 pages, 105323 bytes).
 PDF statistics:
- 123 PDF objects out of 1000 (max. 8388607)
- 108 compressed objects within 2 object streams
- 24 named destinations out of 1000 (max. 500000)
- 33 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 155 PDF objects out of 1000 (max. 8388607)
+ 139 compressed objects within 2 object streams
+ 31 named destinations out of 1000 (max. 500000)
+ 49 words of extra memory for PDF output out of 10000 (max. 10000000)
 
