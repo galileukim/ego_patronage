@@ -92,13 +92,26 @@ There is an ongoing debate on the strength of partisan ties in Brazil. On the on
 One thing is clear: party ties at the electoral level are durable, with most voters remaining affiliated to a single party for their entire life, as highlighted by figure \emph{FIGURE}. Noting that party affiliations are registered at the municipal level, this empirical fact aligns with qualitative evidence provided by \citet{palmeira1995comicios}, who notes that parties at the local level constitute political factions (\emph{grupos pol\'{i}ticos} ) with well-defined boundaries and power disputes. This relative stability of party ties at the electorate level for the minority of voters who are registered with a parties suggests a distinct dynamic tying an elite group of party members to the city hall.
 
 \section{Data}
+\label{sec:data}
 
+\subsection{Municipal and Private Sector Employment}
 
+Data on formal sector employment is collected by the Department of Labor in Brazil through a census instrument, \emph{RAIS}. This instrument is completed electronically by all formally registered companies regardless of workforce size or capital, subject to sanctions if evidence of misreporting is found.\footnote{See coverage and description \href{https://agenciabrasil.ebc.com.br/economia/noticia/2020-03/prazo-para-entrega-da-rais-comeca-hoje-e-vai-ate-17-de-abril}{here}.} In total, over 97 percent of companies in the formal sector are included in the \emph{RAIS}, as well as all public sector employment, including federal, state and municipal level bureaucrats. The quality of the data is subject to constant review by the Department of Labor, which relies on accurate information to calculate taxes and retirements benefits for the Brazilian workforce. 
+
+The \emph{RAIS} data is structured as follows. Each row corresponds to a job associated to a worker, which may or may not appear more than once in the dataset -- since workers can hold multiple jobs at the same time. Each worker is tagged by a unique national id, the \emph{CPF}, which allows for following workers across sectors and over time. Additionally, the identified \emph{RAIS} contains the names and dates of birth of workers.\footnote{Access to the identified \emph{RAIS} was generously provided by the Department of Economics at Princeton University, hosted at the Industrial Relations office.} These are the unique primary keys that make possible join this dataset to other sources of data. Other studies have leveraged similar join approaches to infer employment benefits of campaign contributors \citep{colonnelli2018patronage}, as well as whether party members receive public sector employment if they belong to the same party as the winning mayor \citep{brollo2017victor}.
+
+In contrast to these previous studies, I leverage the rich dataset of covariates that includes, \emph{inter alia}, wage compensation, education, work experience and type of contract, to estimate differential returns to compensation, outlined in greater detail in Section \ref{sec:empirical}. The richness of \emph{RAIS} allows for a complete radiography of the public sector, revealing how compensation structures are altered by their intersection with patronage dynamics. In particular, because of the panel nature of its structure, researchers can follow bureaucrats before and after their public sector employment spell, providing an unprecedently accurate depiction of the municipal revolving door.
+
+\subsection{Partisan affiliation}
+
+Data on partisan affiliation is detailed as well. The \emph{TSE}, the national electoral authority, collects data on all party members in the national territory, including commencement and termination dates, affiliated party, municipality and name of the registered party member, as well as their electoral title.\footnote{The data is available \href{https://filia-consulta.tse.jus.br/}{here}.} Parties are mandated by electoral law to report all party members as well as providing updated registry information throughout the year. Parties have municipal offices in which citizens may update their registry, and these party offices in turn report to the state electoral authority, which relays this information to national electoral authorities. If irregularities are found parties may be sanctioned by the \emph{TSE}.
+
+The party affiliation data is structured as a rolling registry (\emph{fita espelho}), in which existing and expired party memberships are preserved. Each row therefore corresponds to a particular party member entry, containing the state, municipality, electoral zone and date of the registration. Additionally, the registry indicates the status of the membership, whether it is active (\emph{regular}) or canceled (\emph{cancelado/desfiliado}), as well as the date of the change in the membership status. Individual identifiers are provided, including the name and a nationally unique electoral title (\emph{t\'{i}tulo eleitoral}) that allows researchers to join names contained in the \emph{RAIS} and party affiliation data.
+
+Note that party affiliation in Brazil is high, with over 10 percent of nationally registered voters affiliated to a political party \citep{speck2015estudo}. Partisan ties at the electorate level are stable, in contrast with more strategic party switching occurs at the political candidate level \citep{desposato2006parties}. As of 2019, the year for which party affiliation data was extracted, there were over 11 million active party affiliates, with around 5 million registries either canceled or terminated by party members.
 
 \section{Descriptive statistics}
 \label{sec:descriptive}
-
-
 
 \section{Empirical strategy}
 \label{sec:empirical}
