@@ -115,5 +115,7 @@ export_maps <- list(
 
 pwalk(
     export_maps,
-    ggsave
+    ggsave,
+    height = 5,
+    width = 5
 )
