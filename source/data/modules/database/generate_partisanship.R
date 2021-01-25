@@ -41,7 +41,6 @@ rais_filiado <- map(
         c("occupation", "contract", "education")
     )
 
-gg_ma
 # fix grouping columns
 rais_filiado <- rais_filiado %>%
     modify_at(

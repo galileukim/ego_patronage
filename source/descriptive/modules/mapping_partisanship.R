@@ -82,7 +82,6 @@ map_br_disaggregated <- party_dominance_disaggregated %>%
         )
     )
 
-
 map_partisanship <- map_br_partisan %>%
     gg_map(partisanship)
 
@@ -108,9 +107,9 @@ map_education <- map_br_disaggregated %>%
     facet_wrap(. ~ edu_category)
 
 export_maps <- list(
-    plot = list(map_occupation, map_contract, map_education),
+    plot = list(map_partisanship, map_occupation, map_contract, map_education),
     filename = sprintf(
-        here("paper/figures/maps/%s.png"), names(party_dominance)
+        here("paper/figures/maps/%s.png"), c("pooled", names(party_dominance))
         )
 )
 
