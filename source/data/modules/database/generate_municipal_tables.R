@@ -24,6 +24,7 @@ rais_mun_non_partisan <- dbGetQuery(
     SELECT
         rais.cod_ibge_6,
         rais.year,
+        SUBSTR(rais.cbo_02, 1, 1),
         AVG(hired) AS hired,
         AVG(fired) AS fired,
         AVG(age) AS age,
@@ -47,6 +48,7 @@ rais_mun_partisan <- dbGetQuery(
     SELECT
         rais.cod_ibge_6,
         rais.year,
+        SUBSTR(rais.cbo_02, 1, 1),
         AVG(hired) AS hired,
         AVG(fired) AS fired,
         AVG(age) AS age,
@@ -69,7 +71,7 @@ message("write out tables")
 export <- list(
     object = list(rais_mun_partisan, rais_mun_non_partisan) %>%
         map(
-            ~ rename(., occupation = `SUBSTR(cbo_02, 1, 1)`) %>%
+            ~ rename(., occupation = `SUBSTR(rais.cbo_02, 1, 1)`) %>%
                 fix_occupation()
         ),
     file = c("rais_mun_partisan.csv.gz", "rais_mun_non_partisan.csv.gz")
