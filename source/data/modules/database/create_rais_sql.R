@@ -29,7 +29,7 @@ source(
 
 # data --------------------------------------------------------------------
 cpi <- fread(
-  here("data/raw/cpi.csv"),
+  here("data/raw/cpi/cpi.csv"),
   colClasses = c("year" = "numeric")
 )
 

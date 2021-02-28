@@ -18,15 +18,8 @@ rais_sql <- tbl(rais_con, "rais") %>%
     
 filiado_sql <- tbl(rais_con, "filiado_mun")
 
-rais_tables <- c(
-    partisan = "rais_mun_partisan",
-    non_partisan = "rais_mun_non_partisan"
-)
-
-rais_filiado <- map_dfr(
-    rais_tables,
-    ~ dbGetQuery(sprintf("SELECT * FROM %s", .)),
-    .id = "is_filiado"
+filiado <- fread(
+    here("data/raw/tse/filiado.csv.gz")
 )
 
 # create entries and exits per year
