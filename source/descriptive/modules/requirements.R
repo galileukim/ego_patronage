@@ -99,6 +99,17 @@ convert_to_date <- function(data) {
     )
 }
 
+fix_year_filiado <- function(data){
+  data %>%
+  mutate(
+        across(
+            starts_with("date"), 
+            ~ str_extract(., "^\\d{4}") %>%
+                as.integer
+        )
+    )
+}
+
 fix_edu <- function(data){
   data %>%
   mutate(
@@ -162,12 +173,11 @@ fix_occupation <- function(data) {
     select(-occupation)
 }
 
-filter_active_filiado <- function(data) {
+filter_active_filiado <- function(data, year) {
   data %>%
-    generate_year_filiado() %>%
     filter(
-      year >= year_date_start &
-        year <= year_date_end
+      year >= date_start &
+        (year <= date_end|is.na(date_end))
     )
 }
 

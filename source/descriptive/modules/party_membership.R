@@ -24,50 +24,77 @@ filiado <- fread(
 
 # create entries and exits per year
 # segmented by employment
-filiado_unemployed <- filiado_sql %>%
-    anti_join(
-        rais_sql %>%
-            select(cod_ibge_6, id_employee),
-        by = c("cod_ibge_6", "id_employee")
-    ) %>%
-    collect()
+# filiado_unemployed <- filiado_sql %>%
+#     anti_join(
+#         rais_sql %>%
+#             select(cod_ibge_6, id_employee),
+#         by = c("cod_ibge_6", "id_employee")
+#     ) %>%
+#     collect()
 
-filiado_employed <- filiado_sql %>%
-    inner_join(
-        rais_sql %>%
-            select(cod_ibge_6, id_employee),
-        by = c("cod_ibge_6", "id_employee")
-    ) %>%
-    collect() %>%
-    distinct(filiado_id, .keep_all = TRUE)
+# filiado_employed <- filiado_sql %>%
+#     inner_join(
+#         rais_sql %>%
+#             select(cod_ibge_6, id_employee),
+#         by = c("cod_ibge_6", "id_employee")
+#     ) %>%
+#     collect() %>%
+#     distinct(filiado_id, .keep_all = TRUE)
 
 # compare duration of party membership between employed vs. unemployed
-filiado_turnover <- list(
-    filiado_employed,
-    filiado_unemployed
-) %>%
-    set_names(c("employed", "unemployed")) %>%
-    map_dfr(
-        . %>%
-            convert_to_date() %>%
-            pivot_longer(
-                c(date_start, date_end),
-                names_prefix = "date_",
-                names_to = "date"
-            ) %>%
-            count(date, value),
-        .id = "is_employed"
+# filiado_turnover <- list(
+#     filiado_employed,
+#     filiado_unemployed
+# ) %>%
+#     set_names(c("employed", "unemployed")) %>%
+#     map_dfr(
+#         . %>%
+#             convert_to_date() %>%
+#             pivot_longer(
+#                 c(date_start, date_end),
+#                 names_prefix = "date_",
+#                 names_to = "date"
+#             ) %>%
+#             count(date, value),
+#         .id = "is_employed"
+#     )
+
+# first determine how many party members there are per annum
+filiado_date <- filiado %>% 
+    transmute(
+        date_start, 
+        date_end = coalesce(date_end, date_cancel)
+     ) %>%
+    fix_year_filiado() %>%
+    filter(
+        between(date_start, 1997, 2018)
     )
 
-# verify when data for membership termination begins
-filiado_turnover %>%
-    gg_point(
-        aes(x = value, y = n),
-        size = 2
-    ) +
-    plot_mandate_year() +
-    facet_wrap(. ~ date + is_employed) +
-    coord_cartesian(ylim = c(0, 50)) +
-    scale_x_date(limit = as.Date(c("2003-01-01", "2019-01-01")))
+range_record <- range(filiado_date$date_start)
+range_record <- range_record[1]:range_record[2]
 
+filiado_active_year <- map_dfr(
+    range_record,
+    ~ filter_active_filiado(year = .x, data = filiado_date) %>%
+        nrow() %>%
+        tibble(
+            n = .
+        ) %>%
+        mutate(year = .x)
+)
+
+filiado_active_year %>% 
+    filter(
+        between(year, 1997, 2018)
+    ) %>%
+    gg_point_line(
+        aes(year, n)
+    ) +
+    labs(
+        x = "Year",
+        y = "Total active party members"
+    ) +
+    ggsave(
+        here("paper/figures/partisanship/plot_partisan_by_year.pdf")
+    )
 # compare membership spells
