@@ -49,5 +49,5 @@ campaign_filiado <- campaign %>%
 campaign_filiado %>%
     group_by(is_filiado) %>% 
     summarise(
-        sum(as.numeric(vr_receita), na.rm = TRUE)/n()
+        sum(as.numeric(vr_receita), na.rm = TRUE)
     )
