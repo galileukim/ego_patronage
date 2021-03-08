@@ -47,6 +47,9 @@ campaign_filiado <- campaign %>%
     )
     
 campaign_filiado %>%
+    replace_na(
+        list(is_filiado = 0)
+    ) %>%
     group_by(is_filiado) %>% 
     summarise(
         sum(as.numeric(vr_receita), na.rm = TRUE)
