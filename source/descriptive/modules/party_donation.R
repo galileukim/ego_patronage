@@ -46,11 +46,28 @@ campaign_filiado <- campaign %>%
         by = c("ds_nr_titulo_eleitor" = "electoral_title")
     )
     
-campaign_filiado %>%
+campaign_filiado_total <- campaign_filiado %>%
     replace_na(
         list(is_filiado = 0)
     ) %>%
     group_by(is_filiado) %>% 
     summarise(
-        sum(as.numeric(vr_receita), na.rm = TRUE)
+        total_contribution = sum(as.numeric(vr_receita)/1e6, na.rm = TRUE)
+    )
+
+campaign_filiado_total %>%
+    mutate(
+        is_filiado = recode(is_filiado, `0` = "non-partisan", `1` = "partisan")
+    ) %>%
+    ggplot(
+        aes(is_filiado, total_contribution, fill = is_filiado)
+    ) +
+    geom_col(
+        width = 0.5
+    ) +
+    scale_y_continuous(breaks = scales::pretty_breaks()) +
+    xlab("") +
+    ylab("Total contribution (million reais)") +
+    ggsave(
+        here("paper/figures/plot_contribution.pdf")
     )

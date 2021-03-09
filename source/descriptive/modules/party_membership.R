@@ -92,7 +92,15 @@ filiado_active_year %>%
     ) +
     labs(
         x = "Year",
-        y = "Total active party members"
+        y = "Total active party members (millions)"
+    ) +
+    geom_vline(
+        xintercept = seq(2002, 2018, 4),
+        linetype = "dashed"
+    ) +
+    scale_y_continuous(
+        breaks = c(0, 5e6, 1e7),
+        labels = c(0, 5, 10)
     ) +
     ggsave(
         here("paper/figures/partisanship/plot_partisan_by_year.pdf")

@@ -178,10 +178,13 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmti10.tfm
-INPUT /hdd/ego_patronage/paper/figures/maps/pooled.png
-INPUT /hdd/ego_patronage/paper/figures/maps/pooled.png
-INPUT /hdd/ego_patronage/paper/figures/maps/pooled.png
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT /hdd/ego_patronage/paper/figures/maps/pooled.png
+INPUT /hdd/ego_patronage/paper/figures/maps/pooled.png
+INPUT /hdd/ego_patronage/paper/figures/maps/pooled.png
 INPUT /hdd/ego_patronage/paper/draft.bbl
 INPUT /hdd/ego_patronage/paper/draft.bbl
 INPUT /hdd/ego_patronage/paper/draft.aux
