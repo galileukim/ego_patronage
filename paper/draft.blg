@@ -3,44 +3,44 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: draft.aux
 The style file: apsr.bst
 Database file #1: patronage.bib
-You've used 27 entries,
+You've used 31 entries,
             2874 wiz_defined-function locations,
-            795 strings with 9549 characters,
-and the built_in function-call counts, 125959 in all, are:
-= -- 20754
-> -- 1489
+            819 strings with 10288 characters,
+and the built_in function-call counts, 139463 in all, are:
+= -- 22935
+> -- 1626
 < -- 2
-+ -- 9872
-- -- 522
-* -- 10811
-:= -- 25092
-add.period$ -- 110
-call.type$ -- 27
-change.case$ -- 352
-chr.to.int$ -- 27
-cite$ -- 27
-duplicate$ -- 421
-empty$ -- 907
-format.name$ -- 546
-if$ -- 22643
++ -- 10845
+- -- 573
+* -- 11917
+:= -- 27819
+add.period$ -- 126
+call.type$ -- 31
+change.case$ -- 404
+chr.to.int$ -- 31
+cite$ -- 31
+duplicate$ -- 501
+empty$ -- 1060
+format.name$ -- 603
+if$ -- 25090
 int.to.chr$ -- 5
 int.to.str$ -- 0
-missing$ -- 32
-newline$ -- 119
-num.names$ -- 322
-pop$ -- 117
+missing$ -- 36
+newline$ -- 135
+num.names$ -- 366
+pop$ -- 134
 preamble$ -- 1
-purify$ -- 405
+purify$ -- 465
 quote$ -- 0
-skip$ -- 352
+skip$ -- 435
 stack$ -- 0
-substring$ -- 29436
-swap$ -- 58
-text.length$ -- 380
+substring$ -- 32472
+swap$ -- 86
+text.length$ -- 436
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 96
+type$ -- 112
 warning$ -- 0
-while$ -- 644
+while$ -- 742
 width$ -- 0
-write$ -- 390
+write$ -- 444

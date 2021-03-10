@@ -38,6 +38,13 @@ Brollo, Fernanda, Pedro Forquesato \harvardand\ Juan~Carlos Gozzi. 2017.
   sector employment in brazil.'' {\em Party Membership and Public Sector
   Employment in Brazil (October 2017)} .
 
+\harvarditem[Claessens, Feijen \harvardand\ Laeven]{Claessens, Feijen
+  \harvardand\ Laeven}{2008}{claessens2008political}
+Claessens, Stijn, Erik Feijen \harvardand\ Luc Laeven. 2008.
+\newblock ``Political connections and preferential access to finance: The role
+  of campaign contributions.'' {\em Journal of financial economics}
+  88(3):554--580.
+
 \harvarditem[Colonnelli, Prem \harvardand\ Teso]{Colonnelli, Prem \harvardand\
   Teso}{2018}{colonnelli2018patronage}
 Colonnelli, Emanuele, Mounu Prem \harvardand\ Edoardo Teso. 2018.
@@ -107,6 +114,11 @@ Lewis, David~E. 2010.
   bureaucratic performance}.
 \newblock Princeton University Press.
 
+\harvarditem{Nichter}{2008}{nichter2008vote}
+Nichter, Simeon. 2008.
+\newblock ``Vote buying or turnout buying? Machine politics and the secret
+  ballot.'' {\em American political science review} pp.~19--31.
+
 \harvarditem{Palmeira \harvardand\ de~Heredia}{1995}{palmeira1995comicios}
 Palmeira, Moacir~GS \harvardand\ Beatriz Mar{\'\i}a~Alasia de~Heredia. 1995.
 \newblock ``Os com{\'\i}cios e a pol{\'\i}tica de fac{\c{c}}{\~o}es.'' {\em
@@ -153,6 +165,12 @@ Speck, Bruno~Wilhelm, Maria do Socorro~Sousa Braga \harvardand\ Valeriano
   identifica{\c{c}}{\~a}o partid{\'a}ria no Brasil.'' {\em Revista de
   Sociologia e Pol{\'\i}tica} 23(56):125--148.
 
+\harvarditem{Stokes}{2005}{stokes2005perverse}
+Stokes, Susan~C. 2005.
+\newblock ``Perverse accountability: A formal model of machine politics with
+  evidence from Argentina.'' {\em American political science review}
+  pp.~315--325.
+
 \harvarditem[Stokes et~al.]{Stokes, Dunning, Nazareno \harvardand\
   Brusco}{2013}{stokes2013brokers}
 Stokes, Susan~C, Thad Dunning, Marcelo Nazareno \harvardand\ Valeria Brusco.
@@ -166,5 +184,11 @@ Toral, Guillermo. 2019.
 \newblock ``The benefits of patronage: How the political appointment of
   bureaucrats can enhance their accountability and effectiveness.'' {\em
   Available at SSRN 3462459} .
+
+\harvarditem{Van~de Walle}{2007}{van2007meet}
+Van~de Walle, Nicolas. 2007.
+\newblock ``Meet the new boss, same as the old boss? The evolution of political
+  clientelism in Africa.'' {\em Patrons, clients and policies: Patterns of
+  democratic accountability and political competition} pp.~50--67.
 
 \end{thebibliography}
