@@ -121,7 +121,7 @@ Additionally, it is worthwhile noting that the affiliation of party members has 
 
 Another interesting feature to note in the data is that there are discontinuities in the number of party members. The dashed lines indicate the year of a local election in Brazil, such as 2002 or 2018. The jumps in party affiliation are expressive, in particular for earlier electoral cycles. In particular, for the electoral year of 2002, there were around 2 million new party members registered as a result of that particular local election. While these jumps have decreased in more recent elections, it is an empirical regularity that highlights the electoral motivation driving party affiliation in Brazil.
 
-\subsection{Why engage in patronage?}
+\subsection{Locking-In Wealthy Patrons}
 
 Why do politicians engage in patronage? And who should politicians buy off? There are competing views on who benefits from patronage, and what is motivating it in the first place. On the one hand, from a politician's perspective it can be cheaper to buy voters who are poor, insofar as these voters need and value more monetary incentives \citet{stokes2013brokers}. Other scholars argue that in order to maximize electoral returns, politicians target swing voters, those who are indifferent to either party and therefore, again, require the least resources to buy off \citet{dixit1996determinants}.
 
@@ -129,9 +129,18 @@ The socioeconomic status of voters is not, however, the only consideration that 
 
 Why should patronage occur post-election? There is an important distinction to be made between different forms of clientelism such as disbursement of campaign materials \citep{stokes2005perverse,nichter2008vote} and another form of clientelism which can only occur after a politician takes office. In particular, a politician cannot offer job to a voter prior to holding office. Moreover, public sector jobs are coarse goods in the sense that they cannot be infinitely divided among voters. There are tight budget and administrative constraints that distinguishes a public sector jobs from other forms of resources available to politicians.
 
-If public sector jobs are scarce, and there are only so many spots that can be filled post-election, a different form of consideration takes place from the standpoint of the politician. Differently from an electoral race in which each voter theoretically contributes the same exact amount to the race, a single vote, constituencies can vary widely with respect to the resources that they bring in to the table. A well established literature on the influence of money on politics has documented how campaign contributions play a crucial role in electoral outcomes in both the developed and developing world \citep{claessens2008political}. What is overseen is the fact that patronage can lock-in wealthy patrons into the bureaucracy and incentivize greater campaign contributions in the future, effectively securing important revenue streams for both the politician and her party \citep{robinson2013political}.
+If public sector jobs are scarce, and there are only so many spots that can be filled post-election, a different form of consideration takes place from the standpoint of the politician. Differently from an electoral race in which each voter theoretically contributes the same exact amount to the race, a single vote, constituencies can vary widely with respect to the resources that they bring in to the table. A well established literature on the influence of money on politics has documented how campaign contributions play a crucial role in electoral outcomes in both the developed and developing world \citep{claessens2008political}. What is underemphasized is the fact that patronage can lock-in wealthy patrons into the bureaucracy and incentivize greater campaign contributions in the future, effectively securing important revenue streams for both the politician and her party \citep{robinson2013political}.
 
-This is in fact what the data shows. 
+This is in fact what the data suggests. First, on average party members who enter the bureaucracy are wealthier than their non-partisan counterparts, in particular at the moment that the mayor assumes office. With the RAIS data, it is possible to identify for each and every employee the last wage in the non-municipal sector prior to public sector employment. Figure \ref{fig:wage_differential} plots the median of the last non-municipal sector wage by partisanship status. The gap between partisan and non-partisan wages is the highest for the beginning of the mayoral term, which is often associated with more intense patronage activity.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 10cm, height = 8cm]{figures/partisanship/plot_median_wage.pdf}
+    \caption{\textbf{Wage Gap between Partisans and Non-Partisans}. The graph tracks the time trend in the median wage }
+    \label{fig:wage_differential}
+\end{figure}
+
+Additionally
 
 \section{Descriptive statistics}
 \label{sec:descriptive}
@@ -142,11 +151,10 @@ First, that the distribution of partisan affiliation varies significantly over t
 
 \begin{figure}[H]
     \centering
-    \includegraphics{figures/maps/pooled.png}
+    \includegraphics[width = 10cm, height = 8cm]{figures/maps/pooled.png}
     \caption{\textbf{Proportion of party-affiliated members by municipality (2015)}. Darker colors indicate a larger degree of partisan affiliation. This visualization includes all bureaucrats, from high-level managers to service staff.}
     \label{fig:map_pooled}
 \end{figure}
-
 
 \section{Empirical strategy}
 \label{sec:empirical}

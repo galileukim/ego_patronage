@@ -27,6 +27,15 @@ career_filiado <- career_filiado %>%
         )
     )
 
+# aggregate
+career_filiado_year <- career_filiado %>%
+    group_by(year, is_partisan) %>%
+    summarise(
+        across(
+            c(ends_with("mean"), median_wage),
+        ~weighted.mean(., n)
+        )
+    )
 # ---------------------------------------------------------------------------- #
 message("generating descriptive plots")
 
@@ -42,12 +51,11 @@ plot_summary <- map2(
     vars_to_plot,
     label_vars,
     ~ ggplot(
-        data = career_filiado,
+        data = career_filiado_year,
         aes_string(x = "year", y = .x, color = "is_partisan")
     ) +
-    geom_smooth(
-        span = 3
-    ) +
+    geom_point() +
+    geom_line() +
     scale_colour_discrete(
         name = "Partisanship",
         labels = c(
@@ -56,6 +64,7 @@ plot_summary <- map2(
             "non_partisan" = "non-partisan"
         )
     ) +
+    geom_vline(xintercept = seq(2005, 2013, 4), lty = "dotted") +
     labs(x = "Year", y = .y)
 )
 
