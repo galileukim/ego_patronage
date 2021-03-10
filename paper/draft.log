@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.6.25)  10 MAR 2021 16:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.6.25)  10 MAR 2021 16:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -790,39 +790,45 @@ File: figures/partisanship/plot_median_wage.pdf Graphic file (type pdf)
 Package pdftex.def Info: figures/partisanship/plot_median_wage.pdf  used on input line 138.
 (pdftex.def)             Requested size: 284.53154pt x 227.62523pt.
  [9]
-<figures/maps/pooled.png, id=264, 361.35pt x 361.35pt>
+<figures/partisanship/plot_work_experience_mean.pdf, id=263, 505.89pt x 505.89pt>
+File: figures/partisanship/plot_work_experience_mean.pdf Graphic file (type pdf)
+<use figures/partisanship/plot_work_experience_mean.pdf>
+Package pdftex.def Info: figures/partisanship/plot_work_experience_mean.pdf  used on input line 147.
+(pdftex.def)             Requested size: 284.53154pt x 227.62523pt.
+ [10 </hdd/ego_patronage/paper/figures/partisanship/plot_median_wage.pdf> </hdd/ego_patronage/paper/figures/partisanship/plot_work_experience_mean.pdf>]
+<figures/maps/pooled.png, id=283, 361.35pt x 361.35pt>
 File: figures/maps/pooled.png Graphic file (type png)
 <use figures/maps/pooled.png>
-Package pdftex.def Info: figures/maps/pooled.png  used on input line 154.
+Package pdftex.def Info: figures/maps/pooled.png  used on input line 161.
 (pdftex.def)             Requested size: 284.53156pt x 227.62413pt.
- [10 </hdd/ego_patronage/paper/figures/partisanship/plot_median_wage.pdf>] [11 </hdd/ego_patronage/paper/figures/maps/pooled.png (PNG copy)>] (/hdd/ego_patronage/paper/draft.bbl [12] [13])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 171.
+ [11 </hdd/ego_patronage/paper/figures/maps/pooled.png (PNG copy)>] (/hdd/ego_patronage/paper/draft.bbl [12] [13])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 178.
  [14]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 171.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 178.
  (/hdd/ego_patronage/paper/draft.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 171.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 171.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 178.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 178.
 Package rerunfilecheck Info: File `draft.out' has not changed.
 (rerunfilecheck)             Checksum: A160FEA9D2C1803D274A7876462F556D;778.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 171.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 178.
  ) 
 Here is how much of TeX's memory you used:
- 9703 strings out of 494880
- 141328 string characters out of 6179601
- 240904 words of memory out of 5000000
- 12811 multiletter control sequences out of 15000+600000
+ 9710 strings out of 494880
+ 141637 string characters out of 6179601
+ 241152 words of memory out of 5000000
+ 12816 multiletter control sequences out of 15000+600000
  13102 words of font info for 50 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  41i,8n,43p,1051b,481s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on /hdd/ego_patronage/paper/draft.pdf (14 pages, 366357 bytes).
+Output written on /hdd/ego_patronage/paper/draft.pdf (14 pages, 371607 bytes).
 PDF statistics:
- 340 PDF objects out of 1000 (max. 8388607)
- 307 compressed objects within 4 object streams
- 67 named destinations out of 1000 (max. 500000)
- 112 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 348 PDF objects out of 1000 (max. 8388607)
+ 313 compressed objects within 4 object streams
+ 68 named destinations out of 1000 (max. 500000)
+ 117 words of extra memory for PDF output out of 10000 (max. 10000000)
 
