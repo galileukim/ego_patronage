@@ -24,10 +24,24 @@ filiado <- fread(
     here("data/raw/tse/filiado.csv.gz")
 )
 
+bureaucrat_entry <- tbl(rais_con, "rais_bureaucrat_entry")
+
+filiado_bureaucrat <- tbl(rais_con, "filiado_mun") %>%
+    select(filiado_id, id_employee, year_start, year_termination) %>%
+    filter(year_start <= 2008 & year_termination > 2008) %>%
+    inner_join(
+        bureaucrat_entry,
+        by = "id_employee"
+    ) %>%
+    collect()
+
 # ==============================================================================
 # visualize breakdown of donations by partisan vs. non-partisan
 # ==============================================================================
 filiado_active <- filiado %>% 
+    mutate(
+        filiado_id = row_number()
+    ) %>%
     fix_year_filiado() %>%
     filter_active_filiado(2008)
 
