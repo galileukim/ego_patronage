@@ -35,6 +35,10 @@ filiado_bureaucrat <- tbl(rais_con, "filiado_mun") %>%
     ) %>%
     collect()
 
+filiado_mun <- fread(
+    here("data/clean/id/filiado_with_id_employee_mun.csv.gz")
+)
+
 # ==============================================================================
 # visualize breakdown of donations by partisan vs. non-partisan
 # ==============================================================================
@@ -50,14 +54,14 @@ campaign_filiado <- campaign %>%
         ds_titulo == "Recursos de pessoas físicas"
     ) %>%
     transmute(
-        ds_nr_titulo_eleitor = as.character(ds_nr_titulo_eleitor) %>%
+        electoral_title = as.character(ds_nr_titulo_eleitor) %>%
             str_pad(., 12, "left", "0"),
         ds_titulo,
         vr_receita
     ) %>%
     left_join(
         filiado_active %>% mutate(is_filiado = 1),
-        by = c("ds_nr_titulo_eleitor" = "electoral_title")
+        by = c("electoral_title")
     )
     
 campaign_filiado_total <- campaign_filiado %>%
