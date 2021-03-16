@@ -89,3 +89,34 @@ campaign_filiado_total %>%
     ggsave(
         here("paper/figures/plot_contribution.pdf")
     )
+
+# ==============================================================================
+# test whether we can identify workers
+# ==============================================================================
+# can we make a one-to-one join?
+filiado_mun_first <- filiado_mun[order(date_start)] %>%
+    .[, .SD[1], id_employee]
+
+# eliminate defective entries
+filiado_mun_first <- filiado_mun_first %>%
+    filter(
+        str_detect(date_start, "^199|^20")
+    )
+
+# extract only if there is a unique record per date key
+filiado_unique <- filiado %>%
+    select(electoral_title, cod_ibge_6, party, starts_with("date")) %>%
+    filter(
+        str_detect(date_start, "^199|^20")
+    ) %>%
+    group_by(cod_ibge_6, party, date_start, date_end, date_cancel) %>%
+    mutate(n = n()) %>%
+    ungroup() %>%
+    filter(n == 1) %>%
+    select(-n)
+
+# able to recover around 21% of filiados
+filiado_with_id_employee <- filiado_mun_first %>%
+    merge(filiado_unique, all.x = TRUE)
+
+# look within the ones who are party members
