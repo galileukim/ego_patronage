@@ -34,7 +34,8 @@ career_filiado_year <- career_filiado %>%
         across(
             c(ends_with("mean"), median_wage),
         ~weighted.mean(., n)
-        )
+        ),
+        n = n()
     )
 # ---------------------------------------------------------------------------- #
 message("generating descriptive plots")
@@ -64,6 +65,7 @@ plot_summary <- map2(
             "non_partisan" = "non-partisan"
         )
     ) +
+    ggtitle(.y) +
     geom_vline(xintercept = seq(2005, 2013, 4), lty = "dotted") +
     labs(x = "Year", y = .y)
 )
