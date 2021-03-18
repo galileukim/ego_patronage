@@ -10,6 +10,8 @@ source(
     here("source/descriptive/modules/requirements.R")
 )
 
+library(lubridate)
+
 # ==============================================================================
 # generate descriptive statistics of party members
 # ==============================================================================
@@ -62,6 +64,7 @@ filiado <- fread(
 # first determine how many party members there are per annum
 filiado_date <- filiado %>% 
     transmute(
+        party,
         date_start, 
         date_end = coalesce(date_end, date_cancel)
      ) %>%
@@ -105,4 +108,27 @@ filiado_active_year %>%
     ggsave(
         here("paper/figures/partisanship/plot_partisan_by_year.pdf")
     )
-# compare membership spells
+
+# duration spells
+filiado_date_spell <- filiado %>%
+    # sample_n(100) %>%
+    transmute(
+        date_end = coalesce(date_end, date_cancel) %>%
+            if_else(
+                . == "",
+                date_record_extraction, .
+            ),
+        duration = interval(
+            as_date(date_start), as_date(date_end)
+        ) / years(1)
+    )
+
+# what we ultimately want is number of party members by year
+filiado_date_spell %>%
+    mutate(
+        duration = round(duration)
+    ) %>%
+    ggplot() +
+    geom_histogram(
+        aes(duration), binwidth = 1
+    )
