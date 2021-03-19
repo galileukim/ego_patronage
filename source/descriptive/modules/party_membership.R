@@ -10,8 +10,6 @@ source(
     here("source/descriptive/modules/requirements.R")
 )
 
-library(lubridate)
-
 # ==============================================================================
 # generate descriptive statistics of party members
 # ==============================================================================
@@ -24,43 +22,6 @@ filiado <- fread(
     here("data/raw/tse/filiado.csv.gz")
 )
 
-# create entries and exits per year
-# segmented by employment
-# filiado_unemployed <- filiado_sql %>%
-#     anti_join(
-#         rais_sql %>%
-#             select(cod_ibge_6, id_employee),
-#         by = c("cod_ibge_6", "id_employee")
-#     ) %>%
-#     collect()
-
-# filiado_employed <- filiado_sql %>%
-#     inner_join(
-#         rais_sql %>%
-#             select(cod_ibge_6, id_employee),
-#         by = c("cod_ibge_6", "id_employee")
-#     ) %>%
-#     collect() %>%
-#     distinct(filiado_id, .keep_all = TRUE)
-
-# compare duration of party membership between employed vs. unemployed
-# filiado_turnover <- list(
-#     filiado_employed,
-#     filiado_unemployed
-# ) %>%
-#     set_names(c("employed", "unemployed")) %>%
-#     map_dfr(
-#         . %>%
-#             convert_to_date() %>%
-#             pivot_longer(
-#                 c(date_start, date_end),
-#                 names_prefix = "date_",
-#                 names_to = "date"
-#             ) %>%
-#             count(date, value),
-#         .id = "is_employed"
-#     )
-
 # first determine how many party members there are per annum
 filiado_date <- filiado %>% 
     transmute(
@@ -70,7 +31,8 @@ filiado_date <- filiado %>%
      ) %>%
     fix_year_filiado() %>%
     filter(
-        between(date_start, 1997, 2018)
+        between(date_start, 1997, 2019) &
+        between(date_end, 1997, 2019)
     )
 
 range_record <- range(filiado_date$date_start)
@@ -111,24 +73,47 @@ filiado_active_year %>%
 
 # duration spells
 filiado_date_spell <- filiado %>%
-    # sample_n(100) %>%
     transmute(
+        date_start,
         date_end = coalesce(date_end, date_cancel) %>%
             if_else(
                 . == "",
                 date_record_extraction, .
             ),
-        duration = interval(
-            as_date(date_start), as_date(date_end)
-        ) / years(1)
+        duration = lubridate::interval(
+            lubridate::as_date(date_start), lubridate::as_date(date_end)
+        ) / lubridate::years(1)
     )
 
 # what we ultimately want is number of party members by year
-filiado_date_spell %>%
+filiado_date_spell <- filiado_date_spell %>%
+    mutate(
+        across(
+            starts_with("date"), 
+            ~ str_extract(., "^\\d{4}") %>%
+                as.integer,
+            .names = "year_{col}"
+        )
+    ) %>%
+    filter(
+        year_date_start >= 1985 &
+        year_date_start <= 2019 & 
+        year_date_end <= 2019
+    ) %>%
     mutate(
         duration = round(duration)
-    ) %>%
+    )
+
+filiado_date_spell %>%
+    filter(duration > 0) %>%
     ggplot() +
     geom_histogram(
         aes(duration), binwidth = 1
+    ) +
+    scale_y_continuous(
+        breaks = c(0, 5e6, 1e7),
+        labels = c(0, 5, 10)
+    ) +
+    ggsave(
+        here::here("paper/figures/partisanship/plot_partisan_spell.pdf")
     )
