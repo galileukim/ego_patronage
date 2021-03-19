@@ -51,7 +51,7 @@ path_to_figs <- ifelse(
 
 export_plots <- list(
     filename = sprintf(
-        here(path_to_figs, "plot_partisanship_by_%s.pdf"),
+        here(path_to_figs, "%s.pdf"),
         group_vars
         ),
     plot = plot_partisan

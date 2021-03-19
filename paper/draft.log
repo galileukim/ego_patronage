@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.6.25)  19 MAR 2021 10:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.6.25)  19 MAR 2021 19:10
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -666,7 +666,11 @@ Package: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 282.
 )
 \Hy@SectionHShift=\skip66
-) (/hdd/ego_patronage/paper/draft.aux)
+) (/hdd/ego_patronage/paper/draft.aux
+
+LaTeX Warning: Label `fig:map_pooled' multiply defined.
+
+)
 \openout1 = `draft.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 36.
@@ -778,76 +782,87 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 74.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [4] [5] [6]
-
-LaTeX Warning: Reference `fig:number_partisanship' on page 7 undefined on input line 113.
-
-<figures/partisanship/plot_partisan_by_year.pdf, id=210, 505.89pt x 505.89pt>
+<figures/partisanship/plot_partisan_by_year.pdf, id=211, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_partisan_by_year.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_partisan_by_year.pdf>
 Package pdftex.def Info: figures/partisanship/plot_partisan_by_year.pdf  used on input line 117.
+(pdftex.def)             Requested size: 199.17207pt x 199.17207pt.
+<figures/partisanship/plot_partisan_by_region.pdf, id=212, 505.89pt x 505.89pt>
+File: figures/partisanship/plot_partisan_by_region.pdf Graphic file (type pdf)
+<use figures/partisanship/plot_partisan_by_region.pdf>
+Package pdftex.def Info: figures/partisanship/plot_partisan_by_region.pdf  used on input line 118.
+(pdftex.def)             Requested size: 199.17207pt x 199.17207pt.
+ [7]
+<figures/partisanship/plot_partisan_spell.pdf, id=224, 505.89pt x 505.89pt>
+File: figures/partisanship/plot_partisan_spell.pdf Graphic file (type pdf)
+<use figures/partisanship/plot_partisan_spell.pdf>
+Package pdftex.def Info: figures/partisanship/plot_partisan_spell.pdf  used on input line 131.
 (pdftex.def)             Requested size: 284.53154pt x 227.62523pt.
-[7]
-File: figures/partisanship/plot_partisan_by_year.pdf Graphic file (type pdf)
-<use figures/partisanship/plot_partisan_by_year.pdf>
-Package pdftex.def Info: figures/partisanship/plot_partisan_by_year.pdf  used on input line 128.
-(pdftex.def)             Requested size: 284.53154pt x 227.62523pt.
- [8 </hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf>] [9]
-<figures/partisanship/plot_median_wage.pdf, id=263, 505.89pt x 505.89pt>
+ [8 </hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf> </hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_region.pdf>] [9 </hdd/ego_patronage/paper/figures/partisanship/plot_partisan_spell.pdf>]
+<figures/partisanship/plot_median_wage.pdf, id=277, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_median_wage.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_median_wage.pdf>
-Package pdftex.def Info: figures/partisanship/plot_median_wage.pdf  used on input line 149.
+Package pdftex.def Info: figures/partisanship/plot_median_wage.pdf  used on input line 150.
 (pdftex.def)             Requested size: 284.53154pt x 227.62523pt.
- [10]
-<figures/partisanship/plot_work_experience_mean.pdf, id=270, 505.89pt x 505.89pt>
+ [10 </hdd/ego_patronage/paper/figures/partisanship/plot_median_wage.pdf>]
+<figures/partisanship/plot_work_experience_mean.pdf, id=291, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_work_experience_mean.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_work_experience_mean.pdf>
-Package pdftex.def Info: figures/partisanship/plot_work_experience_mean.pdf  used on input line 158.
+Package pdftex.def Info: figures/partisanship/plot_work_experience_mean.pdf  used on input line 159.
 (pdftex.def)             Requested size: 284.53154pt x 227.62523pt.
- [11 </hdd/ego_patronage/paper/figures/partisanship/plot_median_wage.pdf>]
-<figures/partisanship/plot_edu_mean.pdf, id=283, 505.89pt x 505.89pt>
+<figures/partisanship/plot_edu_mean.pdf, id=293, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_edu_mean.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_edu_mean.pdf>
-Package pdftex.def Info: figures/partisanship/plot_edu_mean.pdf  used on input line 167.
+Package pdftex.def Info: figures/partisanship/plot_edu_mean.pdf  used on input line 168.
 (pdftex.def)             Requested size: 199.17207pt x 227.62523pt.
-<figures/partisanship/plot_age_mean.pdf, id=284, 505.89pt x 505.89pt>
+<figures/partisanship/plot_age_mean.pdf, id=294, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_age_mean.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_age_mean.pdf>
-Package pdftex.def Info: figures/partisanship/plot_age_mean.pdf  used on input line 168.
+Package pdftex.def Info: figures/partisanship/plot_age_mean.pdf  used on input line 169.
 (pdftex.def)             Requested size: 199.17207pt x 227.62523pt.
- [12 </hdd/ego_patronage/paper/figures/partisanship/plot_work_experience_mean.pdf> </hdd/ego_patronage/paper/figures/partisanship/plot_edu_mean.pdf> </hdd/ego_patronage/paper/figures/partisanship/plot_age_mean.pdf>]
-<figures/maps/pooled.png, id=309, 361.35pt x 361.35pt>
+ [11 </hdd/ego_patronage/paper/figures/partisanship/plot_work_experience_mean.pdf>]
+<figures/maps/pooled.png, id=307, 361.35pt x 361.35pt>
 File: figures/maps/pooled.png Graphic file (type png)
 <use figures/maps/pooled.png>
-Package pdftex.def Info: figures/maps/pooled.png  used on input line 180.
-(pdftex.def)             Requested size: 256.07509pt x 256.07509pt.
- [13 </hdd/ego_patronage/paper/figures/maps/pooled.png (PNG copy)>] (/hdd/ego_patronage/paper/draft.bbl [14] [15])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 197.
- [16]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 197.
+Package pdftex.def Info: figures/maps/pooled.png  used on input line 181.
+(pdftex.def)             Requested size: 227.62413pt x 227.62413pt.
+ [12 </hdd/ego_patronage/paper/figures/partisanship/plot_edu_mean.pdf> </hdd/ego_patronage/paper/figures/partisanship/plot_age_mean.pdf>]
+<figures/partisanship/plot_partisanship_by_cbo_group.pdf, id=324, 505.89pt x 505.89pt>
+File: figures/partisanship/plot_partisanship_by_cbo_group.pdf Graphic file (type pdf)
+<use figures/partisanship/plot_partisanship_by_cbo_group.pdf>
+Package pdftex.def Info: figures/partisanship/plot_partisanship_by_cbo_group.pdf  used on input line 191.
+(pdftex.def)             Requested size: 227.62523pt x 227.62523pt.
+ [13 </hdd/ego_patronage/paper/figures/maps/pooled.png (PNG copy)> </hdd/ego_patronage/paper/figures/partisanship/plot_partisanship_by_cbo_group.pdf>] [14] (/hdd/ego_patronage/paper/draft.bbl [15] [16])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 208.
+ [17]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 208.
  (/hdd/ego_patronage/paper/draft.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 197.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 197.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 208.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 208.
 Package rerunfilecheck Info: File `draft.out' has not changed.
 (rerunfilecheck)             Checksum: E39343E849E8F12907D97475A87058BF;782.
 
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 197.
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 208.
  ) 
 Here is how much of TeX's memory you used:
- 9733 strings out of 494880
- 142351 string characters out of 6179601
- 241547 words of memory out of 5000000
- 12832 multiletter control sequences out of 15000+600000
+ 9749 strings out of 494880
+ 143139 string characters out of 6179601
+ 241621 words of memory out of 5000000
+ 12843 multiletter control sequences out of 15000+600000
  13102 words of font info for 50 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  41i,8n,43p,1051b,481s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on /hdd/ego_patronage/paper/draft.pdf (16 pages, 384295 bytes).
+Output written on /hdd/ego_patronage/paper/draft.pdf (17 pages, 469578 bytes).
 PDF statistics:
- 376 PDF objects out of 1000 (max. 8388607)
- 335 compressed objects within 4 object streams
- 73 named destinations out of 1000 (max. 500000)
- 127 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 402 PDF objects out of 1000 (max. 8388607)
+ 354 compressed objects within 4 object streams
+ 75 named destinations out of 1000 (max. 500000)
+ 142 words of extra memory for PDF output out of 10000 (max. 10000000)
 

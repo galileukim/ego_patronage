@@ -181,9 +181,13 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmti10.tfm
 INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf
 INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf
 INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_region.pdf
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_region.pdf
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_region.pdf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf
-INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_spell.pdf
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_spell.pdf
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisan_spell.pdf
 INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_median_wage.pdf
 INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_median_wage.pdf
 INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_median_wage.pdf
@@ -199,6 +203,9 @@ INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_age_mean.pdf
 INPUT /hdd/ego_patronage/paper/figures/maps/pooled.png
 INPUT /hdd/ego_patronage/paper/figures/maps/pooled.png
 INPUT /hdd/ego_patronage/paper/figures/maps/pooled.png
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisanship_by_cbo_group.pdf
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisanship_by_cbo_group.pdf
+INPUT /hdd/ego_patronage/paper/figures/partisanship/plot_partisanship_by_cbo_group.pdf
 INPUT /hdd/ego_patronage/paper/draft.bbl
 INPUT /hdd/ego_patronage/paper/draft.bbl
 INPUT /hdd/ego_patronage/paper/draft.aux
