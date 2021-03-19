@@ -23,11 +23,15 @@ filiado <- fread(
 )
 
 # first determine how many party members there are per annum
-filiado_date <- filiado %>% 
+filiado_date <- filiado %>%
     transmute(
         party,
+        region = str_sub(cod_ibge_6, 1, 1),
         date_start, 
-        date_end = coalesce(date_end, date_cancel)
+        date_end = coalesce(date_end, date_cancel) %>%
+            if_else(
+                . == "", "2019", .
+            )
      ) %>%
     fix_year_filiado() %>%
     filter(
@@ -45,6 +49,13 @@ filiado_active_year <- map_dfr(
         tibble(
             n = .
         ) %>%
+        mutate(year = .x)
+)
+
+filiado_active_year_by_region <- map_dfr(
+    range_record,
+    ~ filter_active_filiado(year = .x, data = filiado_date) %>%
+        count(region) %>%
         mutate(year = .x)
 )
 
@@ -69,6 +80,40 @@ filiado_active_year %>%
     ) +
     ggsave(
         here("paper/figures/partisanship/plot_partisan_by_year.pdf")
+    )
+
+# growth in membership by state
+filiado_active_year_by_region %>% 
+    filter(
+        between(year, 1997, 2018)
+    ) %>%
+    mutate(
+        region = recode(
+            region,
+            `1` = "North",
+            `2` = "Northeast",
+            `3` = "Southeast",
+            `4` = "South",
+            `5` = "Midwest"
+        )
+    ) %>%
+    gg_point_line(
+        aes(year, n, color = region)
+    ) +
+    labs(
+        x = "Year",
+        y = "Total active party members (millions)"
+    ) +
+    geom_vline(
+        xintercept = seq(2002, 2018, 4),
+        linetype = "dashed"
+    ) +
+    scale_y_continuous(
+        breaks = c(0, 5e6, 1e7),
+        labels = c(0, 5, 10)
+    ) +
+    ggsave(
+        here("paper/figures/partisanship/plot_partisan_by_region.pdf")
     )
 
 # duration spells
@@ -99,12 +144,10 @@ filiado_date_spell <- filiado_date_spell %>%
         year_date_start >= 1985 &
         year_date_start <= 2019 & 
         year_date_end <= 2019
-    ) %>%
-    mutate(
-        duration = round(duration)
     )
 
 filiado_date_spell %>%
+    filter(year_date_start >= 1997) %>%
     filter(duration > 0) %>%
     ggplot() +
     geom_histogram(
