@@ -13,14 +13,15 @@ source(
 rais <- tbl(rais_con, "rais")
 filiado <- tbl(rais_con, "filiado_mun")
 
-rais_tables <- c(
-    partisan = "rais_mun_partisan",
-    non_partisan = "rais_mun_non_partisan"
+rais_tables <- list.files(
+    here("data/clean/summary/"),
+    pattern = "^rais",
+    full.names = TRUE
 )
 
 rais_filiado <- map_dfr(
     rais_tables,
-    ~ dbGetQuery(sprintf("SELECT * FROM %s", .)),
+    fread,
     .id = "is_filiado"
 )
 

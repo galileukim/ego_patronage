@@ -78,6 +78,6 @@ export <- list(
 )
 
 export %>%
-    pwalk(write_data, dir = "summary")
+    pwalk(write_data, dir = "data/clean/summary")
 
 message("create municipal tables complete!")

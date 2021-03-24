@@ -16,6 +16,8 @@ group_vars <- c(
     "SUBSTR(cbo_02, 1, 1)", "contract_type", "edu"
 )
 
+RSQLite::initExtension(rais_con)
+
 rais_query <- sprintf(
     "
     SELECT
@@ -23,7 +25,7 @@ rais_query <- sprintf(
     rais.year,
     %1$s,
     SUM(1.0) AS n,
-    AVG(COALESCE(is_filiado, 0)) AS partisanship
+    AVG(COALESCE(is_filiado, 0)) AS partisanship,
     FROM rais
     LEFT JOIN (SELECT *, 1.0 AS is_filiado FROM filiado_mun) AS filiado_mun
     ON rais.cod_ibge_6 = filiado_mun.cod_ibge_6 AND
