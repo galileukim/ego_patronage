@@ -10,8 +10,23 @@ source(
     here::here("source/descriptive/modules/requirements.R")
 )
 
+plot_partisan_stat <- function(data, var){
+     ggplot(
+        aes_string("year", var, color = "is_filiado"),
+        data = data
+    ) +
+    stat_summary_bin(
+        fun = "mean",
+        geom = "point"
+    ) +
+    stat_summary_bin(
+        fun = "mean",
+        geom = "line"
+    ) +
+    ggtitle(var)
+}
+
 rais <- tbl(rais_con, "rais")
-filiado <- tbl(rais_con, "filiado_mun")
 
 rais_tables <- list.files(
     here("data/clean/summary/"),
@@ -23,30 +38,17 @@ rais_filiado <- map_dfr(
     rais_tables,
     fread,
     .id = "is_filiado"
-)
+) %>%
+    mutate(
+        is_filiado = recode(is_filiado, `1` = "non-partisan", `2` = "partisan")
+    )
 
 message("generate plots")
-vars_to_plot <- c("hired", "fired", "work_experience")
+vars_to_plot <- c("hired", "fired", "age", "edu", "wage", "work_experience")
 plot_turnover <- map(
     vars_to_plot,
-    ~ gg_summary(
-        x = "year",
-        y = .,
-        data = rais_filiado,
-        smooth = FALSE,
-        color = !!sym("is_filiado")
-    ) +
-        ggtitle(.)
+    ~ plot_partisan_stat(var = ., data = rais_filiado)
 )
-
-rais_filiado %>%
-    ggplot(
-        aes(year, hired, color = is_filiado)
-    ) +
-    stat_summary_bin(
-        fun = "mean",
-        geom = "point"
-    )
 
 path_to_figs <- ifelse(
     isTRUE(debug), "paper/figures/turnover/sample/", "paper/figures/turnover/"

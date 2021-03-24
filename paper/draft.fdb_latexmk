@@ -1,5 +1,5 @@
 # Fdb version 3
-["bibtex draft"] 1616591587 "draft.aux" "draft.bbl" "draft" 1616593568
+["bibtex draft"] 1616591587 "draft.aux" "draft.bbl" "draft" 1616597085
   "./apsr.bst" 1609794837 25357 c990a86d1a60aa9370f76a9507b609ec ""
   "draft.aux" 1616593029 9680 10f2e3a0d973ac53778c2f43285e20fb ""
   "draft.bcf" 0 -1 0 ""
@@ -7,10 +7,10 @@
   (generated)
   "draft.blg"
   "draft.bbl"
-["pdflatex"] 1616593029 "/hdd/ego_patronage/paper/draft.tex" "/hdd/ego_patronage/paper/draft.pdf" "draft" 1616593568
+["pdflatex"] 1616593029 "/hdd/ego_patronage/paper/draft.tex" "/hdd/ego_patronage/paper/draft.pdf" "draft" 1616597085
   "/etc/texmf/web2c/texmf.cnf" 1585227716 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/hdd/ego_patronage/paper/draft.aux" 1616593029 9680 10f2e3a0d973ac53778c2f43285e20fb ""
-  "/hdd/ego_patronage/paper/draft.tex" 1616593567 30843 780feca413e2a30e832727ebfcc09410 ""
+  "/hdd/ego_patronage/paper/draft.tex" 1616597084 30843 780feca413e2a30e832727ebfcc09410 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1480098698 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -112,7 +112,7 @@
   "draft.aux" 1616593029 9680 10f2e3a0d973ac53778c2f43285e20fb ""
   "draft.bbl" 1616591587 9132 3a6788e87259fee174dfe1b112fcf3c5 "bibtex draft"
   "draft.out" 1616593029 779 b7ad8322ad6c23015612a3f3ac40e2a0 ""
-  "draft.tex" 1616593567 30843 780feca413e2a30e832727ebfcc09410 ""
+  "draft.tex" 1616597084 30843 780feca413e2a30e832727ebfcc09410 ""
   "figures/maps/pooled.png" 1611602991 202472 da1b08ed6807959134033193453d3f65 ""
   "figures/partisanship/plot_age_mean.pdf" 1615993464 5119 aae4096e92785b1ad3c885e43a7eee89 ""
   "figures/partisanship/plot_edu_mean.pdf" 1615993464 5120 574e647bd83370e55830733efc37f0af ""
@@ -123,9 +123,9 @@
   "figures/partisanship/plot_partisanship_by_cbo_group.pdf" 1609862521 75718 b2ea0ea75ffce438df9315e3684bdb44 ""
   "figures/partisanship/plot_work_experience_mean.pdf" 1615993464 5132 706d34ad99e25538f71940c954879781 ""
   (generated)
-  "draft.log"
-  "draft.aux"
   "/hdd/ego_patronage/paper/draft.pdf"
-  "draft.pdf"
   "draft.out"
+  "draft.log"
   "/hdd/ego_patronage/paper/draft.log"
+  "draft.aux"
+  "draft.pdf"
