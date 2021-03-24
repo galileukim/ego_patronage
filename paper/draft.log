@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.6.25)  24 MAR 2021 09:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.6.25)  24 MAR 2021 11:00
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -820,39 +820,39 @@ Package pdftex.def Info: figures/partisanship/plot_age_mean.pdf  used on input l
 <figures/maps/pooled.png, id=307, 361.35pt x 361.35pt>
 File: figures/maps/pooled.png Graphic file (type png)
 <use figures/maps/pooled.png>
-Package pdftex.def Info: figures/maps/pooled.png  used on input line 181.
+Package pdftex.def Info: figures/maps/pooled.png  used on input line 183.
 (pdftex.def)             Requested size: 227.62413pt x 227.62413pt.
  [12 </hdd/ego_patronage/paper/figures/partisanship/plot_edu_mean.pdf> </hdd/ego_patronage/paper/figures/partisanship/plot_age_mean.pdf>]
 <figures/partisanship/plot_partisanship_by_cbo_group.pdf, id=325, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_partisanship_by_cbo_group.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_partisanship_by_cbo_group.pdf>
-Package pdftex.def Info: figures/partisanship/plot_partisanship_by_cbo_group.pdf  used on input line 192.
+Package pdftex.def Info: figures/partisanship/plot_partisanship_by_cbo_group.pdf  used on input line 194.
 (pdftex.def)             Requested size: 227.62523pt x 227.62523pt.
  [13 </hdd/ego_patronage/paper/figures/maps/pooled.png (PNG copy)>] [14 </hdd/ego_patronage/paper/figures/partisanship/plot_partisanship_by_cbo_group.pdf>] (/hdd/ego_patronage/paper/draft.bbl [15] [16])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 209.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 211.
  [17]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 209.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 211.
  (/hdd/ego_patronage/paper/draft.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 209.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 209.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 211.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 211.
 Package rerunfilecheck Info: File `draft.out' has not changed.
-(rerunfilecheck)             Checksum: B7AD8322AD6C23015612A3F3AC40E2A0;779.
+(rerunfilecheck)             Checksum: 8266301D0B8341629C6A5D8E62C24012;791.
 
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 209.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 211.
  ) 
 Here is how much of TeX's memory you used:
  9750 strings out of 494880
  143160 string characters out of 6179601
- 241816 words of memory out of 5000000
+ 241903 words of memory out of 5000000
  12844 multiletter control sequences out of 15000+600000
  13102 words of font info for 50 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  41i,8n,43p,1051b,481s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on /hdd/ego_patronage/paper/draft.pdf (17 pages, 470378 bytes).
+Output written on /hdd/ego_patronage/paper/draft.pdf (17 pages, 471262 bytes).
 PDF statistics:
  403 PDF objects out of 1000 (max. 8388607)
  355 compressed objects within 4 object streams
