@@ -1,16 +1,16 @@
 # Fdb version 3
-["bibtex draft"] 1616682741 "draft.aux" "draft.bbl" "draft" 1616683146
+["bibtex draft"] 1616684897 "draft.aux" "draft.bbl" "draft" 1616685060
   "./apsr.bst" 1609794837 25357 c990a86d1a60aa9370f76a9507b609ec ""
-  "draft.aux" 1616683146 9926 793f24c1fba6993d594e389f6b714a56 ""
+  "draft.aux" 1616685060 10446 ac54fb50bdf44506d6f23b51414def89 ""
   "draft.bcf" 0 -1 0 ""
   "patronage.bib" 1616682732 11481 60f737d3d10b578efa2b7d54945cba74 ""
   (generated)
   "draft.blg"
   "draft.bbl"
-["pdflatex"] 1616683146 "/hdd/ego_patronage/paper/draft.tex" "/hdd/ego_patronage/paper/draft.pdf" "draft" 1616683146
+["pdflatex"] 1616685059 "/hdd/ego_patronage/paper/draft.tex" "/hdd/ego_patronage/paper/draft.pdf" "draft" 1616685060
   "/etc/texmf/web2c/texmf.cnf" 1585227716 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/hdd/ego_patronage/paper/draft.aux" 1616683146 9926 793f24c1fba6993d594e389f6b714a56 ""
-  "/hdd/ego_patronage/paper/draft.tex" 1616683145 33443 eca0d890a72815cc901e9ff149a46406 ""
+  "/hdd/ego_patronage/paper/draft.aux" 1616685060 10446 ac54fb50bdf44506d6f23b51414def89 ""
+  "/hdd/ego_patronage/paper/draft.tex" 1616685058 35762 1a5475f1adfc59a1c595fde7c10d13d9 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1480098698 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -109,10 +109,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1520210507 32485 c64754543d8ac501bea6e75e209ea521 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1585227723 127853 b41f58aff49fe1af38af8d065f49d51c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1593121643 859410 7e9db4a2b17af51ef47308844b7ed2cf ""
-  "draft.aux" 1616683146 9926 793f24c1fba6993d594e389f6b714a56 ""
-  "draft.bbl" 1616682741 9535 f8f38b9c5f532eca28bb4bd23dba17dd "bibtex draft"
-  "draft.out" 1616683146 791 8266301d0b8341629c6a5d8e62c24012 ""
-  "draft.tex" 1616683145 33443 eca0d890a72815cc901e9ff149a46406 ""
+  "draft.aux" 1616685060 10446 ac54fb50bdf44506d6f23b51414def89 ""
+  "draft.bbl" 1616684897 9535 f8f38b9c5f532eca28bb4bd23dba17dd "bibtex draft"
+  "draft.out" 1616685060 791 8266301d0b8341629c6a5d8e62c24012 ""
+  "draft.tex" 1616685058 35762 1a5475f1adfc59a1c595fde7c10d13d9 ""
   "figures/maps/pooled.png" 1611602991 202472 da1b08ed6807959134033193453d3f65 ""
   "figures/partisanship/plot_age_mean.pdf" 1615993464 5119 aae4096e92785b1ad3c885e43a7eee89 ""
   "figures/partisanship/plot_edu_mean.pdf" 1615993464 5120 574e647bd83370e55830733efc37f0af ""
@@ -123,10 +123,12 @@
   "figures/partisanship/plot_partisanship_by_cbo_group.pdf" 1609862521 75718 b2ea0ea75ffce438df9315e3684bdb44 ""
   "figures/partisanship/plot_partisanship_by_contract_type.pdf" 1609862521 33978 12e893ff744b6d891cbf5f0ecb375c03 ""
   "figures/partisanship/plot_work_experience_mean.pdf" 1615993464 5132 706d34ad99e25538f71940c954879781 ""
+  "figures/turnover/plot_wage.pdf" 1616594622 5044 376f4a86b79f160799a67c3aa432b345 ""
+  "figures/turnover/plot_work_experience.pdf" 1616594628 5067 b098276944e848579c0f2aded60608f6 ""
   (generated)
   "draft.pdf"
-  "/hdd/ego_patronage/paper/draft.log"
-  "draft.log"
   "/hdd/ego_patronage/paper/draft.pdf"
-  "draft.aux"
   "draft.out"
+  "/hdd/ego_patronage/paper/draft.log"
+  "draft.aux"
+  "draft.log"
