@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  29 MAR 2021 10:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  29 MAR 2021 12:55
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -468,110 +468,108 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 72.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [4] [5] [6]
-<figures/partisanship/plot_partisan_by_year.pdf, id=223, 505.89pt x 505.89pt>
+<figures/partisanship/plot_partisan_by_year.pdf, id=227, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_partisan_by_year.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_partisan_by_year.pdf>
 Package pdftex.def Info: figures/partisanship/plot_partisan_by_year.pdf  used on input line 115.
 (pdftex.def)             Requested size: 199.17207pt x 199.17207pt.
-<figures/partisanship/plot_partisan_by_region.pdf, id=224, 505.89pt x 505.89pt>
+<figures/partisanship/plot_partisan_by_region.pdf, id=228, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_partisan_by_region.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_partisan_by_region.pdf>
 Package pdftex.def Info: figures/partisanship/plot_partisan_by_region.pdf  used on input line 116.
 (pdftex.def)             Requested size: 199.17207pt x 199.17207pt.
  [7]
-<figures/partisanship/plot_partisan_spell.pdf, id=236, 505.89pt x 505.89pt>
+<figures/partisanship/plot_partisan_spell.pdf, id=240, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_partisan_spell.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_partisan_spell.pdf>
 Package pdftex.def Info: figures/partisanship/plot_partisan_spell.pdf  used on input line 129.
 (pdftex.def)             Requested size: 284.53154pt x 227.62523pt.
- [8 </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf> </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_partisan_by_region.pdf>] [9 </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_partisan_spell.pdf>]
-<figures/partisanship/plot_median_wage.pdf, id=288, 505.89pt x 505.89pt>
+ [8 </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_partisan_by_year.pdf> </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_partisan_by_region.pdf>] [9 </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_partisan_spell.pdf>] [10]
+<figures/partisanship/plot_median_wage.pdf, id=301, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_median_wage.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_median_wage.pdf>
-Package pdftex.def Info: figures/partisanship/plot_median_wage.pdf  used on input line 148.
-(pdftex.def)             Requested size: 284.53154pt x 227.62523pt.
- [10]
-<figures/partisanship/plot_work_experience_mean.pdf, id=297, 505.89pt x 505.89pt>
-File: figures/partisanship/plot_work_experience_mean.pdf Graphic file (type pdf)
-<use figures/partisanship/plot_work_experience_mean.pdf>
-Package pdftex.def Info: figures/partisanship/plot_work_experience_mean.pdf  used on input line 157.
+Package pdftex.def Info: figures/partisanship/plot_median_wage.pdf  used on input line 155.
 (pdftex.def)             Requested size: 284.53154pt x 227.62523pt.
  [11 </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_median_wage.pdf>]
-<figures/partisanship/plot_edu_mean.pdf, id=309, 505.89pt x 505.89pt>
+<figures/partisanship/plot_work_experience_mean.pdf, id=314, 505.89pt x 505.89pt>
+File: figures/partisanship/plot_work_experience_mean.pdf Graphic file (type pdf)
+<use figures/partisanship/plot_work_experience_mean.pdf>
+Package pdftex.def Info: figures/partisanship/plot_work_experience_mean.pdf  used on input line 164.
+(pdftex.def)             Requested size: 284.53154pt x 227.62523pt.
+<figures/partisanship/plot_edu_mean.pdf, id=316, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_edu_mean.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_edu_mean.pdf>
-Package pdftex.def Info: figures/partisanship/plot_edu_mean.pdf  used on input line 166.
+Package pdftex.def Info: figures/partisanship/plot_edu_mean.pdf  used on input line 173.
 (pdftex.def)             Requested size: 199.17207pt x 227.62523pt.
-<figures/partisanship/plot_age_mean.pdf, id=310, 505.89pt x 505.89pt>
+<figures/partisanship/plot_age_mean.pdf, id=317, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_age_mean.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_age_mean.pdf>
-Package pdftex.def Info: figures/partisanship/plot_age_mean.pdf  used on input line 167.
+Package pdftex.def Info: figures/partisanship/plot_age_mean.pdf  used on input line 174.
 (pdftex.def)             Requested size: 199.17207pt x 227.62523pt.
- [12 </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_work_experience_mean.pdf> </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_edu_mean.pdf> </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_age_mean.pdf>]
-<figures/maps/pooled.png, id=335, 361.35pt x 361.35pt>
+ [12 </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_work_experience_mean.pdf>]
+<figures/maps/pooled.png, id=330, 361.35pt x 361.35pt>
 File: figures/maps/pooled.png Graphic file (type png)
 <use figures/maps/pooled.png>
-Package pdftex.def Info: figures/maps/pooled.png  used on input line 181.
+Package pdftex.def Info: figures/maps/pooled.png  used on input line 188.
 (pdftex.def)             Requested size: 256.07509pt x 256.07509pt.
+ [13 </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_edu_mean.pdf> </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_age_mean.pdf>]
 
+LaTeX Warning: Reference `fig:partisan_by_cbo' on page 14 undefined on input line 193.
 
-LaTeX Warning: Reference `fig:partisan_by_cbo' on page 13 undefined on input line 186.
-
-[13 </Users/gali/github/ego_patronage/paper/figures/maps/pooled.png (PNG copy)>]
-<figures/partisanship/plot_partisanship_by_cbo_group.pdf, id=343, 505.89pt x 505.89pt>
+<figures/partisanship/plot_partisanship_by_cbo_group.pdf, id=349, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_partisanship_by_cbo_group.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_partisanship_by_cbo_group.pdf>
-Package pdftex.def Info: figures/partisanship/plot_partisanship_by_cbo_group.pdf  used on input line 192.
+Package pdftex.def Info: figures/partisanship/plot_partisanship_by_cbo_group.pdf  used on input line 199.
 (pdftex.def)             Requested size: 199.17207pt x 199.17207pt.
-<figures/partisanship/plot_partisanship_by_contract_type.pdf, id=344, 505.89pt x 505.89pt>
+<figures/partisanship/plot_partisanship_by_contract_type.pdf, id=350, 505.89pt x 505.89pt>
 File: figures/partisanship/plot_partisanship_by_contract_type.pdf Graphic file (type pdf)
 <use figures/partisanship/plot_partisanship_by_contract_type.pdf>
-Package pdftex.def Info: figures/partisanship/plot_partisanship_by_contract_type.pdf  used on input line 193.
+Package pdftex.def Info: figures/partisanship/plot_partisanship_by_contract_type.pdf  used on input line 200.
 (pdftex.def)             Requested size: 199.17207pt x 199.17207pt.
- [14 </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_partisanship_by_cbo_group.pdf> </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_partisanship_by_contract_type.pdf>]
-<figures/turnover/plot_wage.pdf, id=368, 504.88625pt x 504.88625pt>
+[14 </Users/gali/github/ego_patronage/paper/figures/maps/pooled.png (PNG copy)>]
+<figures/turnover/plot_wage.pdf, id=362, 504.88625pt x 504.88625pt>
 File: figures/turnover/plot_wage.pdf Graphic file (type pdf)
 <use figures/turnover/plot_wage.pdf>
-Package pdftex.def Info: figures/turnover/plot_wage.pdf  used on input line 206.
+Package pdftex.def Info: figures/turnover/plot_wage.pdf  used on input line 213.
 (pdftex.def)             Requested size: 199.16978pt x 199.16978pt.
-<figures/turnover/plot_work_experience.pdf, id=369, 504.88625pt x 504.88625pt>
+<figures/turnover/plot_work_experience.pdf, id=363, 504.88625pt x 504.88625pt>
 File: figures/turnover/plot_work_experience.pdf Graphic file (type pdf)
 <use figures/turnover/plot_work_experience.pdf>
-Package pdftex.def Info: figures/turnover/plot_work_experience.pdf  used on input line 207.
+Package pdftex.def Info: figures/turnover/plot_work_experience.pdf  used on input line 214.
 (pdftex.def)             Requested size: 199.16978pt x 199.16978pt.
- [15 </Users/gali/github/ego_patronage/paper/figures/turnover/plot_wage.pdf> </Users/gali/github/ego_patronage/paper/figures/turnover/plot_work_experience.pdf>]
-Overfull \hbox (8.78128pt too wide) in paragraph at lines 216--216
+ [15 </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_partisanship_by_cbo_group.pdf> </Users/gali/github/ego_patronage/paper/figures/partisanship/plot_partisanship_by_contract_type.pdf>]
+Overfull \hbox (8.78128pt too wide) in paragraph at lines 223--223
 []\OT1/cmr/bx/n/17.28 Campaign Fi-nance and the Need for Wealthy
  []
 
-[16] (/Users/gali/github/ego_patronage/paper/draft.bbl [17] [18])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 236.
- [19]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 236.
+[16 </Users/gali/github/ego_patronage/paper/figures/turnover/plot_wage.pdf> </Users/gali/github/ego_patronage/paper/figures/turnover/plot_work_experience.pdf>] [17] (/Users/gali/github/ego_patronage/paper/draft.bbl [18] [19])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 243.
+ [20]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 243.
  (/Users/gali/github/ego_patronage/paper/draft.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 236.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 236.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 243.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 243.
 Package rerunfilecheck Info: File `draft.out' has not changed.
-(rerunfilecheck)             Checksum: 08868E5CA070D0FA29BFB23EEE892189;876.
+(rerunfilecheck)             Checksum: 57809535890AB6BEB4C17E00C9F08E7E;979.
 
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 236.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 243.
  ) 
 Here is how much of TeX's memory you used:
- 9579 strings out of 492616
- 144332 string characters out of 6129482
+ 9583 strings out of 492616
+ 144380 string characters out of 6129482
  253597 words of memory out of 5000000
- 13270 multiletter control sequences out of 15000+600000
+ 13271 multiletter control sequences out of 15000+600000
  13102 words of font info for 50 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  36i,8n,43p,1065b,483s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on /Users/gali/github/ego_patronage/paper/draft.pdf (19 pages, 521822 bytes).
+Output written on /Users/gali/github/ego_patronage/paper/draft.pdf (20 pages, 525355 bytes).
 PDF statistics:
- 455 PDF objects out of 1000 (max. 8388607)
- 399 compressed objects within 4 object streams
- 83 named destinations out of 1000 (max. 500000)
- 165 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 468 PDF objects out of 1000 (max. 8388607)
+ 410 compressed objects within 5 object streams
+ 86 named destinations out of 1000 (max. 500000)
+ 173 words of extra memory for PDF output out of 10000 (max. 10000000)
 
