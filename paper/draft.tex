@@ -44,9 +44,7 @@
 \section{Introduction}
 \label{sec:intro}
 
-Who benefits from patronage? And what are its consequences for local administration? 
-
-Literature on patronage and selection: \citet{robinson2013political}. Extant literature on selection of public officials have primarily focused on who becomes a politician \citet{dal2017becomes}. There remains unanswered questions regarding who enters the bureaucracy, what types of employment they held, and what are the differential compensations among public officials.
+Who benefits from patronage? What motivates allocation of public sector jobs in the first place? A
 
 Empirical research on allocation of public sector jobs has consistently found that politically motivated allocation of public sector jobs is an important determinant of public employment in the developed and developing world \citep{finan2017personnel}. In the United States, appointments to the federal bureaucracy involve considerations of party loyalty and ideological alignment with the president \citep{lewis2010politics, hollibaugh2014presidents}. In Brazil, whether it be at the presidential \citep{pracca2011political} or at the municipal level \citep{colonnelli2018patronage,brollo2017victor}, politicians have discretion over bureaucratic appointments and frequently use these to further their political goals.
 
@@ -89,7 +87,7 @@ Partisanship in Brazil is voluntary and widespread, with over 11 percent of regi
 
 There is an ongoing debate on the strength of partisan ties in Brazil. On the one hand, scholars have noted that partisanship in Brazil is weak, meaning that politicians and voters do not have strong party loyalty and often ``switch'' to other parties \citep{desposato2006parties,ames2002deadlock}. On the other, some scholars have noted that party ties have grown in strength over time, in particular for leftist programmatic parties such as the PT \citep{samuels2014power,samuels2006sources}. Part of this debate owes to disagreements on how to measure party strength, whether it be testing voters' prior knowledge of party's ideological positions or if instead, it should be measured by testing whether voters issue ballots for individual candidates or their party labels -- with each one of these measures painting an opposite picture of the relative strength of party ties.
 
-One thing is clear: party ties at the electoral level are durable, with most voters remaining affiliated to a single party for their entire life, as highlighted by figure \emph{FIGURE}. Noting that party affiliations are registered at the municipal level, this empirical fact aligns with qualitative evidence provided by \citet{palmeira1995comicios}, who notes that parties at the local level constitute political factions (\emph{grupos pol\'{i}ticos} ) with well-defined boundaries and power disputes. This relative stability of party ties at the electorate level for the minority of voters who are registered with a parties suggests a distinct dynamic tying an elite group of party members to the city hall.
+One thing is clear: party ties at the electoral level are durable, with many voters remaining affiliated to a single party for their entire life, as highlighted by figure \emph{FIGURE}. Noting that party affiliations are registered at the municipal level, this empirical fact aligns with qualitative evidence provided by \citet{palmeira1995comicios}, who notes that parties at the local level constitute political factions (\emph{grupos pol\'{i}ticos} ) with well-defined boundaries and power disputes. This relative stability of party ties at the electorate level for the minority of voters who are registered with a parties suggests a distinct dynamic tying an elite group of party members to the city hall.
 
 \section{Data}
 \label{sec:data}
@@ -104,7 +102,7 @@ In contrast to these previous studies, I leverage the rich dataset of covariates
 
 \subsection{Partisan affiliation}
 
-Data on partisan affiliation is detailed as well. The \emph{TSE}, the national electoral authority, collects data on all party members in the national territory, including commencement and termination dates, affiliated party, municipality and name of the registered party member, as well as their electoral title.\footnote{The data is available \href{https://filia-consulta.tse.jus.br/}{here}.} Parties are mandated by electoral law to report all party members as well as providing updated registry information throughout the year. Parties have municipal offices in which citizens may update their registry, and these party offices in turn report to the state electoral authority, which relays this information to national electoral authorities. If irregularities are found parties may be sanctioned by the \emph{TSE}.
+Data on partisan affiliation in Brazil is rich. The \emph{TSE}, the national electoral authority, collects data on all party members in the national territory, including commencement and termination dates, affiliated party, municipality and name of the registered party member, as well as their electoral title.\footnote{The data is available \href{https://filia-consulta.tse.jus.br/}{here}.} Parties are mandated by electoral law to report all party members as well as providing updated registry information throughout the year. Parties have municipal offices in which citizens may update their registry, and these party offices in turn report to the state electoral authority, which relays this information to national electoral authorities. If irregularities are found parties may be sanctioned by the \emph{TSE}.
 
 The party affiliation data is structured as a rolling registry (\emph{fita espelho}), in which existing and expired party memberships are preserved. Each row therefore corresponds to a particular party member entry, containing the state, municipality, electoral zone and date of the registration. Additionally, the registry indicates the status of the membership, whether it is active (\emph{regular}) or canceled (\emph{cancelado/desfiliado}), as well as the date of the change in the membership status. Individual identifiers are provided, including the name and a nationally unique electoral title (\emph{t\'{i}tulo eleitoral}) that allows researchers to join names contained in the \emph{RAIS} and party affiliation data.
 
@@ -124,12 +122,12 @@ Another interesting feature to note in the data is that there are discontinuitie
 
 Disaggregating the data further into regions, we find significant heterogeneities with respect to regional trends.The region that concentrates the most rapid growth and the largest amount of party members is the Southeast, a densely populated and most economically developed region in Brazil. It is closely followed by the Northeast, a region that although relatively poor, has a been characterized by deep partisan roots that underlie patronage exchanges \citep{ansell2010auctioning}. The South, an affluent but predominantly rural region has similar levels of partisanship to the Northeast. In contrast, party membership in the Northern and Midwestern regions are low.
 
-Finally, we present data on party membership spells in Figure \ref{fig:party_spell}. A few patterns emerge. First, the distribution of spells is rather uniform, with spikes every four years that mirror the jumps in partisanship in Figure \ref{fig:number_partisan}.
+Finally, we present data on party membership spells in Figure \ref{fig:party_spell}. A few patterns emerge. First, the distribution of spells is uniform, with spikes every four years that mirror the jumps in partisanship in Figure \ref{fig:number_partisan}. There are no clear patterns with respect to skewedness, suggesting that partisan affiliation duration is distributed in a wave-like pattern, with discontinuities that reflect the occurrence of municipal elections rather than other, long-term dynamics. Overall, the evidence on party membership spells suggests that a constant stream of party members is interspersed with local elections. However, once these membership ties are formed, they are stable and long-lasting.
 
 \begin{figure}
     \centering
     \includegraphics[width = 10cm, height = 8cm]{figures/partisanship/plot_partisan_spell.pdf}
-    \caption{\textbf{Party memebership spells}. Data includes all party memberships that start in 1985 - the Brazilian democratic transition - and 2019.}
+    \caption{\textbf{Party membership spells}. Data includes all party memberships that start in 1985 - the Brazilian democratic transition - and 2019. Note that there are no significant skewedness in the data either to the left or to the right, indicating that there is a constant stream of party members with the exception of local election spikes.}
     \label{fig:party_spell}
 \end{figure}
 
@@ -211,12 +209,20 @@ Finally, party members once in the bureaucracy both earn more and stay for longe
     \label{fig:partisan_trajectory}
 \end{figure}
 
-In sum, the evidence suggests that party members concentrate in the summits of power. This reinforces priors regarding the control of bureaucratic management by politically appointed bureaucrats in a quantifiable way and in the context of a large, developing country with decentralized structure of local governance \citep{lewis2010politics}. Connecting this empirical evidence with the record that the majority of party members are coming from the upper strata of the formal economy, it becomes evident that party members are in fact occupying the upper echelons of the private and public economies, accruing important financial gains in the process and over the long run.
+In sum, the evidence suggests that party members concentrate in the upper echelons of the local bureaucracy. This reinforces priors regarding the control of bureaucratic management by politically appointed bureaucrats in a quantifiable way and in the context of a large, developing country with decentralized structure of local governance \citep{lewis2010politics}. Connecting this empirical evidence with the record that the majority of party members are coming from the upper strata of the formal economy, it is clear that party members are in fact transiting between the upper echelons of the private and public economies, accruing important financial gains in the process and over the long run.
 
 This raises the question of what are the broader implications of local party organizations on the compensation and incentives for its members to join. Is this simply a club good that provides access to public sector employment? And why are only members of the wealthier classes being recruited? In the next section, I explore the incentives for parties to recruit the local elites for running campaign elections. Brazil contains detailed information on party contributions that I leverage to explore the motivation for recruitment of local elites. 
 
+\section{Campaign Finance and the Need for Wealthy Patrons}
+Municipal elections are expensive. In 2016, municipal races commanded an average amount of \emph{X} amounts of dollars. In order to finance these races, politicians rely on a variety of resources, and at the local level, these are primarily party-member donations. In particular, while in the larger municipalities there is a greater reliance on corporate donations, for the majority of smaller municipalities, the contribution are in large part individual-level contributions.\
+
+Figure \emph{x} illustrates this pattern.
+
 \section{Empirical strategy}
 \label{sec:empirical}
+The previous sections present suggestive evidence of systematic differences acros partisan and non-partisan members. In particular, party members seem to be wealthier, less educated and concentrated in the upper strata of the local bureaucracy. However, it is not clear from these aggregate statistics whether the higher compensation is due to 
+
+In this section, I perform a simple Oaxaca decomposition to pin down heterogeneous compensation across party and non-partisan members with respect to observables. In particular, I model wages as a function of age, work experience, education level and gender. To allow for greater flexibility with respect to compensation across states, I perform the decomposition broken down by state, and allow coefficients to vary by state, year, and 
 
 \emph{perform an Oaxaca decomposition to understand the variant compensations}
 
