@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex draft"] 1617025992 "draft.aux" "draft.bbl" "draft" 1617025999
+["bibtex draft"] 1617026510 "draft.aux" "draft.bbl" "draft" 1617028543
   "./apsr.bst" 1616769748 25357 c990a86d1a60aa9370f76a9507b609ec ""
-  "draft.aux" 1617025993 11303 60bbd1c13169a4d247faf61453c1308b "pdflatex"
-  "patronage.bib" 1616769749 11481 60f737d3d10b578efa2b7d54945cba74 ""
+  "draft.aux" 1617026511 11610 5b5c0909782cc68b07aac38111c6b105 "pdflatex"
+  "patronage.bib" 1617026501 12323 665955b2098ac87268b3cbcbd8292624 ""
   (generated)
   "draft.blg"
   "draft.bbl"
-["pdflatex"] 1617025992 "/Users/gali/github/ego_patronage/paper/draft.tex" "/Users/gali/github/ego_patronage/paper/draft.pdf" "draft" 1617025999
-  "/Users/gali/github/ego_patronage/paper/draft.aux" 1617025993 11303 60bbd1c13169a4d247faf61453c1308b ""
-  "/Users/gali/github/ego_patronage/paper/draft.tex" 1617025999 37452 bffa1e4b475d3f323a1c1f14ef7dae6a ""
+["pdflatex"] 1617026510 "/Users/gali/github/ego_patronage/paper/draft.tex" "/Users/gali/github/ego_patronage/paper/draft.pdf" "draft" 1617028543
+  "/Users/gali/github/ego_patronage/paper/draft.aux" 1617026511 11610 5b5c0909782cc68b07aac38111c6b105 ""
+  "/Users/gali/github/ego_patronage/paper/draft.tex" 1617028543 38059 f83a1c5c3407811f8281e43a05614c63 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -103,10 +103,10 @@
   "/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1557342064 3277517 23507ed665b4dd9046f0f2a94bbef2be ""
   "/usr/local/texlive/2019/texmf-var/web2c/pdftex/pdflatex.fmt" 1557342086 4259635 562fc36ec496993777a6c428d8bfb811 ""
   "/usr/local/texlive/2019/texmf.cnf" 1557341546 577 d150fef99ac436ad1156e86b0892f6ef ""
-  "draft.aux" 1617025993 11303 60bbd1c13169a4d247faf61453c1308b "pdflatex"
-  "draft.bbl" 1617025992 9218 3138f3c378cb784e0a01a991adf3cd5d "bibtex draft"
-  "draft.out" 1617025993 876 08868e5ca070d0fa29bfb23eee892189 "pdflatex"
-  "draft.tex" 1617025999 37452 bffa1e4b475d3f323a1c1f14ef7dae6a ""
+  "draft.aux" 1617026511 11610 5b5c0909782cc68b07aac38111c6b105 "pdflatex"
+  "draft.bbl" 1617026510 9971 3e31ee0585711798a4dbdcf7d414a220 "bibtex draft"
+  "draft.out" 1617026511 876 08868e5ca070d0fa29bfb23eee892189 "pdflatex"
+  "draft.tex" 1617028543 38059 f83a1c5c3407811f8281e43a05614c63 ""
   "figures/maps/pooled.png" 1616769749 202472 da1b08ed6807959134033193453d3f65 ""
   "figures/partisanship/plot_age_mean.pdf" 1616769749 5119 aae4096e92785b1ad3c885e43a7eee89 ""
   "figures/partisanship/plot_edu_mean.pdf" 1616769749 5120 574e647bd83370e55830733efc37f0af ""
@@ -120,9 +120,9 @@
   "figures/turnover/plot_wage.pdf" 1616769749 5044 376f4a86b79f160799a67c3aa432b345 ""
   "figures/turnover/plot_work_experience.pdf" 1616769749 5067 b098276944e848579c0f2aded60608f6 ""
   (generated)
-  "/Users/gali/github/ego_patronage/paper/draft.pdf"
   "draft.log"
-  "draft.pdf"
-  "draft.aux"
   "/Users/gali/github/ego_patronage/paper/draft.log"
+  "/Users/gali/github/ego_patronage/paper/draft.pdf"
   "draft.out"
+  "draft.aux"
+  "draft.pdf"
