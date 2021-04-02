@@ -61,21 +61,34 @@ filiado_active <- filiado %>%
     filter_active_filiado(2016)
 
 filiado_active_unique <- filiado_active %>% 
-    arrange(desc(date_start)) %>%
-    distinct(electoral_title, .keep_all = TRUE) %>%
     filter(
         member_status == "regular"
-    )
+    ) %>%
+    arrange(desc(date_start)) %>%
+    distinct(member_name, .keep_all = TRUE)
 
 campaign_filiado <- campaign_individual %>% 
     select(
         cod_ibge_6,
+        cpf_cnpj_donor,
         donor_name,
+        donor_name_tax,
         value_receipt
     ) %>%
     left_join(
-        filiado_active %>% mutate(is_filiado = 1),
-        by = c("donor_name" = "member_name")
+        filiado_active_unique %>% 
+            filter(cpf_candidate == "") %>% 
+            transmute(member_name, is_filiado = "1"),
+        by = c("donor_name_tax" = "member_name")
+    ) %>%
+    left_join(
+        filiado_active_unique %>% 
+            filter(cpf_candidate != "") %>%
+            transmute(cpf_candidate, is_filiado = "1"),
+        by = c("cpf_cnpj_donor" = "cpf_candidate")
+    ) %>%
+    mutate(
+        is_filiado = coalesce(is_filiado.x, is_filiado.y)
     )
     
 campaign_filiado_total <- campaign_filiado %>%
@@ -84,7 +97,9 @@ campaign_filiado_total <- campaign_filiado %>%
     ) %>%
     group_by(is_filiado) %>% 
     summarise(
-        total_contribution = sum(as.numeric(value_receipt)/1e6, na.rm = TRUE)
+        total_contribution = sum(as.numeric(value_receipt)/1e6, na.rm = TRUE),
+        n = n_distinct(donor_name),
+        mean_contribution = total_contribution/n
     )
 
 campaign_filiado_total %>%
@@ -101,7 +116,7 @@ campaign_filiado_total %>%
     xlab("") +
     ylab("Total contribution (million reais)") +
     ggsave(
-        here("paper/figures/plot_contribution.pdf")
+        here("paper/figures/partisanship/plot_contribution.pdf")
     )
 
 # ------------------------------------------------------------------------------
