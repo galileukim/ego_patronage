@@ -16,11 +16,11 @@ source(
 # campaign data
 
 # only electoral title available for year 2008
-campaign_2008 <- fread(
-    here("data/raw/tse/receita_candidatos_2008.csv.gz"),
-    encoding = "Latin-1"
-) %>%
- janitor::clean_names()
+# campaign_2008 <- fread(
+#     here("data/raw/tse/receita_candidatos_2008.csv.gz"),
+#     encoding = "Latin-1"
+# ) %>%
+#  janitor::clean_names()
 
 campaign <- fread(
     here("data/raw/tse/campaign_local.csv.gz")
@@ -57,25 +57,25 @@ filiado_mun <- fread(
 # visualize breakdown of donations by partisan vs. non-partisan
 # ==============================================================================
 filiado_active <- filiado %>% 
-    mutate(
-        filiado_id = row_number()
-    ) %>%
     fix_year_filiado() %>%
-    filter_active_filiado(2008)
+    filter_active_filiado(2016)
 
-campaign_filiado <- campaign_2008 %>% 
+filiado_active_unique <- filiado_active %>% 
+    arrange(desc(date_start)) %>%
+    distinct(electoral_title, .keep_all = TRUE) %>%
     filter(
-        ds_titulo == "Recursos de pessoas físicas"
-    ) %>%
-    transmute(
-        electoral_title = as.character(ds_nr_titulo_eleitor) %>%
-            str_pad(., 12, "left", "0"),
-        ds_titulo,
-        vr_receita
+        member_status == "regular"
+    )
+
+campaign_filiado <- campaign_individual %>% 
+    select(
+        cod_ibge_6,
+        donor_name,
+        value_receipt
     ) %>%
     left_join(
         filiado_active %>% mutate(is_filiado = 1),
-        by = c("electoral_title")
+        by = c("donor_name" = "member_name")
     )
     
 campaign_filiado_total <- campaign_filiado %>%
@@ -84,7 +84,7 @@ campaign_filiado_total <- campaign_filiado %>%
     ) %>%
     group_by(is_filiado) %>% 
     summarise(
-        total_contribution = sum(as.numeric(vr_receita)/1e6, na.rm = TRUE)
+        total_contribution = sum(as.numeric(value_receipt)/1e6, na.rm = TRUE)
     )
 
 campaign_filiado_total %>%
@@ -127,7 +127,7 @@ herfindahl_campaign <- campaign_individual_aggregate %>%
         ),
         total_donation = n()
     )
-
+``
 herfindahl_campaign %>%
     ggplot() +
     geom_histogram(
