@@ -229,7 +229,6 @@ trim_rais <- function(data, ...) {
   data_trimmed <- data %>%
     select(
       id_employee,
-      year = as.integer(year),
       cod_ibge_6 = municipio,
       cbo_02 = cbo2002,
       matches("cnae_[0-9]{2}"),
@@ -246,19 +245,24 @@ trim_rais <- function(data, ...) {
       hours = horascontr,
       cpi,
       type_admission = tipoadmissao,
-      cause_fired = causadesli,
-      ...
+      cause_fired = causadesli
     ) %>%
     mutate(
+      year = as.integer(year),
       municipal = if_else(nat_jur == 1031, 1, 0),
-      across(starts_with("date"), ~ format(., "%Y%m%d")),
       gender = if_else(gender == 1, "male", "female"),
       hired = if_else(type_admission == 1 | type_admission == 2, 1, 0),
       fired = if_else(cause_fired == 10 | cause_fired == 11, 1, 0),
       departure = if_else(cause_fired == 20 | cause_fired == 21, 1, 0),
       cbo_02 = ifelse(nchar(cbo_02) == 5, paste0("0", cbo_02), cbo_02),
-      date_admission = as.character(date_admission),
-      date_separation = as.character(date_separation)
+      date_admission = as.character(date_admission, format = "%Y-%m-%d"),
+      date_separation = as.character(date_separation, format = "%Y-%m-%d")
+    ) %>%
+    select(
+      id_employee,
+      cod_ibge_6,
+      year,
+      everything()
     )
 
   return(data_trimmed)

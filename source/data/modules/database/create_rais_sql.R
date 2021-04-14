@@ -20,7 +20,7 @@ rais_files <- list.files(
 log_file <- here("log/log_create_sql.txt")
 
 source(
-    here::here("source/descriptive/modules/globals.R")
+    here::here("source/data/modules/database/globals.R")
 )
 
 source(
@@ -78,10 +78,11 @@ for (file in rais_files) {
   if (as.numeric(year) <= 2010) {
     rais <- rais %>%
       mutate(
-        age = calc_age(dtnascimento, !!ref_date),
+        age = calc_age(dtnascimento, ref_date),
         edu = grauinstrucao
       ) %>%
-      trim_rais()
+      trim_rais() %>%
+      select(starts_with("date"))
   } else {
     rais <- rais %>%
       rename(
