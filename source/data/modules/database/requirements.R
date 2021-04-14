@@ -257,8 +257,8 @@ trim_rais <- function(data, ...) {
       fired = if_else(cause_fired == 10 | cause_fired == 11, 1, 0),
       departure = if_else(cause_fired == 20 | cause_fired == 21, 1, 0),
       cbo_02 = ifelse(nchar(cbo_02) == 5, paste0("0", cbo_02), cbo_02),
-      date_admission = format(date_admission, "%Y%m%d"),
-      date_separation = format(date_separation, "%Y%m%d")
+      date_admission = as.character(date_admission),
+      date_separation = as.character(date_separation)
     )
 
   return(data_trimmed)
